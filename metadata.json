@@ -1,0 +1,6 @@
+{
+  "name": "Audiovisual Interactivo Dalcroze",
+  "description": "Audiovisual interactivo educativo basado en la euritmia Dalcroze para niños de 7 a 12 años, adaptado para la Fundación Monte Tabor.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

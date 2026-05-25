@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Rethink+Sans:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Rethink Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Rethink Sans", ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Fluid clean scrollbars representing the wooden ambient design theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d0c0b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3a3530;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF8C00;
+}
