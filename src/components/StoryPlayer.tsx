@@ -30,7 +30,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
   const [playbackRate, setPlaybackRate] = useState<number>(1); // e.g. 1x or 2x for testing/skipping
   
   // Welcome and help panel state
-  const [showWelcomeScreen, setShowWelcomeScreen] = useState<boolean>(true);
+  const [showWelcomeScreen, setShowWelcomeScreen] = useState<boolean>(false);
   const [welcomeTab, setWelcomeTab] = useState<'tutorial' | 'help' | 'play'>('tutorial');
   const [tutorialStep, setTutorialStep] = useState<number>(0);
 
@@ -46,22 +46,165 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
   const [activePauseContent, setActivePauseContent] = useState<string | null>(null);
   const [congratulationsBlock, setCongratulationsBlock] = useState<NarrativeBlock | null>(null);
 
+  // Visual dynamic particles representing physical cut-out elements
+  const [particles, setParticles] = useState<{ id: number; char: string; x: number; y: number; scale: number }[]>([]);
+  // Climax state when remaining time in block 8 is <= 15 seconds
+  const [isFinalClimax, setIsFinalClimax] = useState<boolean>(false);
+
+  const spawnParticles = (count = 15) => {
+    let chars = ["🍃", "🌸", "🍁"];
+    if (activeBlock.id === 2) {
+      chars = ["🍃", "🌸", "🍁"]; // Tierra: Hojas verdes, flores naranjas
+    } else if (activeBlock.id === 3) {
+      chars = ["💧", "🫧", "🌊"]; // Agua: Gotas azules, burbujas
+    } else if (activeBlock.id === 4) {
+      chars = ["🪶", "☁️", "🌬️"]; // Viento: Plumas blancas, nubes pequeñas
+    } else if (activeBlock.id === 5 || activeBlock.id === 6) {
+      chars = ["✨", "⚡", "✦"]; // Trueno: Chispas moradas
+    } else {
+      chars = ["⭐", "☀️", "✦"]; // Sol/Default: Estrellas doradas, rayos amarillos
+    }
+
+    const newParticles = Array.from({ length: count }).map((_, i) => ({
+      id: Date.now() + i + Math.random(),
+      char: chars[Math.floor(Math.random() * chars.length)],
+      x: 15 + Math.random() * 70, // random x between 15% and 85% of stage
+      y: 80, // starts near Adaggio bottom positions
+      scale: 0.7 + Math.random() * 0.8,
+    }));
+
+    setParticles(prev => [...prev, ...newParticles]);
+    // Remove after animation completes
+    setTimeout(() => {
+      setParticles(prev => prev.filter(p => !newParticles.find(np => np.id === p.id)));
+    }, 2800);
+  };
+
+  const getTeatrilloBackgroundStyle = () => {
+    if (isFinalClimax) {
+      return {
+        background: "linear-gradient(135deg, #FF8C00 0%, #40E0D0 25%, #E1F6FF 50%, #7B68EE 75%, #FFD700 100%)",
+        transition: "background 1s ease-in-out"
+      };
+    }
+    switch (activeBlock.id) {
+      case 1:
+        // Bloque 1: Negro absoluto con vignette gris en bordes
+        return {
+          background: "radial-gradient(circle, #1a1a1a 0%, #000000 100%)",
+          transition: "background 1s ease-in-out"
+        };
+      case 2:
+        // Bloque 2: Tierra (Ocres, marrones cálidos, verdes musgo, naranjas apagados)
+        return {
+          background: "linear-gradient(to bottom, #755b40 0%, #304d1f 100%)",
+          transition: "background 1s ease-in-out"
+        };
+      case 3:
+        // Bloque 3: Agua (Azules turquesa, celestes, verdes agua)
+        return {
+          background: "linear-gradient(to bottom, #1E90FF 0%, #40E0D0 100%)",
+          transition: "background 1s ease-in-out"
+        };
+      case 4:
+        // Bloque 4: Viento (Blancos, grises perla, azules cielo claros, amarillos pálidos)
+        return {
+          background: "linear-gradient(to bottom, #E1F6FF 0%, #F5F5DC 100%)",
+          transition: "background 1s ease-in-out"
+        };
+      case 5:
+      case 6:
+        // Bloque 5-6: Trueno (Grises tormenta, morados oscuros, azules noche)
+        return {
+          background: "linear-gradient(to bottom, #191970 0%, #4B0082 100%)",
+          transition: "background 1s ease-in-out"
+        };
+      case 7:
+        // Bloque 7: Sol (Amarillos cálidos, dorados, naranjas luminosos)
+        return {
+          background: "linear-gradient(to bottom, #FFD700 0%, #FF8C00 100%)",
+          transition: "background 1s ease-in-out"
+        };
+      case 8:
+        // Bloque 8: Final. Multi-color soft transition fusionando los 5 tótems (rainbow natural, no saturado)
+        return {
+          background: "linear-gradient(135deg, #FF8C00 0%, #40E0D0 25%, #E1F6FF 50%, #7B68EE 75%, #FFD700 100%)",
+          transition: "background 1.5s ease-in-out"
+        };
+      default:
+        return {
+          background: "radial-gradient(circle at center, #26211e 0%, #0d0c0b 100%)",
+          transition: "background 1s ease-in-out"
+        };
+    }
+  };
+
+  // Spacebar play/pause keydown listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // If user is typing in notes/inputs, do not hijack Spacebar!
+      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') {
+        return;
+      }
+      if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        if (activePauseContent) {
+          // Suggested pause is active: resume!
+          setActivePauseContent(null);
+          setIsPlaying(true);
+        } else {
+          setIsPlaying(prev => !prev);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activePauseContent]);
+
   // Global event listener to summon this dashboard from any companion button
   useEffect(() => {
     const handleOpenMenu = (e: Event) => {
-      const customEvent = e as CustomEvent;
-      setShowWelcomeScreen(true);
-      if (customEvent.detail && customEvent.detail.tab) {
-        setWelcomeTab(customEvent.detail.tab);
-      }
-      // Smooth scroll to player
-      const element = document.getElementById('storyplayer-interactive-section');
+      // Smooth scroll to facilitator workspace below
+      const element = document.getElementById('facilitator-tactical-workspace');
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
     };
+
+    const handleStartSession = () => {
+      setCurrentTime(0);
+      setActiveBlock(NARRATIVE_BLOCKS[0]);
+      setIsPlaying(true);
+      setTriggeredPauses([]);
+      audioInstance.stop();
+      audioInstance.start(1, 0);
+    };
+
+    const handleSkipToScene = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail && customEvent.detail.blockId) {
+        const blockId = customEvent.detail.blockId;
+        const block = NARRATIVE_BLOCKS.find(b => b.id === blockId);
+        if (block) {
+          setCurrentTime(block.durationStart);
+          setActiveBlock(block);
+          setTriggeredPauses(prev => prev.filter(p => p < block.durationStart));
+          setIsPlaying(true);
+          audioInstance.stop();
+          audioInstance.start(block.id, 0);
+        }
+      }
+    };
+
     window.addEventListener('open-storyplayer-menu', handleOpenMenu);
-    return () => window.removeEventListener('open-storyplayer-menu', handleOpenMenu);
+    window.addEventListener('storyplayer-start-session', handleStartSession);
+    window.addEventListener('storyplayer-skip-to-scene', handleSkipToScene);
+
+    return () => {
+      window.removeEventListener('open-storyplayer-menu', handleOpenMenu);
+      window.removeEventListener('storyplayer-start-session', handleStartSession);
+      window.removeEventListener('storyplayer-skip-to-scene', handleSkipToScene);
+    };
   }, []);
   
   // Visual effects overlays
@@ -175,7 +318,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
       if (isPlaying) {
         setCurrentTime(prev => {
           const nextTime = prev + delta * playbackRate;
-          const totalDuration = 455; // 7:35 minutes
+          const totalDuration = 505; // 8:25 minutes
 
           if (nextTime >= totalDuration) {
             setIsPlaying(false);
@@ -257,6 +400,34 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
     }
   }, [currentTime, activeBlock, triggeredPauses, isPlaying, congratulationsBlock]);
 
+  // Monitor climax state for the final 15 seconds of block 8 or 9
+  useEffect(() => {
+    if ((activeBlock.id === 8 || activeBlock.id === 9) && isPlaying) {
+      const remaining = activeBlock.durationEnd - currentTime;
+      if (remaining <= 15 && remaining > 0) {
+        setIsFinalClimax(true);
+        // Periodically spawn beautiful particles to create a beautiful final magical environment
+        if (Math.random() < 0.2) {
+          spawnParticles(4);
+        }
+      } else {
+        setIsFinalClimax(false);
+      }
+    } else {
+      setIsFinalClimax(false);
+    }
+  }, [currentTime, activeBlock, isPlaying]);
+
+  // Trigger magical celebration effects on block completions
+  useEffect(() => {
+    if (congratulationsBlock) {
+      spawnParticles(30);
+      try {
+        audioInstance.playDrip(true);
+      } catch (e) {}
+    }
+  }, [congratulationsBlock]);
+
   const handleContinueNextBlock = () => {
     if (!congratulationsBlock) return;
 
@@ -325,7 +496,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
     const rect = timelineRef.current.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const percentage = Math.max(0, Math.min(1, clickX / rect.width));
-    const newTime = percentage * 455; // 455 total seconds (7:35)
+    const newTime = percentage * 505; // 505 total seconds (8:25)
 
     setCurrentTime(newTime);
 
@@ -364,23 +535,16 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
     timelineRef.current?.releasePointerCapture(e.pointerId);
   };
 
-  const activePercent = (currentTime / 455) * 100;
+  const activePercent = (currentTime / 505) * 100;
 
   if (showWelcomeScreen) {
-    const isSessionStarted = currentTime > 0;
+    // Funtionality completely fused into the single light-themed FacilitatorWorkspace dashboard
+    return null;
+  }
 
-    // Ritmica audio trigger check
-    const triggerAudioTest = () => {
-      // Plays deep Bom and a droplet sequence
-      audioInstance.playBom();
-      setTimeout(() => audioInstance.playDrip(true), 200);
-      setTimeout(() => audioInstance.playDrip(false), 400);
-      setTimeout(() => audioInstance.playBom(), 600);
-      
-      setSoundTestSuccess(true);
-      setTimeout(() => setSoundTestSuccess(false), 3500);
-    };
-
+  const renderObsoleteWelcome = () => {
+    const isSessionStarted = false;
+    const triggerAudioTest = () => {};
     return (
       <div id="dalcroze-storyplayer-welcome" className="bg-neutral-950 border border-neutral-800 rounded-xl p-6 shadow-2xl flex flex-col justify-between text-white relative overflow-hidden min-h-[640px] w-full">
         {/* Glow ambient background elements representing Totem Sol & Agua */}
@@ -907,6 +1071,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                               {block.id === 6 && "👣"}
                               {block.id === 7 && "☀️"}
                               {block.id === 8 && "🌍"}
+                              {block.id === 9 && "🌸"}
                             </span>
                           </div>
                           
@@ -966,16 +1131,16 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
         </div>
       </div>
     );
-  }
+  };
 
   return (
-    <div id="dalcroze-storyplayer-main" className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-neutral-900 text-white rounded-xl overflow-hidden p-1 min-h-[580px]">
+    <div id="dalcroze-storyplayer-main" className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-slate-150/40 text-slate-800 rounded-xl overflow-hidden p-1 min-h-[580px]">
       
-      {/* 8-BLOCKS COMPREHENSIVE ROADMAP (TOP BAR) */}
-      <div id="narrative-blocks-flow-roadmap" className="lg:col-span-12 bg-neutral-950 p-4 rounded-lg flex flex-wrap gap-2 justify-between items-center border border-neutral-800">
+      {/* 9-BLOCKS COMPREHENSIVE ROADMAP (TOP BAR) */}
+      <div id="narrative-blocks-flow-roadmap" className="lg:col-span-12 bg-white p-4 rounded-lg flex flex-wrap gap-2 justify-between items-center border border-slate-200 shadow-sm">
         <div className="flex items-center gap-2">
           <Sparkles className="text-amber-500 w-5 h-5 animate-pulse" />
-          <h3 className="text-sm font-semibold tracking-wide text-neutral-300">Ruta de Euritmia (8 Bloques - 7:35 min)</h3>
+          <h3 className="text-sm font-semibold tracking-wide text-slate-705 text-slate-700">Ruta de Euritmia (9 Bloques - 8:25 min)</h3>
         </div>
         <div className="flex flex-wrap gap-1.5">
           {NARRATIVE_BLOCKS.map(block => {
@@ -985,12 +1150,13 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
               <button
                 key={block.id}
                 onClick={() => handleSkipToBlock(block.id)}
+                style={block.id === 1 ? { backgroundColor: '#af7cec', borderColor: '#e2e8f0', color: '#ffffff' } : undefined}
                 className={`px-2.5 py-1.5 text-xs rounded transition-all duration-300 font-medium flex items-center gap-1 border ${
                   isActive
-                    ? 'bg-amber-500 text-neutral-950 border-amber-400 font-semibold shadow-lg shadow-amber-500/15 scale-105'
+                    ? 'bg-amber-500 text-neutral-950 border-amber-400 font-semibold shadow-md scale-105'
                     : isPassed
-                    ? 'bg-neutral-800/80 text-amber-500 border-neutral-700'
-                    : 'bg-neutral-900 text-neutral-500 border-neutral-800 hover:border-neutral-700'
+                    ? 'bg-amber-50 text-amber-600 border-amber-200'
+                    : 'bg-white text-slate-400 border-slate-200 hover:border-slate-300 shadow-sm'
                 }`}
               >
                 <span className="opacity-80 font-bold">{block.id}</span>
@@ -1009,12 +1175,22 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
         {/* PHYSICAL STAGE */}
         <div
           id="teatrillo-marionette-stage-frame"
-          className="relative aspect-video w-full rounded-xl border-4 border-amber-950 bg-neutral-950 overflow-hidden flex flex-col justify-between shadow-2xl"
+          className="relative aspect-video w-full rounded-xl border-4 border-amber-950 overflow-hidden flex flex-col justify-between shadow-2xl"
           style={{
-            backgroundImage: "radial-gradient(circle at center, #26211e 0%, #0d0c0b 100%)",
-            boxShadow: "inset 0 0 80px rgba(0,0,0,0.9)"
+            ...getTeatrilloBackgroundStyle(),
+            boxShadow: "inset 0 0 85px rgba(0,0,0,0.92)"
           }}
         >
+          {/* Cardboard/Paper noise texture overlay for apparent natural puppet theater craft depth */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.05] z-10" xmlns="http://www.w3.org/2000/svg">
+            <filter id="paper-noise">
+              <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" stitchTiles="stitch" />
+              <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" />
+              <feComposite operator="in" in2="SourceGraphic" />
+            </filter>
+            <rect width="100%" height="100%" filter="url(#paper-noise)" />
+          </svg>
+
           {/* Lightning Storm Flash Overlay */}
           <div
             className={`absolute inset-0 z-40 bg-purple-700/60 pointer-events-none transition-opacity duration-75 mix-blend-color-dodge ${
@@ -1096,10 +1272,258 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
             </motion.div>
           ))}
 
+          {/* RENDER POETIC ELEVATION PARTICLES (MOMENTO 1 & MOMENTO 2) */}
+          {particles.map(p => (
+            <motion.div
+              key={p.id}
+              className="absolute text-2xl select-none z-20 pointer-events-none"
+              style={{ left: `${p.x}%`, top: `${p.y}%` }}
+              initial={{ y: 0, opacity: 1, scale: p.scale }}
+              animate={{ y: -180, opacity: 0, x: [0, (Math.random() > 0.5 ? 25 : -25)] }}
+              transition={{ duration: 2.3, ease: "easeOut" }}
+            >
+              {p.char}
+            </motion.div>
+          ))}
+
+          {/* CLIMAX TYPEWRITER OVERLAY END EVENT (MOMENTO 3) */}
+          {isFinalClimax && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="absolute inset-0 bg-black/55 z-40 flex flex-col justify-center items-center font-sans pointer-events-none"
+            >
+              <motion.h2 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.2, ease: "easeOut" }}
+                className="text-4xl font-extrabold text-[#FFD700] text-center tracking-tight drop-shadow-lg"
+              >
+                ¡El Ritmo Regresó!
+              </motion.h2>
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.2, duration: 1 }}
+                className="text-base text-neutral-200 mt-2 font-bold drop-shadow-md text-center max-w-sm"
+              >
+                Gracias por ayudar a Adaggio
+              </motion.p>
+            </motion.div>
+          )}
+
+          {/* PARTE 4 - COMPONENTE 1: BARRA DE PROGRESO */}
+          <div className="absolute top-12 left-6 z-30 flex gap-1.5">
+            {[
+              { id: 2, name: "Tierra", color: "#FF8C00", icon: "🌱" },
+              { id: 3, name: "Agua", color: "#40E0D0", icon: "💧" },
+              { id: 4, name: "Viento", color: "#E1F6FF", icon: "☁️" },
+              { id: 5, name: "Trueno", color: "#7B68EE", icon: "⚡" },
+              { id: 7, name: "Sol", color: "#FFD700", icon: "⭐" },
+            ].map((totem) => {
+              const activeId = activeBlock.id;
+              let isActive = false;
+              let isCompleted = false;
+
+              if (totem.id === 2) {
+                isActive = activeId === 2;
+                isCompleted = activeId > 2;
+              } else if (totem.id === 3) {
+                isActive = activeId === 3;
+                isCompleted = activeId > 3;
+              } else if (totem.id === 4) {
+                isActive = activeId === 4;
+                isCompleted = activeId > 4;
+              } else if (totem.id === 5) {
+                isActive = activeId === 5 || activeId === 6;
+                isCompleted = activeId > 6;
+              } else if (totem.id === 7) {
+                isActive = activeId === 7 || activeId === 8;
+                isCompleted = activeId > 8 || (activeId === 8 && currentTime >= 450);
+              }
+
+              return (
+                <motion.div
+                  key={totem.id}
+                  className={`relative w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs select-none shadow transition-all duration-300 border ${
+                    isActive 
+                      ? "border-white scale-110 shadow-lg" 
+                      : isCompleted 
+                      ? "opacity-60 border font-normal" 
+                      : "opacity-30 border-dashed border-gray-600"
+                  }`}
+                  style={{
+                    backgroundColor: isActive || isCompleted ? totem.color : "#1a1a1a",
+                    borderColor: isActive ? "#ffffff" : isCompleted ? totem.color : "#696969",
+                    color: isActive || isCompleted ? "#000000" : "#cccccc"
+                  }}
+                  animate={isActive ? { scale: [1, 1.1, 1] } : {}}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                >
+                  {isCompleted ? (
+                    <span className="text-[11px] text-black font-black">✓</span>
+                  ) : (
+                    <span className="text-xs">{totem.icon}</span>
+                  )}
+                  {isActive && (
+                    <span className="absolute left-1/2 -translate-x-1/2 top-10 bg-black/90 text-[7px] font-mono text-white px-1 py-0.5 rounded leading-none truncate whitespace-nowrap">
+                      {totem.name}
+                    </span>
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* PARTE 4 - COMPONENTE 2: ÍCONO DE ESTADO */}
+          {(() => {
+            const isEscucha = activeBlock.stateType === 'NARRATIVO' || activeBlock.stateType === 'DESCANSO' || activeBlock.stateType === 'CONCLUSIÓN';
+            return (
+              <motion.div
+                className={`absolute top-12 right-6 z-30 w-[52px] h-[52px] rounded-full border-[3px] border-white flex flex-col justify-center items-center shadow-lg cursor-pointer ${
+                  isEscucha ? "bg-neutral-500" : "bg-emerald-600"
+                }`}
+                animate={{
+                  scale: isPlaying ? [1, 1.04, 1] : 1,
+                  rotate: isEscucha ? 0 : 360
+                }}
+                transition={{
+                  scale: { repeat: Infinity, duration: 2.5, ease: "easeInOut" },
+                  rotate: { type: "spring", stiffness: 70 }
+                }}
+                title={isEscucha ? "Momento de ESCUCHAR (Quietud)" : "Momento de ACCIÓN (Movimiento)"}
+              >
+                {isEscucha ? (
+                  <span className="text-xl" title="Escucha Grupal">👂</span>
+                ) : (
+                  <span className="text-xl" title="Acción Física">🏃</span>
+                )}
+                <span className="text-[6px] uppercase font-bold text-white tracking-widest leading-none mt-0.5 font-sans">
+                  {isEscucha ? "Escucha" : "Acción"}
+                </span>
+              </motion.div>
+            );
+          })()}
+
+          {/* PARTE 4 - COMPONENTE 3: EQUIVALENCIA ACTIVA (FADE IN/OUT BASED ON ACCIÓN) */}
+          <AnimatePresence>
+            {(activeBlock.stateType === 'ACCIÓN' || activeBlock.stateType === 'ACCIÓN_DIRECCIÓN') && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 0.9, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.5 }}
+                className="absolute bottom-20 left-6 z-30 w-[200px] h-[72px] bg-white/95 text-black rounded-[10px] p-2 flex items-center justify-between border border-white shadow-xl"
+              >
+                {/* Sonido */}
+                <div className="flex flex-col items-center justify-center w-[40%] text-center">
+                  <span className="text-lg select-none">
+                    {activeBlock.id === 2 && "🥁"}
+                    {activeBlock.id === 3 && "🔔"}
+                    {activeBlock.id === 4 && "🌬️"}
+                    {activeBlock.id === 5 && "⚡"}
+                    {activeBlock.id === 6 && "⚡"}
+                    {activeBlock.id === 7 && "🎺"}
+                  </span>
+                  <span className="text-[8px] uppercase tracking-wide text-zinc-600 leading-none font-bold">
+                    {activeBlock.id === 2 && "Bombo"}
+                    {activeBlock.id === 3 && "Agudo"}
+                    {activeBlock.id === 4 && "Silbido"}
+                    {activeBlock.id === 5 && "Rayo"}
+                    {activeBlock.id === 6 && "Rayo"}
+                    {activeBlock.id === 7 && "Marcha"}
+                  </span>
+                </div>
+
+                {/* Arrow */}
+                <span className="text-zinc-500 font-extrabold text-xs w-[20%] text-center">➔</span>
+
+                {/* Movimiento */}
+                <div className="flex flex-col items-center justify-center w-[40%] text-center">
+                  <span className="text-lg select-none animate-bounce">
+                    {activeBlock.id === 2 && "👣"}
+                    {activeBlock.id === 3 && "🙋"}
+                    {activeBlock.id === 4 && "👐"}
+                    {activeBlock.id === 5 && "🫨"}
+                    {activeBlock.id === 6 && "🗿"}
+                    {activeBlock.id === 7 && "🦘"}
+                  </span>
+                  <span className="text-[8px] uppercase tracking-wide text-zinc-600 leading-none font-bold">
+                    {activeBlock.id === 2 && "Pisada"}
+                    {activeBlock.id === 3 && "Brazo ↑"}
+                    {activeBlock.id === 4 && "Brazos"}
+                    {activeBlock.id === 5 && "Temblar"}
+                    {activeBlock.id === 6 && "Estatua"}
+                    {activeBlock.id === 7 && "Salto"}
+                  </span>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* PARTE 4 - COMPONENTE 4: MENSAJE PARA EL FACILITADOR (FADE IN NEAR PAUSES) */}
+          {(() => {
+            const containsPauseNear = activeBlock.suggestedPausas.some(pausa => {
+              const globalPValue = activeBlock.durationStart + pausa.time;
+              return currentTime >= globalPValue - 4 && currentTime < globalPValue + 4;
+            });
+
+            if (!containsPauseNear) return null;
+
+            let messageText = "⚠ PREPARACIÓN: Alistar el espacio de juego";
+            if (activeBlock.id === 2) messageText = "⚠ PREPARACIÓN: Confirmar que todos estén de pie";
+            else if (activeBlock.id === 3) messageText = "⚠ DISTRIBUIR: 1 Pañuelo azul por estudiante";
+            else if (activeBlock.id === 4) messageText = "⚠ MOVIMIENTO: Brazos frente al pecho";
+            else if (activeBlock.id === 6) messageText = "⚠ OBSERVACIÓN: ¿Se congelan rápidamente?";
+            else if (activeBlock.id === 7) messageText = "⚠ SEGURIDAD: Sostener bastón con dos manos";
+
+            return (
+              <motion.div
+                initial={{ y: 55, opacity: 0 }}
+                animate={{ y: 0, opacity: 0.95 }}
+                exit={{ y: 55, opacity: 0 }}
+                className="absolute bottom-20 left-1/2 -translate-x-1/2 z-30 w-[410px] h-[50px] bg-[#FFC107] text-neutral-950 font-sans font-black text-xs uppercase rounded-lg border-t-2 border-b-2 border-black flex items-center px-4 gap-2 shadow-2xl"
+              >
+                <span className="text-lg">🖐️</span>
+                <span className="text-center font-bold tracking-tight text-[10px] leading-snug flex-1">
+                  {messageText}
+                </span>
+              </motion.div>
+            );
+          })()}
+
+          {/* PARTE 4 - COMPONENTE 5: TEMPORIZADOR OPCIONAL */}
+          {(() => {
+            const blockRemaining = activeBlock.durationEnd - currentTime;
+            const mins = Math.floor(blockRemaining / 60);
+            const secs = Math.floor(blockRemaining % 60);
+            const formattedTime = `${mins}:${secs.toString().padStart(2, '0')}`;
+            
+            let colorBg = "bg-neutral-800/80 border border-neutral-700 text-white";
+            if (blockRemaining < 30) {
+              colorBg = "bg-red-600/80 border border-red-500 text-white animate-pulse";
+            } else if (blockRemaining < 60) {
+              colorBg = "bg-yellow-500/80 border border-yellow-400 text-neutral-955";
+            }
+
+            return (
+              <div className={`absolute bottom-20 right-6 z-30 w-11 h-11 rounded-full flex flex-col justify-center items-center shadow-lg backdrop-blur-sm text-[9.5px] font-mono font-black ${colorBg}`}>
+                <span className="leading-none">{formattedTime}</span>
+                <span className="text-[5.5px] uppercase font-bold tracking-widest leading-none mt-0.5 opacity-80">Rem</span>
+              </div>
+            );
+          })()}
+
           {/* ACTIVE ADAGGIO PUPPET IN STAGE CENTER */}
           <div id="marionette-adaggio-centerfold" className="flex-1 flex justify-center items-end pb-4 relative z-10 mt-10">
             <AdaggioPuppet
-              animationState={activeBlock.adaggioAnimationState}
+              animationState={
+                isFinalClimax 
+                  ? "bow" 
+                  : congratulationsBlock 
+                  ? "bow" 
+                  : activeBlock.adaggioAnimationState
+              }
               isElectrocuting={activeBlock.id === 5 && isPlaying}
             />
 
@@ -1126,7 +1550,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
             <p className="text-amber-500 text-[10.5px] font-bold uppercase tracking-widest font-mono">
               Narrador (Escucha Grupal)
             </p>
-            <p className="text-gray-100 text-xs sm:text-sm text-center font-sans tracking-wide leading-relaxed max-w-xl">
+            <p className="text-gray-100 text-[13px] text-center font-sans tracking-wide leading-relaxed max-w-xl">
               "{activeBlock.narratorLines}"
             </p>
           </div>
@@ -1141,7 +1565,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
             <span className="text-[10px] uppercase font-bold text-amber-500 tracking-wider">
               {activeBlock.name} — {activeBlock.title}
             </span>
-            <span>7:35</span>
+            <span>8:25</span>
           </div>
 
           {/* Scrub slider bar */}
@@ -1168,7 +1592,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
               <div
                 key={idx}
                 className="absolute w-1.5 h-full bg-red-600 z-10 pointer-events-none"
-                style={{ left: `${(point / 455) * 100}%` }}
+                style={{ left: `${(point / 505) * 100}%` }}
                 title="Pausa Pedagógica Sugerida"
               />
             ))}
@@ -1266,14 +1690,14 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
       <div id="mediation-companion-column" className="lg:col-span-12 xl:col-span-5 flex flex-col gap-4 h-full">
         
         {/* TAB CONTROLLER DECK FOR HIGH-PRECISION WIREFRAME CONSOLE */}
-        <div className="flex flex-wrap gap-1 bg-neutral-950 p-1 rounded-xl border border-neutral-800 text-[11px] font-mono">
+        <div className="flex flex-wrap gap-1 bg-white p-1 rounded-xl border border-slate-200 shadow-sm text-[11px] font-mono">
           <button
             type="button"
             onClick={() => setRightActiveTab('guide')}
             className={`flex-1 min-w-[70px] py-1.5 rounded-lg transition-all flex flex-col items-center justify-center gap-1 border border-transparent ${
               rightActiveTab === 'guide'
                 ? 'bg-amber-500 text-neutral-950 font-bold border-amber-400'
-                : 'text-neutral-400 hover:text-white hover:bg-neutral-900 border-transparent'
+                : 'text-slate-500 hover:text-slate-850 hover:bg-slate-50 border-transparent'
             }`}
             title="Guía Pedagógica y Observables en Vivo"
           >
@@ -1287,7 +1711,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
             className={`flex-1 min-w-[70px] py-1.5 rounded-lg transition-all flex flex-col items-center justify-center gap-1 border border-transparent ${
               rightActiveTab === 'prep'
                 ? 'bg-amber-500 text-neutral-950 font-bold border-amber-400'
-                : 'text-neutral-400 hover:text-white hover:bg-neutral-900 border-transparent'
+                : 'text-slate-500 hover:text-slate-850 hover:bg-slate-50 border-transparent'
             }`}
             title="Lista de Alistamiento Físico de Aula y Sonos Sandbox"
           >
@@ -1301,7 +1725,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
             className={`flex-1 min-w-[70px] py-1.5 rounded-lg transition-all flex flex-col items-center justify-center gap-1 border border-transparent ${
               rightActiveTab === 'map'
                 ? 'bg-amber-500 text-neutral-950 font-bold border-amber-400'
-                : 'text-neutral-400 hover:text-white hover:bg-neutral-900 border-transparent'
+                : 'text-slate-500 hover:text-slate-850 hover:bg-slate-50 border-transparent'
             }`}
             title="Distribución Geográfica del Aula Metodológica 3x3"
           >
@@ -1315,7 +1739,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
             className={`flex-1 min-w-[70px] py-1.5 rounded-lg transition-all flex flex-col items-center justify-center gap-1 border border-transparent ${
               rightActiveTab === 'bitacora'
                 ? 'bg-amber-500 text-neutral-950 font-bold border-amber-400'
-                : 'text-neutral-400 hover:text-white hover:bg-neutral-900 border-transparent'
+                : 'text-slate-500 hover:text-slate-850 hover:bg-slate-50 border-transparent'
             }`}
             title="Registro de Bitácora y Guardado de Historial en LocalStorage"
           >
@@ -1329,7 +1753,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
             className={`flex-1 min-w-[70px] py-1.5 rounded-lg transition-all flex flex-col items-center justify-center gap-1 border border-transparent ${
               rightActiveTab === 'pedagogy'
                 ? 'bg-amber-500 text-neutral-950 font-bold border-amber-400'
-                : 'text-neutral-400 hover:text-white hover:bg-neutral-900 border-transparent'
+                : 'text-slate-500 hover:text-slate-850 hover:bg-slate-50 border-transparent'
             }`}
             title="Soporte y Fundamentación Metodológica Dalcroze"
           >
@@ -1342,50 +1766,50 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
         {rightActiveTab === 'guide' && (
           <div className="flex flex-col gap-4 flex-1">
             {/* ACTIVE PEDAGOGICAL CUE CARD CARD */}
-            <div id="cue-verbal-pulpit" className="bg-neutral-950 border border-yellow-700/30 rounded-xl p-4 flex flex-col gap-3 shadow-md relative overflow-hidden">
+            <div id="cue-verbal-pulpit" className="bg-white border border-slate-200/80 rounded-xl p-4 flex flex-col gap-3 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-yellow-500/10 to-transparent pointer-events-none" />
               
               <div className="flex items-center gap-2 text-left">
                 <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                <h4 className="text-xs uppercase font-bold text-amber-400 font-mono tracking-wider">
+                <h4 className="text-xs uppercase font-bold text-amber-600 font-mono tracking-wider">
                   Guía del Tutor (Ciudad Bolívar Context)
                 </h4>
               </div>
 
-              <div className="bg-neutral-900/60 p-3 rounded-lg border border-neutral-800/80 text-left">
-                <p className="text-[10px] font-mono text-neutral-500 uppercase">Consigna verbal sugerida para vocear en el salón:</p>
-                <p className="text-gray-200 text-xs mt-1.5 italic font-medium leading-relaxed">
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-200/65 text-left">
+                <p className="text-[10px] font-mono text-slate-400 uppercase">Consigna verbal sugerida para vocear en el salón:</p>
+                <p className="text-slate-700 text-xs mt-1.5 italic font-medium leading-relaxed">
                   "{activeBlock.narratorLines.split('.').slice(2).join('.') || activeBlock.narratorLines}"
                 </p>
               </div>
 
               <div className="text-left">
-                <p className="text-[10px] font-mono text-amber-500 uppercase font-black tracking-wider">Acción Física del Tutor/Facilitador:</p>
-                <p className="text-gray-300 text-xs mt-1 leading-relaxed border-l-2 border-amber-600 pl-2.5">
+                <p className="text-[10px] font-mono text-amber-600 uppercase font-black tracking-wider">Acción Física del Tutor/Facilitador:</p>
+                <p className="text-slate-700 text-xs mt-1 leading-relaxed border-l-2 border-amber-600 pl-2.5">
                   💡 {activeBlock.facilitatorCue}
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-[11px] bg-neutral-900 p-2.5 rounded border border-neutral-800/60 text-left">
+              <div className="grid grid-cols-2 gap-2 text-[11px] bg-slate-50 p-2.5 rounded border border-slate-200/60 text-left">
                 <div>
-                  <span className="text-[9.5px] font-mono text-gray-500 block">Objetivo Pedagógico:</span>
-                  <span className="text-gray-300 font-sans">{activeBlock.pedagogicalObjective}</span>
+                  <span className="text-[9.5px] font-mono text-slate-400 block">Objetivo Pedagógico:</span>
+                  <span className="text-slate-600 font-sans">{activeBlock.pedagogicalObjective}</span>
                 </div>
                 <div>
-                  <span className="text-[9.5px] font-mono text-gray-500 block">Concepto Dalcroze:</span>
-                  <span className="text-gray-300 font-sans">{activeBlock.rhythmicConcept}</span>
+                  <span className="text-[9.5px] font-mono text-slate-400 block">Concepto Dalcroze:</span>
+                  <span className="text-slate-600 font-sans">{activeBlock.rhythmicConcept}</span>
                 </div>
               </div>
             </div>
 
             {/* LIVE REAL-TIME OBSERVABLES SCENARIO */}
-            <div id="observables-tracker-box" className="bg-neutral-950 border border-neutral-800 rounded-xl p-3 shadow-lg flex-1 flex flex-col justify-between">
+            <div id="observables-tracker-box" className="bg-white border border-slate-200 rounded-xl p-3 shadow-sm flex-1 flex flex-col justify-between">
               <div>
                 <div className="flex justify-between items-center mb-2.5 text-left">
-                  <h4 className="text-xs font-bold text-neutral-300 tracking-wider font-mono uppercase">
+                  <h4 className="text-xs font-bold text-slate-800 tracking-wider font-mono uppercase">
                     Observables del Bloque {activeBlock.id}
                   </h4>
-                  <span className="text-[10px] text-gray-500">¿Qué observar en los niños?</span>
+                  <span className="text-[10px] text-slate-400">¿Qué observar en los niños?</span>
                 </div>
 
                 <div className="flex flex-col gap-2.5 text-left font-sans">
@@ -1393,25 +1817,25 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                     const currentRating = evaluations.find(e => e.blockId === activeBlock.id)?.[obs.id === 'pulse_sync' || obs.id === 'pitch_discrimination' || obs.id === 'dynamic_scaling' || obs.id === 'sudden_contrast' || obs.id === 'stealth_pulse_walk' || obs.id === 'accent_jump' ? 'rhythmSinc' : 'understanding'] || 3;
                     
                     return (
-                      <div key={obs.id} className="bg-neutral-900/40 p-2.5 rounded-lg border border-neutral-800/80 flex flex-col gap-1 hover:border-neutral-700/50 transition-all font-sans">
+                      <div key={obs.id} className="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col gap-1 hover:border-slate-300 transition-all font-sans">
                         <div>
-                          <span className="text-xs font-semibold text-gray-100 flex items-center gap-1.5">
+                          <span className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                             <CheckSquare className="w-3.5 h-3.5 text-amber-500" />
                             {obs.label}
                           </span>
-                          <p className="text-[11px] text-gray-400 mt-1 pl-5 leading-normal font-sans">
+                          <p className="text-[11px] text-slate-500 mt-1 pl-5 leading-normal font-sans">
                             {obs.description}
                           </p>
                         </div>
 
                         {/* Quick Evaluators scale */}
-                        <div className="flex justify-between items-center mt-1.5 pt-1.5 border-t border-neutral-800/40 pl-5">
-                          <span className="text-[9.5px] font-mono text-gray-500 uppercase">Logro del grupo:</span>
+                        <div className="flex justify-between items-center mt-1.5 pt-1.5 border-t border-slate-200 pl-5">
+                          <span className="text-[9.5px] font-mono text-slate-400 uppercase">Logro del grupo:</span>
                           <div className="flex gap-1 font-sans">
                             {[
-                              { val: 1, label: 'Bajo', color: 'hover:bg-red-500/10 hover:text-red-400', activeCol: 'bg-red-950/80 text-red-400 border-red-900/50' },
-                              { val: 2, label: 'Medio', color: 'hover:bg-amber-500/10 hover:text-amber-400', activeCol: 'bg-amber-950/80 text-amber-400 border-amber-900/50' },
-                              { val: 3, label: 'Excelente', color: 'hover:bg-emerald-500/10 hover:text-emerald-400', activeCol: 'bg-emerald-950/80 text-emerald-400 border-emerald-900/50' }
+                              { val: 1, label: 'Bajo', color: 'hover:bg-red-50 hover:text-red-600', activeCol: 'bg-red-50 text-red-600 border-red-250' },
+                              { val: 2, label: 'Medio', color: 'hover:bg-amber-50 hover:text-amber-600', activeCol: 'bg-amber-50 text-amber-600 border-amber-250' },
+                              { val: 3, label: 'Excelente', color: 'hover:bg-emerald-50 hover:text-emerald-600', activeCol: 'bg-emerald-50 text-emerald-600 border-emerald-250' }
                             ].map(rating => {
                               const isSel = currentRating === rating.val;
                               const field = obs.id === 'pulse_sync' || obs.id === 'pitch_discrimination' || obs.id === 'dynamic_scaling' || obs.id === 'sudden_contrast' || obs.id === 'stealth_pulse_walk' || obs.id === 'accent_jump' ? 'rhythmSinc' : 'understanding';
@@ -1424,7 +1848,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                                   className={`text-[9.5px] px-1.5 py-0.5 rounded transition-all border font-medium ${
                                     isSel
                                       ? rating.activeCol
-                                      : 'bg-neutral-950 text-neutral-400 border-neutral-800 ' + rating.color
+                                      : 'bg-white text-slate-400 border-slate-200 ' + rating.color
                                   }`}
                                 >
                                   {rating.label}
@@ -1453,7 +1877,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                     );
                   }}
                   placeholder="Ej. Sincronía ideal, se cansaron hacia el final, precisó pausas de agua, etc..."
-                  className="w-full text-xs p-2 rounded bg-neutral-900 border border-neutral-800 text-white placeholder-gray-600 focus:outline-none focus:border-amber-500 h-14 resize-none font-sans"
+                  className="w-full text-xs p-2 rounded bg-slate-50 border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 h-14 resize-none font-sans"
                 />
               </div>
             </div>
@@ -1462,17 +1886,17 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
 
         {/* TAB 2: CLASSROOM PREP LIST & SOUND SANDBOX TRIGGER BOARD */}
         {rightActiveTab === 'prep' && (
-          <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-3.5 flex flex-col gap-4 shadow-lg flex-1">
+          <div className="bg-white border border-slate-200 rounded-xl p-3.5 flex flex-col gap-4 shadow-sm flex-1">
             
             {/* SCENIC CHECKLIST INSIDE TAB */}
             <div className="text-left font-sans">
               <div className="flex items-center gap-1.5 mb-2 font-mono">
-                <ClipboardList className="text-amber-500 w-4 h-4" />
-                <h4 className="text-xs font-bold uppercase tracking-wide text-gray-200">
+                <ClipboardList className="text-amber-550 w-4 h-4 text-amber-500" />
+                <h4 className="text-xs font-bold uppercase tracking-wide text-slate-750 text-slate-800">
                   Lista de Alistamiento Físico de Aula
                 </h4>
               </div>
-              <p className="text-[11px] text-gray-400 mb-2 leading-relaxed">
+              <p className="text-[11px] text-slate-500 mb-2 leading-relaxed font-sans">
                 Marca estas verificaciones necesarias en el salón de la fundación antes o durante la reproducción:
               </p>
 
@@ -1481,15 +1905,15 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                 <div
                   onClick={() => setCheckedScarves(!checkedScarves)}
                   className={`p-2 rounded-lg border cursor-pointer select-none transition-all flex items-center gap-2 ${
-                    checkedScarves ? 'bg-emerald-950/20 border-emerald-600/50 text-emerald-400' : 'bg-neutral-900 border-neutral-800 text-neutral-400 hover:bg-neutral-850'
+                    checkedScarves ? 'bg-emerald-50 border-emerald-250 text-emerald-600' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'
                   }`}
                 >
-                  <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center font-mono text-[9px] ${checkedScarves ? 'bg-emerald-600 text-neutral-950 font-bold border-transparent' : 'border-neutral-700'}`}>
+                  <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center font-mono text-[9px] ${checkedScarves ? 'bg-emerald-500 text-white font-bold border-transparent' : 'border-slate-300'}`}>
                     {checkedScarves ? '✓' : ''}
                   </div>
                   <div className="truncate font-sans">
-                    <span className="text-[10px] font-semibold block leading-tight text-neutral-200">15 Pañuelos</span>
-                    <span className="text-[8.5px] text-gray-500 block leading-tight">Material Agua (Azules)</span>
+                    <span className="text-[10px] font-bold block leading-tight text-slate-700">15 Pañuelos</span>
+                    <span className="text-[8.5px] text-slate-400 block leading-tight">Material Agua (Azules)</span>
                   </div>
                 </div>
 
@@ -1497,15 +1921,15 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                 <div
                   onClick={() => setCheckedSticks(!checkedSticks)}
                   className={`p-2 rounded-lg border cursor-pointer select-none transition-all flex items-center gap-2 ${
-                    checkedSticks ? 'bg-emerald-950/20 border-emerald-600/50 text-emerald-400' : 'bg-neutral-900 border-neutral-800 text-neutral-450 hover:bg-neutral-850'
+                    checkedSticks ? 'bg-emerald-50 border-emerald-250 text-emerald-600' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'
                   }`}
                 >
-                  <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center font-mono text-[9px] ${checkedSticks ? 'bg-emerald-600 text-neutral-950 font-bold border-transparent' : 'border-neutral-700'}`}>
+                  <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center font-mono text-[9px] ${checkedSticks ? 'bg-emerald-500 text-white font-bold border-transparent' : 'border-slate-300'}`}>
                     {checkedSticks ? '✓' : ''}
                   </div>
-                  <div className="truncate font-sans font-sans">
-                    <span className="text-[10px] font-semibold block leading-tight text-neutral-200">15 Bastones</span>
-                    <span className="text-[8.5px] text-gray-500 block leading-tight">Material Sol (Bastón)</span>
+                  <div className="truncate font-sans">
+                    <span className="text-[10px] font-bold block leading-tight text-slate-700">15 Bastones</span>
+                    <span className="text-[8.5px] text-slate-400 block leading-tight">Material Sol (Bastón)</span>
                   </div>
                 </div>
 
@@ -1513,32 +1937,32 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                 <div
                   onClick={() => setCheckedQuiet(!checkedQuiet)}
                   className={`p-2 rounded-lg border cursor-pointer select-none transition-all flex items-center gap-2 col-span-2 ${
-                    checkedQuiet ? 'bg-emerald-950/20 border-emerald-600/50 text-emerald-400' : 'bg-neutral-900 border-neutral-800 text-neutral-450 hover:bg-neutral-850'
+                    checkedQuiet ? 'bg-emerald-50 border-emerald-250 text-emerald-600' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'
                   }`}
                 >
-                  <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center font-mono text-[9px] ${checkedQuiet ? 'bg-emerald-600 text-neutral-950 font-bold border-transparent' : 'border-neutral-700'}`}>
+                  <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center font-mono text-[9px] ${checkedQuiet ? 'bg-emerald-500 text-white font-bold border-transparent' : 'border-slate-300'}`}>
                     {checkedQuiet ? '✓' : ''}
                   </div>
-                  <div className="font-sans">
-                    <span className="text-[10px] font-semibold block leading-tight text-neutral-100">Espacio de 3x3 metros Libre</span>
-                    <span className="text-[8.5px] text-gray-400 block leading-tight mt-0.5">Mover pupitres y sillas para despejar el centro</span>
+                  <div className="font-sans font-sans">
+                    <span className="text-[10px] font-bold block leading-tight text-slate-700">Espacio de 3x3 metros Libre</span>
+                    <span className="text-[8.5px] text-slate-400 block leading-tight mt-0.5">Mover pupitres y sillas para despejar el centro</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* SOUND TEST / SANDBOX CONTROLLERS inside Tab */}
-            <div className="border-t border-neutral-800/80 pt-3 flex flex-col gap-2 text-left font-sans">
+            <div className="border-t border-slate-200 pt-3 flex flex-col gap-2 text-left font-sans">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5 font-mono">
                   <Volume2 className="text-amber-500 w-4 h-4" />
-                  <h4 className="text-xs font-bold uppercase tracking-wide text-gray-200">
+                  <h4 className="text-xs font-bold uppercase tracking-wide text-slate-800">
                     Banco de Sonidos & Sonos Pruebas
                   </h4>
                 </div>
-                <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950/45 text-emerald-400 font-mono border border-emerald-900/35 font-bold uppercase">Sintetizador OK</span>
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-600 font-mono border border-emerald-200 font-bold uppercase">Sintetizador OK</span>
               </div>
-              <p className="text-[11px] text-gray-400 leading-normal mb-1 font-sans">
+              <p className="text-[11px] text-slate-500 leading-normal mb-1 font-sans">
                 Prueba los timbres rítmicos correspondientes a los elementos de la euritmia antes de dar play:
               </p>
 
@@ -1551,23 +1975,23 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                     audioInstance.playPluck(196);
                     setSoundTestSuccess(true);
                   }}
-                  className="bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 p-2 rounded-lg flex flex-col items-start gap-0.5 text-left active:scale-[0.98] transition-transform"
+                  className="bg-slate-50 hover:bg-slate-100 border border-slate-200 p-2 rounded-lg flex flex-col items-start gap-0.5 text-left active:scale-[0.98] transition-all font-sans"
                 >
-                  <span className="text-[10px] font-bold text-amber-500 font-mono flex items-center gap-1 font-sans">🪘 Tierra • Grave</span>
-                  <span className="text-[8.5px] text-neutral-500">Pulsar BOM! rítmico pesado</span>
+                  <span className="text-[10px] font-bold text-amber-600 font-mono flex items-center gap-1 font-sans">🪘 Tierra • Grave</span>
+                  <span className="text-[8.5px] text-slate-400">Pulsar BOM! rítmico pesado</span>
                 </button>
 
                 {/* Water Pitch sounds */}
-                <div className="bg-neutral-900 border border-neutral-800 p-2 rounded-lg flex flex-col gap-1 text-left font-sans">
-                  <span className="text-[10px] font-bold text-cyan-400 font-mono">💧 Agua • Tonos</span>
-                  <div className="grid grid-cols-2 gap-1.5 font-sans">
+                <div className="bg-slate-50 border border-slate-200 p-2 rounded-lg flex flex-col gap-1 text-left font-sans">
+                  <span className="text-[10px] font-bold text-cyan-600 font-mono">💧 Agua • Tonos</span>
+                  <div className="grid grid-cols-2 gap-1.5 font-sans animate-none">
                     <button
                       type="button"
                       onClick={() => {
                         audioInstance.playDrip(true);
                         setSoundTestSuccess(true);
                       }}
-                      className="bg-cyan-950/60 hover:bg-cyan-900 text-[9px] text-cyan-200 py-0.5 rounded font-mono font-bold text-center"
+                      className="bg-cyan-50 hover:bg-cyan-100 text-[9px] text-cyan-700 py-0.5 rounded font-mono font-bold text-center"
                     >
                       Agudo
                     </button>
@@ -1577,7 +2001,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                         audioInstance.playDrip(false);
                         setSoundTestSuccess(true);
                       }}
-                      className="bg-neutral-950 hover:bg-neutral-905 text-[9px] text-gray-300 py-0.5 rounded font-mono font-bold text-center"
+                      className="bg-slate-100 hover:bg-slate-200 text-[9px] text-slate-650 text-slate-600 py-0.5 rounded font-mono font-bold text-center"
                     >
                       Grave
                     </button>
@@ -1594,10 +2018,10 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                     }, 220);
                     setSoundTestSuccess(true);
                   }}
-                  className="bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 p-2 rounded-lg flex flex-col items-start gap-0.5 text-left active:scale-[0.98] transition-transform"
+                  className="bg-slate-50 hover:bg-slate-100 border border-slate-200 p-2 rounded-lg flex flex-col items-start gap-0.5 text-left active:scale-[0.98] transition-all font-sans"
                 >
-                  <span className="text-[10px] font-bold text-neutral-200 font-mono">💨 Viento • Dinámica</span>
-                  <span className="text-[8.5px] text-neutral-500">Arpegio Piano a Forte</span>
+                  <span className="text-[10px] font-bold text-slate-700 font-mono">💨 Viento • Dinámica</span>
+                  <span className="text-[8.5px] text-slate-400">Arpegio Piano a Forte</span>
                 </button>
 
                 {/* Lightning Explosion */}
@@ -1607,10 +2031,10 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                     audioInstance.playLightning();
                     setSoundTestSuccess(true);
                   }}
-                  className="bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 p-2 rounded-lg flex flex-col items-start gap-0.5 text-left active:scale-[0.98] transition-transform"
+                  className="bg-slate-50 hover:bg-slate-100 border border-slate-200 p-2 rounded-lg flex flex-col items-start gap-0.5 text-left active:scale-[0.98] transition-all font-sans"
                 >
-                  <span className="text-[10px] font-bold text-indigo-400 font-mono">⚡ Trueno • Choque</span>
-                  <span className="text-[8.5px] text-neutral-500">Emisión de descarga súbita</span>
+                  <span className="text-[10px] font-bold text-indigo-600 font-mono">⚡ Trueno • Choque</span>
+                  <span className="text-[8.5px] text-slate-400">Emisión de descarga súbita</span>
                 </button>
 
                 {/* Sun military march acento */}
@@ -1621,30 +2045,50 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                     audioInstance.playBom();
                     setSoundTestSuccess(true);
                   }}
-                  className="bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 p-2 rounded-lg flex flex-col items-start gap-0.5 text-left active:scale-[0.98] transition-transform col-span-2 animation-pulse font-sans"
+                  className="bg-slate-50 hover:bg-slate-100 border border-slate-200 p-2 rounded-lg flex flex-col items-start gap-0.5 text-left active:scale-[0.98] transition-all col-span-2 font-sans"
                 >
-                  <span className="text-[10px] font-bold text-yellow-500 font-mono flex items-center justify-between w-full font-mono">
+                  <span className="text-[10px] font-bold text-yellow-600 font-mono flex items-center justify-between w-full font-sans">
                     <span>☀️ Sol • Acento y Marcha 4/4</span>
-                    <span className="text-[7.5px] text-gray-500 font-normal">Bastones</span>
+                    <span className="text-[7.5px] text-slate-400 font-normal">Bastones</span>
                   </span>
-                  <span className="text-[8.5px] text-neutral-500">Pulso militar robusto ideal para saltar y percutir al caer</span>
+                  <span className="text-[8.5px] text-slate-400">Pulso militar robusto ideal para saltar y percutir al caer</span>
                 </button>
               </div>
+            </div>
+
+            {/* MANUAL GROUP CLASSROOM CELEBRATION BUTTON (SIN PUNTOS, SOLO ESFUERZO) */}
+            <div className="border-t border-slate-200 pt-3 flex flex-col gap-2 text-left font-sans">
+              <span className="text-[10px] font-mono font-bold text-slate-405 text-slate-400 uppercase tracking-widest block">Celebración de Participación Colectiva:</span>
+              <button
+                type="button"
+                onClick={() => {
+                  // Trigger magical elevation particles in theater
+                  spawnParticles(25);
+                  // Sound high quality chime water note
+                  try {
+                    audioInstance.playDrip(true);
+                  } catch(e) {}
+                }}
+                className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-neutral-950 font-black px-4 py-3 rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 uppercase font-mono text-xs"
+              >
+                <span>¡Celebrar Participación Grupal 🌸!</span>
+                <span className="text-sm">(Sin Puntos, Solo Esfuerzo)</span>
+              </button>
             </div>
           </div>
         )}
 
         {/* TAB 3: SPATIAL BLUEPRINT MAP 3X3 */}
         {rightActiveTab === 'map' && (
-          <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-3.5 flex flex-col gap-4 shadow-lg flex-1">
+          <div className="bg-white border border-slate-200 rounded-xl p-3.5 flex flex-col gap-4 shadow-sm flex-1">
             <div className="flex items-center gap-1.5 mb-1.5 text-left font-mono">
-              <Map className="text-amber-500 w-4 h-4" />
-              <h4 className="text-xs font-bold uppercase tracking-wider text-gray-200">Plano Geográfico de Aula</h4>
+              <Map className="text-amber-550 w-4 h-4 text-amber-500" />
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800">Plano Geográfico de Aula</h4>
             </div>
 
             {/* Direct Vector schematic graph */}
-            <div className="w-full aspect-video bg-neutral-900/60 rounded-xl border border-neutral-800/80 p-3 pt-4 relative flex flex-col justify-between overflow-hidden shadow-inner font-sans">
-              <div className="text-[8px] font-mono text-amber-500/80 text-center border-b border-neutral-800/40 pb-1 uppercase tracking-wide font-sans">
+            <div className="w-full aspect-video bg-slate-50 rounded-xl border border-slate-200 p-3 pt-4 original-aspect relative flex flex-col justify-between overflow-hidden shadow-inner font-sans">
+              <div className="text-[8px] font-mono text-amber-650 text-center border-b border-slate-200 pb-1 uppercase tracking-wide font-sans">
                 PANTALLA AUDIOVISUAL MULTIMEDIA
               </div>
               
@@ -1657,8 +2101,8 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                   <div className="flex flex-col items-center">
                     <span className="w-5 h-5 rounded-full bg-emerald-600 border border-white text-white font-mono text-[9px] flex items-center justify-center font-bold">N2</span>
                   </div>
-                  <div className="flex flex-col items-center border border-amber-500/20 bg-amber-950/20 p-1 rounded font-sans">
-                    <span className="w-5 h-5 rounded-full bg-amber-500 text-neutral-950 text-[10px] flex items-center justify-center font-bold font-mono">★</span>
+                  <div className="flex flex-col items-center border border-amber-500/20 bg-amber-50 p-1 rounded font-sans">
+                    <span className="w-5 h-5 rounded-full bg-amber-500 text-neutral-905 text-[10px] flex items-center justify-center font-bold font-mono">★</span>
                   </div>
                   <div className="flex flex-col items-center font-sans">
                     <span className="w-5 h-5 rounded-full bg-emerald-600 border border-white text-white font-mono text-[9px] flex items-center justify-center font-bold">N3</span>
@@ -1666,27 +2110,27 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                 </div>
 
                 {/* Facilitator role */}
-                <div className="flex flex-col items-center bg-blue-950/35 border border-blue-900/50 px-1.5 py-0.5 rounded leading-tight">
+                <div className="flex flex-col items-center bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded leading-tight">
                   <span className="w-4 h-4 rounded-full bg-blue-600 text-white font-mono font-bold text-[8.5px] flex items-center justify-center">T</span>
-                  <span className="text-[7px] text-blue-300 font-bold uppercase mt-0.5 font-mono">Tutor</span>
+                  <span className="text-[7px] text-blue-600 font-bold uppercase mt-0.5 font-mono">Tutor</span>
                 </div>
               </div>
 
-              <div className="text-[8px] font-mono text-gray-500 text-center uppercase tracking-wider">
+              <div className="text-[8px] font-mono text-slate-400 text-center uppercase tracking-wider">
                 Dimensiones mínimas: Área libre de 3x3 metros de diámetro
               </div>
             </div>
 
-            <div className="flex flex-col gap-2.5 text-xs text-gray-300 leading-normal font-sans text-left">
+            <div className="flex flex-col gap-2.5 text-xs text-slate-600 leading-normal font-sans text-left">
               <div>
-                <strong className="text-neutral-100 text-[11px] block text-left">Disposición Recomendada de Alumnos:</strong>
-                <p className="text-[10.5px] text-neutral-450 mt-1">
+                <strong className="text-slate-800 text-[11px] block text-left">Disposición Recomendada de Alumnos:</strong>
+                <p className="text-[10.5px] text-slate-500 mt-1">
                   Reúne a los niños en un semicírculo simétrico mirando la pantalla. El tutor se posiciona en un lateral o al frente como modelo rítmico para animar el levantamiento coordinado de talones y brazos.
                 </p>
               </div>
 
-              <div className="p-2.5 bg-neutral-900 border border-neutral-850/60 rounded text-[10px] text-amber-500 font-mono text-left">
-                💡 <span className="font-bold text-gray-250 font-sans">Tip Dalcroze:</span> Si notas cansancio o dispersión del grupo durante la tormenta del Trueno, llévalos al Punto Seguro (★) para hacer respiraciones colectivas lentas.
+              <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded text-[10px] text-amber-600 font-mono text-left">
+                💡 <span className="font-bold text-slate-700 font-sans">Tip Dalcroze:</span> Si notas cansancio o dispersión del grupo durante la tormenta del Trueno, llévalos al Punto Seguro (★) para hacer respiraciones colectivas lentas.
               </div>
             </div>
           </div>
@@ -1862,63 +2306,183 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
 
       {/* DETAILED PEDAGOGICAL SUGGESTED PAUSE FULLSCREEN MODAL OVERLAY */}
       <AnimatePresence>
-        {activePauseContent && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
-          >
+        {activePauseContent && (() => {
+          const details = (() => {
+            switch (activeBlock.id) {
+              case 2:
+                return {
+                  title: "PREPARACIÓN: BLOQUE TIERRA",
+                  borderColor: "border-[#FF8C00]",
+                  barColor: "#FF8C00",
+                  iconEmoji: "🧍",
+                  checks: [
+                    "Confirmar que todos los niños estén de pie.",
+                    "Dividirlos dejando suficiente espacio entre cada uno.",
+                    "Verificar que puedan ver a Adaggio sin obstrucciones."
+                  ],
+                  iconLabel: "Siluetas de niños de pie en círculo amplio",
+                  actionBtnText: "Todos listos ➔ ESPACIO"
+                };
+              case 3:
+                return {
+                  title: "PREPARACIÓN: BLOQUE AGUA",
+                  borderColor: "border-[#40E0D0]",
+                  barColor: "#40E0D0",
+                  iconEmoji: "🧣",
+                  checks: [
+                    "Distribuir 1 pañuelo azul para cada niño.",
+                    "Sugerir sostenerlo estirándolo suavemente.",
+                    "Comprobar que todos los niños tengan su pañuelo listo."
+                  ],
+                  iconLabel: "Mano sosteniendo pañuelo azul ondulante",
+                  actionBtnText: "Pañuelos listos ➔ ESPACIO"
+                };
+              case 4:
+                return {
+                  title: "PREPARACIÓN: BLOQUE VIENTO",
+                  borderColor: "border-[#D1F1FF]",
+                  barColor: "#E1F6FF",
+                  iconEmoji: "👐",
+                  checks: [
+                    "Sugerir soltar temporalmente el pañuelo azul.",
+                    "Demostrar la postura de brazos frente al pecho.",
+                    "Incentivar la imitación de respiración rítmica."
+                  ],
+                  iconLabel: "Brazos de pie en posición inicial",
+                  actionBtnText: "Postura adoptada ➔ ESPACIO"
+                };
+              case 6:
+                return {
+                  title: "AYUDA: CONGELAMIENTO",
+                  borderColor: "border-[#7B68EE]",
+                  barColor: "#7B68EE",
+                  iconEmoji: "🗿",
+                  checks: [
+                    "Practicar el congelamiento estático antes de jugar.",
+                    "Vocalizar: '¡Cuando diga RAYO, todos estatua!'",
+                    "Mantenerse rígido y quieto por 3 segundos enteros.",
+                    "¡Increíble! Continuemos ahora con el video."
+                  ],
+                  iconLabel: "Silueta rígida con estrellas de quietud",
+                  actionBtnText: "Quietud Practicada ➔ ESPACIO"
+                };
+              case 7:
+                return {
+                  title: "PREPARACIÓN: BLOQUE SOL",
+                  borderColor: "border-[#FFD700]",
+                  barColor: "#FFD700",
+                  iconEmoji: "🪵",
+                  checks: [
+                    "Distribuir 1 bastón o palo de madera simulada por niño.",
+                    "Sostener el bastón con ambas manos rítmicamente.",
+                    "Prevenir accidentes: recordar mantener distancia del de al lado.",
+                    "Asegurar que todos los niños tengan su bastón listo."
+                  ],
+                  iconLabel: "Niño sosteniendo bastón vertical con ambas manos",
+                  actionBtnText: "Bastones listos ➔ ESPACIO"
+                };
+              default:
+                return {
+                  title: "PAUSA PEDAGÓGICA REQUERIDA",
+                  borderColor: "border-amber-500",
+                  barColor: "#FFC107",
+                  iconEmoji: "📋",
+                  checks: [
+                    "Enseña el movimiento exagerando alturas o dinámicas.",
+                    "Asegura que todos los niños tengan el material listo."
+                  ],
+                  iconLabel: "Tutor orientando físicamente al grupo escolar",
+                  actionBtnText: "Continuar ➔ ESPACIO"
+                };
+            }
+          })();
+
+          return (
             <motion.div
-              initial={{ scale: 0.9, y: 15 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 15 }}
-              className="bg-neutral-900 border-2 border-amber-500 rounded-2xl w-full max-w-xl p-6 shadow-2xl relative"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60 p-4 backdrop-blur-[2px]"
             >
-              <div className="flex items-center gap-3.5 mb-4 border-b border-neutral-800 pb-3">
-                <div className="p-3 bg-amber-500/10 rounded-full border border-amber-500/35">
-                  <AlertCircle className="text-amber-500 w-6 h-6 animate-pulse" />
+              {/* Central pulsing pause icon behind or above the message card */}
+              <motion.div
+                onClick={() => {
+                  setActivePauseContent(null);
+                  setIsPlaying(true);
+                }}
+                animate={{ scale: [1, 1.08, 1] }}
+                transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
+                className="w-14 h-14 bg-white text-black text-xl font-bold font-mono rounded-full flex items-center justify-center shadow-2xl mb-5 hover:scale-105 active:scale-95 transition-transform duration-150 cursor-pointer"
+                title="Pulsar para reanudar"
+              >
+                ||
+              </motion.div>
+
+              <motion.div
+                initial={{ scale: 0.93, y: 15 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.93, y: 15 }}
+                className="bg-white/95 text-neutral-900 shadow-2xl rounded-[15px] w-full max-w-[600px] p-6 relative border-t-8"
+                style={{ borderTopColor: details.barColor }}
+              >
+                <div className="flex gap-4 items-start mb-4">
+                  {/* Left-side visual illustration */}
+                  <div className="flex flex-col items-center gap-1.5 w-24">
+                    <div className="w-20 h-20 bg-neutral-100 rounded-full border border-neutral-200/50 flex items-center justify-center text-4xl select-none">
+                      {details.iconEmoji}
+                    </div>
+                    {/* Explicative label underneath */}
+                    <span className="text-[7.5px] font-mono text-neutral-400 uppercase text-center font-bold tracking-tight leading-normal">
+                      {details.iconLabel}
+                    </span>
+                  </div>
+
+                  {/* Right side instruction content */}
+                  <div className="flex-1 text-left">
+                    <h2 className="text-xl font-extrabold text-black font-sans leading-tight tracking-tight mb-2 uppercase">
+                      {details.title}
+                    </h2>
+
+                    <p className="text-xs text-neutral-600 font-sans leading-normal mb-4 font-normal">
+                      {activePauseContent}
+                    </p>
+
+                    {/* Core checklist criteria (wcag safe readable contrast) */}
+                    <div className="mb-4 bg-neutral-50 p-3 rounded-lg border border-neutral-200 text-left flex flex-col gap-2">
+                      <span className="text-[9.5px] font-mono font-bold text-neutral-400 uppercase tracking-widest block">Lista de Verificación de Aula:</span>
+                      {details.checks.map((checkpoint, chkIdx) => (
+                        <div key={chkIdx} className="text-xs text-neutral-705 flex items-start gap-1.5 leading-tight font-medium">
+                          <span className="text-emerald-600 font-extrabold select-none">✓</span>
+                          <span>{checkpoint}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-lg font-bold text-amber-500 font-sans uppercase">
-                    Pausa Pedagógica Sugerida (Euritmia)
-                  </h3>
-                  <p className="text-xs text-neutral-400 font-mono">Orientación para facilitar en el aula</p>
+
+                {/* Horizontal Divider */}
+                <div className="border-t border-neutral-100 my-4" />
+
+                {/* Footer and play action */}
+                <div className="flex justify-between items-center bg-neutral-50 p-2.5 rounded-lg border border-neutral-200/50">
+                  <span className="text-[9.5px] font-mono text-neutral-400 leading-none">
+                    🔑 Control: Pulsar <strong>ESPACIO</strong> o botón ▶
+                  </span>
+
+                  <button
+                    onClick={() => {
+                      setActivePauseContent(null);
+                      setIsPlaying(true);
+                    }}
+                    className="bg-neutral-900 border border-neutral-800 text-white hover:bg-black font-black font-sans text-xs uppercase px-5 py-2.5 rounded-lg shadow active:scale-95 transition-all tracking-wide"
+                  >
+                    {details.actionBtnText}
+                  </button>
                 </div>
-              </div>
-
-              {/* Informative description */}
-              <div className="bg-amber-950/20 text-neutral-200 border border-amber-900/40 p-4 rounded-xl mb-6 leading-relaxed text-sm">
-                <p className="font-sans">
-                  {activePauseContent}
-                </p>
-              </div>
-
-              {/* Facilitator reminders before resuming */}
-              <div className="mb-6 flex flex-col gap-2 bg-neutral-950 p-3 rounded-lg border border-neutral-800">
-                <span className="text-[10px] font-mono text-gray-500 uppercase block">Lista de Cotejo Rápida:</span>
-                <span className="text-xs text-gray-300 flex items-center gap-2">
-                  <span className="text-amber-500">✓</span> Enseña el movimiento exagerando las alturas / dinámicas.
-                </span>
-                <span className="text-xs text-gray-300 flex items-center gap-2">
-                  <span className="text-amber-500">✓</span> Asegura que todos los niños tengan el material listo.
-                </span>
-              </div>
-
-              <div className="flex justify-end">
-                <button
-                  onClick={() => {
-                    setActivePauseContent(null);
-                    setIsPlaying(true);
-                  }}
-                  className="bg-gradient-to-r from-amber-600 to-yellow-500 text-neutral-950 font-black px-6 py-3 rounded-xl hover:from-amber-500 hover:to-yellow-400 transition-all text-xs tracking-wider shadow-lg shadow-amber-500/20 hover:scale-105"
-                >
-                  ¡ACOMPAÑAR A NUESTROS NIÑOS Y CONTINUAR!
-                </button>
-              </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
+          );
+        })()}
       </AnimatePresence>
  
       {/* GLORIOUS GAME-LIKE CONGRATULATIONS MODAL */}
@@ -1940,17 +2504,25 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
               <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
               
               <div className="flex items-center gap-3.5 mb-4 border-b border-neutral-800 pb-3">
-                <div className="p-3 bg-emerald-500/15 rounded-full border border-emerald-500/35">
+                <div className="p-3 bg-emerald-500/15 rounded-full border border-emerald-500/35 animate-bounce">
                   <span className="text-3xl leading-none block select-none">
-                    {congratulationsBlock.id === 8 ? "🏆" : "🎉"}
+                    {congratulationsBlock.id >= 8 ? "🏆" : "🎉"}
                   </span>
                 </div>
                 <div>
                   <h3 className="text-lg font-black text-emerald-400 font-sans tracking-tight uppercase leading-snug">
-                    ¡Felicidades, lo lograste!
+                    {congratulationsBlock.id === 9 ? "¡Fin de la Experiencia con Adaggio! 🌸" :
+                     congratulationsBlock.id === 8 ? "¡El Ritmo Universal ha regresado! 🌍" : `¡El Ritmo de la ${
+                      congratulationsBlock.id === 1 ? "Escucha" :
+                      congratulationsBlock.id === 2 ? "Tierra 🌾" :
+                      congratulationsBlock.id === 3 ? "Agua 🌊" :
+                      congratulationsBlock.id === 4 ? "Viento 🌬️" :
+                      congratulationsBlock.id === 5 || congratulationsBlock.id === 6 ? "Quietud ⚡" :
+                      "Sol ☀️"
+                    } ha regresado!`}
                   </h3>
                   <p className="text-[10px] text-neutral-400 font-mono uppercase tracking-wider">
-                    Escena Terminada Con Éxito — Bloque {congratulationsBlock.id}
+                    {congratulationsBlock.id === 9 ? "Logro Absoluto: ¡Mensaje motivador para los niños!" : "Felicidades: El ritmo del elemento ha regresado con éxito"}
                   </p>
                 </div>
               </div>
@@ -1967,6 +2539,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                     {congratulationsBlock.id === 6 && "👣"}
                     {congratulationsBlock.id === 7 && "☀️"}
                     {congratulationsBlock.id === 8 && "🌍"}
+                    {congratulationsBlock.id === 9 && "🌺"}
                   </div>
                   <div>
                     <h4 className="font-bold text-emerald-300 text-sm font-sans mb-1 uppercase tracking-wide">
@@ -1975,25 +2548,26 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                     <p className="text-xs text-neutral-400 italic mb-2">
                       “{congratulationsBlock.title}”
                     </p>
-                    <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed font-sans mt-2">
-                      {congratulationsBlock.id === 1 && "¡Súper comienzo! Has despertado la magia de Adaggio y preparado el salón de euritmia con una escucha grandiosa."}
-                      {congratulationsBlock.id === 2 && "¡Increíble! Lograron sintonizar sus pies con el pulso profundo de la tierra y sembrar al ritmo del BOM."}
-                      {congratulationsBlock.id === 3 && "¡Qué fluidez! Los movimientos altos y bajos con los pañuelos azules sintonizaron el caudal del arroyo con precisión estelar."}
-                      {congratulationsBlock.id === 4 && "¡Magnífico! Controlaron su postura y respiración expandiéndose suavemente de piano a forte como la brisa."}
-                      {congratulationsBlock.id === 5 && "¡Espectacular control! Supieron reaccionar al rayo repentino y sincronizar la sacudida y la quietud."}
-                      {congratulationsBlock.id === 6 && "¡Gran concentración! Caminaron en puntillas de pies y dominaron la marcha silenciosa del sigilo lunar."}
-                      {congratulationsBlock.id === 7 && "¡Insuperable energía! Alzaron sus bastones rústicos de madera coordinando un compás alegre bajo el Sol radiante."}
-                      {congratulationsBlock.id === 8 && "¡LO LOGRARON! Despertaron todos los tótems del ritmo. Adaggio y la Fundación Monte Tabor brillan con alegría eurítmica pública de Ciudad Bolívar."}
+                    <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed font-sans mt-2 font-medium text-justify">
+                      {congratulationsBlock.id === 1 && "¡Súper comienzo! Han despertado la magia de Adaggio y preparado el salón de euritmia con una escucha grandiosa."}
+                      {congratulationsBlock.id === 2 && "¡Increíble esfuerzo! Conseguimos sintonizar los pies de todo el grupo con el pulso profundo de la tierra y sembrar al ritmo del BOM."}
+                      {congratulationsBlock.id === 3 && "¡Qué fluidez! Los movimientos de pañuelos arriba y abajo sintieron el caudal del arroyo con una armonía maravillosa."}
+                      {congratulationsBlock.id === 4 && "¡Magnífico! Controlaron su respiración expandiendo la energía corporal suavemente, de piano a forte, sintiendo el viento."}
+                      {congratulationsBlock.id === 5 && "¡Excelente reacción! Lograron sintonizar la reacción ágil ante el rayo y la calma silenciosa del reposo."}
+                      {congratulationsBlock.id === 6 && "¡Gran concentración grupal! Caminaron en puntillas de pies coordinados, dominando la marcha silenciosa del sigilo nocturno."}
+                      {congratulationsBlock.id === 7 && "¡Insuperable energía colectiva! Alzaron los bastones rústicos de madera coordinando un compás alegre bajo el Sol radiante."}
+                      {congratulationsBlock.id === 8 && "¡LO LOGRARON EN CIUDAD BOLÍVAR! Todos los tótems de la naturaleza brillan. Adaggio y la Fundación Monte Tabor brillan con alegría eurítmica pública, celebrando el puro esfuerzo grupal."}
+                      {congratulationsBlock.id === 9 && "¡LOS CORAZONES BRILAN EN SINTONÍA! Adaggio les susurra una gran verdad: El gran ritmo no estaba dormido en el teatrillo, sino latiendo dentro de cada uno de ustedes. Con sus manos compartiendo amor, sus pies marchando firmes y su alegría compartida, ¡son los custodios de la música y la paz en su comunidad! ¡Felicitaciones pequeños valientes! 🌸"}
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Peer-review reminder check inside the overlay */}
+              {/* Bitácora reminder check inside the overlay */}
               <div className="mb-6 flex flex-col gap-2 bg-neutral-950 p-3 rounded-xl border border-neutral-800">
                 <span className="text-[9.5px] font-mono text-gray-400 uppercase tracking-widest block font-bold">Bitácora para el Facilitador:</span>
-                <p className="text-xs text-neutral-305 leading-relaxed font-sans">
-                  Toma un momento para guardar las calificaciones de <strong>logros del grupo</strong> y registrar tus anotaciones específicas de este bloque en la columna derecha antes de continuar.
+                <p className="text-xs text-neutral-300 leading-relaxed font-sans font-medium">
+                  {congratulationsBlock.id === 9 ? "Han alcanzado el fin de la ruta interactiva. Guarda la bitácora final en la tarjeta de registros." : "Tomen un respiro para celebrar la participación. Guardar las calificaciones cualitativas de logros y esfuerzo del grupo en la columna derecha antes de avanzar."}
                 </p>
               </div>
 
@@ -2002,7 +2576,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
                   onClick={handleContinueNextBlock}
                   className="bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 text-neutral-950 font-black px-6 py-3 rounded-xl transition-all text-xs tracking-wider shadow-lg shadow-emerald-500/20 hover:scale-[1.03] active:scale-95 flex items-center gap-1.5 uppercase font-mono"
                 >
-                  <span>{congratulationsBlock.id === 8 ? "Completar Aventura" : "Iniciar Siguiente Bloque"}</span>
+                  <span>{congratulationsBlock.id === 9 ? "Completar Aventura 🌸" : "Iniciar Siguiente Bloque"}</span>
                   <span className="text-lg leading-none">➔</span>
                 </button>
               </div>

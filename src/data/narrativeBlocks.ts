@@ -191,13 +191,13 @@ export const NARRATIVE_BLOCKS: NarrativeBlock[] = [
   },
   {
     id: 8,
-    name: "BLOQUE 8 — FINAL",
+    name: "BLOQUE 8 — FINAL DE ACCIÓN",
     title: "El ritmo recordado",
     durationStart: 405, // 6:45
     durationEnd: 455, // 7:35 = 455 seconds
     stateType: 'CONCLUSIÓN',
     pedagogicalObjective: "Cierre emocional, integración de conceptos y celebración colectiva.",
-    rhythmicConcept: "Síntesis armónica (descanzo físico, retroalimentación mental y respiración)",
+    rhythmicConcept: "Síntesis armónica (descanso físico, retroalimentación mental y respiración)",
     soundMovementEquivalency: "Marcha triunfal → soltar el bastón → respiraciones lentas simétricas acompañando los brazos libres.",
     physicalMaterials: ["Bastones (se guardan hacia el final)"],
     instrumentProtagonist: "Fusión integradora (guitarra, metalófono, viento y tambores en armonía floreciente)",
@@ -210,5 +210,27 @@ export const NARRATIVE_BLOCKS: NarrativeBlock[] = [
       { id: "calm_respiration", label: "Relajación Final", description: "¿Adquieren con naturalidad el estado de paz, respirando coordinadamente al final?" }
     ],
     hexColors: ["#DAA520", "#32CD32", "#FF69B4"]
+  },
+  {
+    id: 9,
+    name: "BLOQUE 9 — FIN DE LA EXPERIENCIA",
+    title: "Mensaje Motivador de Adaggio",
+    durationStart: 455, // 7:35
+    durationEnd: 505, // 8:25 = 505 seconds
+    stateType: 'CONCLUSIÓN',
+    pedagogicalObjective: "Reforzar positivamente el logro del grupo y fomentar la empatía.",
+    rhythmicConcept: "Relajación pacífica e internalización afectiva del ritmo",
+    soundMovementEquivalency: "Sentarse en semicírculo para recibir un mensaje especial de motivación o celebrar con mímica suave.",
+    physicalMaterials: [],
+    instrumentProtagonist: "Arpa celestial, flauta andina y sonidos ambientales luminosos",
+    narratorLines: "¡Queridos valientes del ritmo! Adaggio se siente inmensamente feliz hoy. Han devuelto el color y la música con cada una de sus pisadas fuertes, con cada suave vuelo de los pañuelos y saltando juntos. Recuerden: la mayor música rítmica del mundo es su sonrisa y cariño. ¡Ustedes son los guardianes de la luz en Ciudad Bolívar! ¡Un enorme y cálido aplauso de corazón para todos!",
+    facilitatorCue: "Sentaos cómodamente en el suelo en semicírculo frente a Adaggio. Dense un fuerte aplauso y un abrazo rítmico grupal.",
+    adaggioAnimationState: "celebration_victory",
+    suggestedPausas: [],
+    observables: [
+      { id: "positive_reflection", label: "Recepción de Mensaje", description: "¿Los niños asimilan el mensaje positivo con sonrisas, atención y gestos de felicidad?" },
+      { id: "peer_empathy", label: "Empatía entre Compañeros", description: "¿Se aplauden y felicitan mutuamente con amabilidad rindiendo homenaje al esfuerzo del grupo?" }
+    ],
+    hexColors: ["#FFD700", "#FF69B4", "#00FFFF"]
   }
 ];

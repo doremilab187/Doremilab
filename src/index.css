@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Rethink+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Rethink+Sans:wght@400;500;600;700;800&family=Baloo+2:wght@700;800&family=Fredoka:wght@600;700&family=Pirata+One&family=MedievalSharp&family=UnifrakturMaguntia&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -13,14 +13,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0d0c0b;
+  background: #ffffff;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3a3530;
+  background: #ffffff;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #FF8C00;
+  background: #af7cec;
 }
