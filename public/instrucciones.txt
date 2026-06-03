@@ -1,0 +1,11 @@
+INSTRUCCIONES PARA EL VIDEO SOUND LOGO
+======================================
+
+Para que el video del logo sonoro se cargue de manera automática, permanente e inmediata (sin tener que cargarlo manualmente cada vez):
+
+1. Sube tu video con el nombre exacto de "sound-logo.mp4"
+2. Colócalo dentro de esta carpeta "public" (es decir: "public/sound-logo.mp4")
+
+Vite servirá el archivo directamente en la ruta raíz "/sound-logo.mp4", y el sistema lo detectará automáticamente al iniciar y durante todas las transiciones del laboratorio.
+
+¡Disfruta Do Re Mi Lab!

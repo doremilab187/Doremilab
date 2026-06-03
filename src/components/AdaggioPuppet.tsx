@@ -297,7 +297,7 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
         {/* Flat Theater Shadows */}
         <ellipse cx="100" cy="225" rx="65" ry="12" fill="#000000" opacity="0.18" />
 
-        {/* --- LEGS & PINS (Cut-out joint points visible) --- */}
+        {/* --- LEGS & PINS (Cute legs with purple diamond-pattern pants) --- */}
         <g id="puppet-legs">
           {/* Left Leg */}
           <motion.g
@@ -311,9 +311,20 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
             transition={{ repeat: Infinity, duration: 0.65, ease: "linear" }}
             style={{ originX: '75px', originY: '190px' }}
           >
-            <path d="M 68 185 Q 60 215 50 220 L 70 222 L 78 190 Z" fill="#E6C2A0" stroke="#8c6d54" strokeWidth="2" />
-            {/* Joint brass rivets typical in puppet theatres */}
-            <circle cx="75" cy="190" r="3.5" fill="#DAA520" stroke="#8c6d54" strokeWidth="1" />
+            {/* Thigh / Pants part (Purple diamond trousers) */}
+            <path d="M 62 180 L 88 180 L 84 198 L 60 198 Z" fill="#9C3FE6" stroke="#4B127E" strokeWidth="2" />
+            <path d="M 62 180 L 84 198 M 88 180 L 60 198" stroke="#FFE954" strokeWidth="1" opacity="0.6" />
+            
+            {/* White Bunny Foot */}
+            <path d="M 68 195 Q 60 215 50 220 L 74 222 L 78 195 Z" fill="#FFFFFF" stroke="#472F92" strokeWidth="2" />
+            
+            {/* Soft pink toes detail */}
+            <circle cx="56" cy="216" r="2.5" fill="#FFAEC9" />
+            <circle cx="63" cy="218" r="2.5" fill="#FFAEC9" />
+            <circle cx="70" cy="218" r="2.5" fill="#FFAEC9" />
+
+            {/* Joint rivet */}
+            <circle cx="75" cy="190" r="3.5" fill="#FFA64D" stroke="#472F92" strokeWidth="1.5" />
           </motion.g>
 
           {/* Right Leg */}
@@ -328,36 +339,57 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
             transition={{ repeat: Infinity, duration: 0.65, ease: "linear" }}
             style={{ originX: '125px', originY: '190px' }}
           >
-            <path d="M 122 185 Q 130 215 140 220 L 120 222 L 122 190 Z" fill="#E6C2A0" stroke="#8c6d54" strokeWidth="2" />
-            {/* Joint brass rivet */}
-            <circle cx="125" cy="190" r="3.5" fill="#DAA520" stroke="#8c6d54" strokeWidth="1" />
+            {/* Thigh / Pants part (Purple diamond trousers) */}
+            <path d="M 112 180 L 138 180 L 140 198 L 116 198 Z" fill="#9C3FE6" stroke="#4B127E" strokeWidth="2" />
+            <path d="M 112 180 L 140 198 M 138 180 L 116 198" stroke="#FFE954" strokeWidth="1" opacity="0.6" />
+
+            {/* White Bunny Foot */}
+            <path d="M 122 195 Q 130 215 140 220 L 116 222 L 122 195 Z" fill="#FFFFFF" stroke="#472F92" strokeWidth="2" />
+            
+            {/* Soft pink toes */}
+            <circle cx="124" cy="218" r="2.5" fill="#FFAEC9" />
+            <circle cx="131" cy="218" r="2.5" fill="#FFAEC9" />
+            <circle cx="138" cy="216" r="2.5" fill="#FFAEC9" />
+
+            {/* Joint rivet */}
+            <circle cx="125" cy="190" r="3.5" fill="#FFA64D" stroke="#472F92" strokeWidth="1.5" />
           </motion.g>
         </g>
 
-        {/* --- TORSO & CHALECO (Tierra tone) --- */}
+        {/* --- TORSO & CONDUCTOR BLUE COAT & BOWTIE --- */}
         <g id="puppet-torso">
-          {/* Fluffy tail backend */}
-          <circle cx="50" cy="175" r="16" fill="#Fdfbf7" stroke="#8c6d54" strokeWidth="1.5" />
-          <circle cx="48" cy="172" r="8" fill="#FFFFFF" />
+          {/* Fluffy tail (white) */}
+          <circle cx="48" cy="172" r="14" fill="#FFFFFF" stroke="#472F92" strokeWidth="2" />
+          <circle cx="44" cy="168" r="7" fill="#FFFFFF" />
 
-          {/* Main torso */}
-          <rect x="65" y="130" width="70" height="60" rx="20" fill="#E6C2A0" stroke="#8c6d54" strokeWidth="2" />
+          {/* Main torso (fluffy white base) */}
+          <rect x="65" y="130" width="70" height="60" rx="20" fill="#FFFFFF" stroke="#472F92" strokeWidth="2" />
 
-          {/* Vest (Para legibilidad extrema en proyección grupal) */}
+          {/* Elegant Royal Blue Conductor Coat */}
           <path
-            d="M 65 145 C 65 130 135 130 135 145 L 135 180 L 110 190 L 90 190 L 65 180 Z"
-            fill="#8B4513"
-            stroke="#5C2E0B"
-            strokeWidth="2"
+            d="M 65 142 C 65 128 135 128 135 142 L 135 182 L 110 192 L 90 192 L 65 182 Z"
+            fill="#1E56FE"
+            stroke="#0B30AA"
+            strokeWidth="2.5"
           />
-          {/* Gold button on vest */}
-          <circle cx="100" cy="165" r="3.5" fill="#FFD700" stroke="#CD7F32" />
+
+          {/* Coat Collar & Trim fold lines */}
+          <path d="M 90 135 L 100 155 L 110 135" fill="none" stroke="#FFE954" strokeWidth="2" />
+          <line x1="100" y1="155" x2="100" y2="192" stroke="#FFE954" strokeWidth="2" />
+
+          {/* Large Gold Conductor Button (Gold Medal/Pendant as in the image!) */}
+          <circle cx="100" cy="164" r="8" fill="#FFC82B" stroke="#B87D00" strokeWidth="1.5" />
+          <circle cx="100" cy="164" r="5" fill="#FFE066" />
+          
+          {/* Cute Orange Bowtie (La pajarita naranja) under the chin */}
+          <path d="M 86 130 L 100 137 L 114 130 L 110 144 L 100 137 L 90 144 Z" fill="#FF8C00" stroke="#B34F00" strokeWidth="2" />
+          <circle cx="100" cy="137" r="4.5" fill="#FFA64D" stroke="#B34F00" strokeWidth="1.5" />
         </g>
 
         {/* Accessories Layer */}
         {renderAccessory()}
 
-        {/* --- FRONT FOREPAWS (Brazos) --- */}
+        {/* --- FRONT WHITE FOREPAWS / ARMS --- */}
         <g id="puppet-arms">
           {/* Left Arm */}
           <motion.g
@@ -373,8 +405,15 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
             transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
             style={{ originX: '70px', originY: '145px' }}
           >
-            <path d="M 70 140 Q 30 140 25 150 L 35 160 Q 55 150 70 148 Z" fill="#E6C2A0" stroke="#8c6d54" strokeWidth="2" />
-            <circle cx="70" cy="145" r="3" fill="#DAA520" />
+            {/* Upper arm jacket sleeve */}
+            <path d="M 70 140 Q 42 140 38 148 L 48 158 Q 58 148 70 148 Z" fill="#1E56FE" stroke="#0B30AA" strokeWidth="2" />
+            
+            {/* White fluffy hand paw protruding */}
+            <circle cx="34" cy="150" r="10" fill="#FFFFFF" stroke="#472F92" strokeWidth="2" />
+            <path d="M 30 146 Q 24 150 30 154" stroke="#472F92" strokeWidth="1.5" strokeLinecap="round" />
+
+            {/* Joint brass rivet */}
+            <circle cx="70" cy="144" r="3" fill="#FFE954" />
           </motion.g>
 
           {/* Right Arm */}
@@ -391,12 +430,19 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
             transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
             style={{ originX: '130px', originY: '145px' }}
           >
-            <path d="M 130 140 Q 170 140 175 150 L 165 160 Q 145 150 130 148 Z" fill="#E6C2A0" stroke="#8c6d54" strokeWidth="2" />
-            <circle cx="130" cy="145" r="3" fill="#DAA520" />
+            {/* Upper arm jacket sleeve */}
+            <path d="M 130 140 Q 158 140 162 148 L 152 158 Q 142 148 130 148 Z" fill="#1E56FE" stroke="#0B30AA" strokeWidth="2" />
+            
+            {/* White fluffy hand paw */}
+            <circle cx="166" cy="150" r="10" fill="#FFFFFF" stroke="#472F92" strokeWidth="2" />
+            <path d="M 170 146 Q 176 150 170 154" stroke="#472F92" strokeWidth="1.5" strokeLinecap="round" />
+
+            {/* Joint brass rivet */}
+            <circle cx="130" cy="144" r="3" fill="#FFE954" />
           </motion.g>
         </g>
 
-        {/* --- EARS (Larguísimas, 1.5x cabeza, de cartón articulado) --- */}
+        {/* --- EARS (Expressive fluffy white ears with pink inside) --- */}
         <g id="puppet-ears">
           {/* Left Ear */}
           <motion.g
@@ -410,21 +456,20 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
             }
             transition={{ duration: 0.3 }}
           >
-            {/* Outer Ear */}
+            {/* Outer White Ear */}
             <path
               d="M 75 95 C 65 30, 80 0, 90 0 C 98 0, 100 30, 90 95 Z"
-              fill="#E6C2A0"
-              stroke="#8c6d54"
-              strokeWidth="2"
+              fill="#FFFFFF"
+              stroke="#472F92"
+              strokeWidth="2.5"
             />
-            {/* Inner Ear Pink */}
+            {/* Inner Pink Ear */}
             <path
               d="M 78 90 C 73 40, 82 10, 88 10 C 92 10, 94 40, 88 90 Z"
-              fill="#FFC0CB"
-              opacity="0.8"
+              fill="#FFAEC9"
             />
             {/* Rivet Joint */}
-            <circle cx="85" cy="95" r="3.5" fill="#DAA520" />
+            <circle cx="85" cy="95" r="3.5" fill="#FFE954" stroke="#472F92" strokeWidth="1.5" />
           </motion.g>
 
           {/* Right Ear */}
@@ -439,42 +484,68 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
             }
             transition={{ duration: 0.3 }}
           >
-            {/* Outer Ear */}
+            {/* Outer White Ear */}
             <path
               d="M 110 95 C 100 30, 102 0, 110 0 C 120 0, 135 30, 125 95 Z"
-              fill="#E6C2A0"
-              stroke="#8c6d54"
-              strokeWidth="2"
+              fill="#FFFFFF"
+              stroke="#472F92"
+              strokeWidth="2.5"
             />
-            {/* Inner Ear Pink */}
+            {/* Inner Pink Ear */}
             <path
               d="M 112 90 C 106 40, 108 10, 112 10 C 118 10, 127 40, 122 90 Z"
-              fill="#FFC0CB"
-              opacity="0.8"
+              fill="#FFAEC9"
             />
             {/* Rivet Joint */}
-            <circle cx="115" cy="95" r="3.5" fill="#DAA520" />
+            <circle cx="115" cy="95" r="3.5" fill="#FFE954" stroke="#472F92" strokeWidth="1.5" />
           </motion.g>
         </g>
 
-        {/* --- HEAD & FACE EXPRESSIONS --- */}
+        {/* --- HEAD, CUTE MASCOT FACE & BLUE CEOMETRIC TALL HAT --- */}
         <g id="puppet-head">
-          <ellipse cx="100" cy="118" rx="35" ry="28" fill="#E6C2A0" stroke="#8c6d54" strokeWidth="2.5" />
-          {/* Cute pink oval cheeks */}
-          <ellipse cx="73" cy="126" rx="6" ry="4" fill="#FFB6C1" opacity="0.6" />
-          <ellipse cx="127" cy="126" rx="6" ry="4" fill="#FFB6C1" opacity="0.6" />
+          {/* Main White Fluffy Head */}
+          <ellipse cx="100" cy="118" rx="35" ry="28" fill="#FFFFFF" stroke="#472F92" strokeWidth="2.5" />
+          
+          {/* Cute pink rosy cheeks */}
+          <ellipse cx="73" cy="126" rx="6" ry="4" fill="#FFAEC9" opacity="0.8" />
+          <ellipse cx="127" cy="126" rx="6" ry="4" fill="#FFAEC9" opacity="0.8" />
 
-          {/* Interfaciable Eye and Mouth structures based on current block state */}
+          {/* Expression Layer */}
           {getFacialExpression()}
 
-          {/* Nose & whiskers */}
-          <polygon points="97,125 103,125 100,129" fill="#FF69B4" stroke="#333" strokeWidth="1" />
-          <line x1="90" y1="128" x2="110" y2="128" stroke="#333" strokeWidth="1" />
-          <line x1="98" y1="129" x2="100" y2="135" stroke="#333" strokeWidth="1.5" />
+          {/* Iconic Deep Purple Round-Rimmed Glasses (Gafas circulares de Adaggio) */}
+          <g id="purple-glasses">
+            {/* Left rim */}
+            <circle cx="81" cy="116" r="14" fill="none" stroke="#5A2EAC" strokeWidth="3" />
+            {/* Right rim */}
+            <circle cx="119" cy="116" r="14" fill="none" stroke="#5A2EAC" strokeWidth="3" />
+            {/* Connecting bridge */}
+            <path d="M 95 116 Q 100 113 105 116" fill="none" stroke="#5A2EAC" strokeWidth="3.5" strokeLinecap="round" />
+            {/* Temples on side */}
+            <path d="M 67 116 Q 60 112 58 110" fill="none" stroke="#5A2EAC" strokeWidth="3" />
+            <path d="M 133 116 Q 140 112 142 110" fill="none" stroke="#5A2EAC" strokeWidth="3" />
+          </g>
+
+          {/* Nose & Mouth detailing */}
+          <polygon points="98,124 102,124 100,127" fill="#FF4D94" />
+          <path d="M 98 128 L 100 131 L 102 128" fill="none" stroke="#472F92" strokeWidth="1.5" />
 
           {/* Whiskers */}
-          <path d="M 68 128 L 52 125 M 68 131 L 50 132" stroke="#444" strokeWidth="1" />
-          <path d="M 132 128 L 148 125 M 132 131 L 150 132" stroke="#444" strokeWidth="1" />
+          <path d="M 66 128 L 52 125 M 66 132 L 50 133" stroke="#472F92" strokeWidth="1.2" />
+          <path d="M 134 128 L 148 125 M 134 132 L 150 133" stroke="#472F92" strokeWidth="1.2" />
+
+          {/* --- GLORIOUS TALL GEOMETRIC BLUE CONductor Hat --- */}
+          <g id="tall-conductor-hat" transform="translate(0, 0)">
+            {/* Hat Base Backside */}
+            <path d="M 82 94 L 118 94 L 114 74 L 86 74 Z" fill="#1591C6" stroke="#0B30AA" strokeWidth="2" />
+            
+            {/* Hat Cap / Top Lid */}
+            <ellipse cx="100" cy="74" rx="14" ry="4" fill="#0FCAB2" stroke="#0B30AA" strokeWidth="1.5" />
+            
+            {/* Yellow / Navy Geometric Zig-Zag Trim */}
+            <polygon points="86,76 91,84 97,76 103,84 109,76 114,84 114,93 86,93" fill="#FFA64D" stroke="#0B30AA" strokeWidth="1.5" />
+            <polyline points="86,85 91,78 97,85 103,78 109,85 114,78" fill="none" stroke="#1E56FE" strokeWidth="2.5" />
+          </g>
         </g>
       </motion.svg>
     </div>

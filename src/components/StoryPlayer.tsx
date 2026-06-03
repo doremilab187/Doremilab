@@ -34,6 +34,10 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
   const [welcomeTab, setWelcomeTab] = useState<'tutorial' | 'help' | 'play'>('tutorial');
   const [tutorialStep, setTutorialStep] = useState<number>(0);
 
+  // Scene transition modals & teacher panel collapsible states
+  const [activeTransitionModal, setActiveTransitionModal] = useState<NarrativeBlock | null>(null);
+  const [showTeacherPanel, setShowTeacherPanel] = useState<boolean>(false);
+
   // Classroom preparation state
   const [checkedScarves, setCheckedScarves] = useState<boolean>(false);
   const [checkedSticks, setCheckedSticks] = useState<boolean>(false);
@@ -438,15 +442,12 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
       setCongratulationsBlock(null);
       setActiveBlock(nextBlock);
       setCurrentTime(nextBlock.durationStart);
-      setIsPlaying(true);
-      
-      // Resume audio for next block
+      setIsPlaying(false);
       audioInstance.stop();
-      audioInstance.start(nextBlock.id, 0);
+      setActiveTransitionModal(nextBlock);
     } else {
-      // It was the last block (block 8)
+      // It was the last block
       setCongratulationsBlock(null);
-      setRightActiveTab('bitacora');
       if (onSessionComplete) {
         onSessionComplete(evaluations);
       }
@@ -472,10 +473,9 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
       setCurrentTime(block.durationStart);
       setActiveBlock(block);
       setTriggeredPauses(prev => prev.filter(p => p < block.durationStart));
-      if (isPlaying) {
-        audioInstance.stop();
-        audioInstance.start(block.id, 0);
-      }
+      setIsPlaying(false);
+      audioInstance.stop();
+      setActiveTransitionModal(block);
     }
   };
 
@@ -1169,18 +1169,23 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
         </div>
       </div>
 
-      {/* LEFT COLUMN: THE MOVEMENT STAGE i.e. THEATRILLO (Col-Span 7) */}
-      <div id="interactive-theater-column" className="lg:col-span-7 flex flex-col gap-4">
+      {/* LEFT COLUMN: THE MOVEMENT STAGE i.e. THEATRILLO (Col-Span 12 - Fills primary viewport) */}
+      <div id="interactive-theater-column" className="lg:col-span-12 flex flex-col gap-4">
         
-        {/* PHYSICAL STAGE */}
+        {/* PHYSICAL STAGE & CONTROLS UNIFIED UNDER A SINGLE CONTAINER */}
         <div
           id="teatrillo-marionette-stage-frame"
-          className="relative aspect-video w-full rounded-xl border-4 border-amber-950 overflow-hidden flex flex-col justify-between shadow-2xl"
-          style={{
-            ...getTeatrilloBackgroundStyle(),
-            boxShadow: "inset 0 0 85px rgba(0,0,0,0.92)"
-          }}
+          className="w-full rounded-xl border-4 border-amber-950 overflow-hidden flex flex-col shadow-2xl bg-neutral-950 animate-fade-in"
         >
+          {/* THEATRE VISUAL CANVAS / VIEWPORT */}
+          <div
+            id="theatre-visual-stage"
+            className="relative aspect-video w-full overflow-hidden flex flex-col justify-between"
+            style={{
+              ...getTeatrilloBackgroundStyle(),
+              boxShadow: "inset 0 0 85px rgba(0,0,0,0.92)"
+            }}
+          >
           {/* Cardboard/Paper noise texture overlay for apparent natural puppet theater craft depth */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.05] z-10" xmlns="http://www.w3.org/2000/svg">
             <filter id="paper-noise">
@@ -1546,7 +1551,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
           </div>
 
           {/* DIGITAL SUBTITLES / TRANSCRIPT OVERLAY */}
-          <div id="theatre-digital-transcripts" className="bg-neutral-900/95 border-t border-neutral-800 p-3 min-h-[68px] flex flex-col justify-center items-center z-20 gap-1 backdrop-blur">
+          <div id="theatre-digital-transcripts" className="bg-neutral-900/95 border-t border-neutral-800 p-3 min-h-[68px] flex flex-col justify-center items-center z-20 gap-1 backdrop-blur animate-fade-in">
             <p className="text-amber-500 text-[10.5px] font-bold uppercase tracking-widest font-mono">
               Narrador (Escucha Grupal)
             </p>
@@ -1554,10 +1559,10 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
               "{activeBlock.narratorLines}"
             </p>
           </div>
-        </div>
+        </div> {/* CLOSE THEATRE VISUAL CANVAS / VIEWPORT */}
 
         {/* TIMELINE CONTROLLER BAR & CONTROLS */}
-        <div id="media-timeline-dashboard" className="bg-neutral-950 border border-neutral-800 rounded-xl p-4 flex flex-col gap-3 shadow-lg">
+        <div id="media-timeline-dashboard" className="bg-neutral-950 border-t border-neutral-800/80 p-4 flex flex-col gap-3">
           
           {/* Timeline and duration badges */}
           <div className="flex justify-between items-center text-xs font-mono text-gray-400">
@@ -1683,13 +1688,38 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
               </label>
             </div>
           </div>
+        </div> {/* CLOSE TIMELINE CONTROLLER BAR & CONTROLS */}
+
+      </div> {/* CLOSE PHYSICAL STAGE & CONTROLS UNIFIED */}
+
+    </div> {/* CLOSE INTERACTIVE THEATER COLUMN */}
+
+    {/* COLLAPSIBLE ACCONT DOCENTE - BITÁCORA DOCENTE DE MONTE TABOR */}
+    <div id="teacher-collapsible-accordion-wrapper" className="lg:col-span-12 w-full mt-4 mb-8">
+      <button
+        id="toggle-teacher-panel-acc"
+        type="button"
+        onClick={() => setShowTeacherPanel(prev => !prev)}
+        className="w-full py-4 px-6 bg-white hover:bg-slate-50 border border-slate-300 rounded-2xl flex justify-between items-center text-slate-800 font-extrabold font-sans text-xs uppercase shadow-md transition-all focus:ring-2 focus:ring-amber-500 cursor-pointer"
+      >
+        <div className="flex items-center gap-2">
+          <ClipboardList className="w-4.5 h-4.5 text-amber-500" />
+          <span>📊 {showTeacherPanel ? "Ocultar panel de bitácora y calificaciones" : "Ver Bitácora y Evaluaciones Docentes (Opcional)"}</span>
         </div>
+        <span className="font-mono text-zinc-500 font-extrabold">{showTeacherPanel ? "▲" : "▼"}</span>
+      </button>
 
-      </div>
-
-      <div id="mediation-companion-column" className="lg:col-span-12 xl:col-span-5 flex flex-col gap-4 h-full">
-        
-        {/* TAB CONTROLLER DECK FOR HIGH-PRECISION WIREFRAME CONSOLE */}
+      <AnimatePresence>
+        {showTeacherPanel && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden mt-4"
+          >
+            <div id="mediation-companion-column" className="flex flex-col gap-4 w-full">
+              
+              {/* TAB CONTROLLER DECK FOR HIGH-PRECISION WIREFRAME CONSOLE */}
         <div className="flex flex-wrap gap-1 bg-white p-1 rounded-xl border border-slate-200 shadow-sm text-[11px] font-mono">
           <button
             type="button"
@@ -2302,7 +2332,12 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
           </div>
         )}
 
-      </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+    </div> {/* CLOSE COLLAPSIBLE ACCONT DOCENTE */}
 
       {/* DETAILED PEDAGOGICAL SUGGESTED PAUSE FULLSCREEN MODAL OVERLAY */}
       <AnimatePresence>
@@ -2583,6 +2618,188 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete, sav
             </motion.div>
           </motion.div>
         )}
+      </AnimatePresence>
+
+      {/* TRANSITION SCENE PREPARATION AND RESET PAUSE MODAL */}
+      <AnimatePresence>
+        {activeTransitionModal && (() => {
+          const details = (() => {
+            switch (activeTransitionModal.id) {
+              case 1:
+                return {
+                  title: "Inicio: Escucha Atenta",
+                  materials: ["Solo tu mente y sintonía grupal"],
+                  pauseTitle: "Preparar la Mente",
+                  pauseText: "Respiren hondo y escuchen el silencio que nos rodea. El salón se calma...",
+                  iconEmoji: "🎼",
+                  color: "#af7cec"
+                };
+              case 2:
+                return {
+                  title: "Tierra: El Gran Pulso",
+                  materials: ["Pies libres para marchar rítmicamente"],
+                  pauseTitle: "Preparar las Piernas",
+                  pauseText: "Muevan suavemente los hombros, rodillas y tobillos para prepararse para marchar.",
+                  iconEmoji: "🌱",
+                  color: "#6B8E23"
+                };
+              case 3:
+                return {
+                  title: "Agua: Gotas y Río Caudaloso",
+                  materials: ["🧣 Un pañuelo o trapo azul ligero (1 por niño)"],
+                  pauseTitle: "Preparar los Brazos",
+                  pauseText: "Distribuyan los pañuelos azules. Ondeen los brazos altos como nubes antes de iniciar.",
+                  iconEmoji: "💧",
+                  color: "#40E0D0"
+                };
+              case 4:
+                return {
+                  title: "Viento: El Sonido del Aire",
+                  materials: ["Solo tus brazos libres y tu respiración"],
+                  pauseTitle: "Respiración Profunda",
+                  pauseText: "Inhalen aire despacio sintiendo el tórax expandirse, luego exhalen vaciándolo.",
+                  iconEmoji: "🌬️",
+                  color: "#87CEEB"
+                };
+              case 5:
+                return {
+                  title: "Trueno Parte 1: El Rayo Eléctrico",
+                  materials: ["Cuerpo libre y reacción rápida"],
+                  pauseTitle: "Liberar Tensiones",
+                  pauseText: "Sacudan todo el cuerpo vigorosamente para soltar miedos antes del trueno.",
+                  iconEmoji: "⚡",
+                  color: "#7B68EE"
+                };
+              case 6:
+                return {
+                  title: "Trueno Parte 2: El Juego del Sigilo",
+                  materials: ["Cuerpo libre para caminar flotando"],
+                  pauseTitle: "Equilibrio y Calma",
+                  pauseText: "Sostengan el equilibrio en un solo pie por 5 segundos. ¡Listos para ser estatuas!",
+                  iconEmoji: "👣",
+                  color: "#4B0082"
+                };
+              case 7:
+                return {
+                  title: "Sol: La Marcha de la Luz",
+                  materials: ["🥖 Un bastón o palo de madera ligero (1 por niño)"],
+                  pauseTitle: "Verificación de Seguridad",
+                  pauseText: "Asegúrense de que haya suficiente espacio entre niños. Sujeten el bastón firme con ambas manos.",
+                  iconEmoji: "☀️",
+                  color: "#FFD700"
+                };
+              case 8:
+                return {
+                  title: "Final de Acción: El Ritmo Encontrado",
+                  materials: ["Cuerpo libre para celebrar"],
+                  pauseTitle: "Regreso a la Calma",
+                  pauseText: "Estiren los brazos amplios hacia el cielo y dejen caer los hombros relajados con alegría.",
+                  iconEmoji: "🌍",
+                  color: "#FF69B4"
+                };
+              case 9:
+                return {
+                  title: "Final: El Mensaje de Adaggio",
+                  materials: ["Semicírculo de calidez grupal"],
+                  pauseTitle: "Cerrar los Ojos",
+                  pauseText: "Busquemos un asiento super cómodo en el suelo para escuchar el susurro final amoroso de Adaggio.",
+                  iconEmoji: "🌺",
+                  color: "#FF1493"
+                };
+              default:
+                return {
+                  title: "Siguiente Escena",
+                  materials: ["Cuerpo libre"],
+                  pauseTitle: "Tomar un Respiro",
+                  pauseText: "Respiren hondo y disfruten la música.",
+                  iconEmoji: "✨",
+                  color: "#f59e0b"
+                };
+            }
+          })();
+
+          return (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
+            >
+              <motion.div
+                initial={{ scale: 0.95, y: 15 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.95, y: 15 }}
+                className="bg-neutral-900 border-2 rounded-3xl w-full max-w-xl p-6 md:p-8 shadow-2xl text-white overflow-hidden relative"
+                style={{ borderColor: details.color }}
+              >
+                {/* Subtle light aura */}
+                <div className="absolute -top-10 -right-10 w-44 h-44 rounded-full blur-3xl opacity-20" style={{ backgroundColor: details.color }} />
+
+                {/* Level Passed Banner / Next Scene */}
+                <div className="mb-4 text-left">
+                  <span className="px-3 py-1 bg-white/5 border text-[10px] font-mono font-bold tracking-widest uppercase rounded-full" style={{ color: details.color, borderColor: `${details.color}33` }}>
+                    🚀 Siguiente Escena / Nivel
+                  </span>
+                  <h1 className="text-2xl md:text-3xl font-black mt-2 font-sans tracking-tight uppercase">
+                    {details.title}
+                  </h1>
+                </div>
+
+                <div className="space-y-5 my-6 text-left">
+                  {/* 1. Physical Objects required checklist */}
+                  <div className="bg-neutral-950 p-4 rounded-xl border border-neutral-800">
+                    <span className="text-[10.5px] uppercase font-mono font-black text-neutral-400 block">
+                      🎒 Elementos rítmicos requeridos:
+                    </span>
+                    <div className="flex items-center gap-3 mt-2 text-sm font-semibold">
+                      <span className="text-2xl leading-none">{details.iconEmoji}</span>
+                      <span>{details.materials[0]}</span>
+                    </div>
+                  </div>
+
+                  {/* 2. Active Pause Section */}
+                  <div className="bg-amber-500/10 p-4 rounded-xl border border-amber-500/15">
+                    <span className="text-[10px] uppercase font-mono font-black text-amber-500 block">
+                      🧘 Momento de descansar y preparar el cuerpo:
+                    </span>
+                    <h4 className="text-sm font-black text-amber-400 mt-1 uppercase font-sans">
+                      {details.pauseTitle}
+                    </h4>
+                    <p className="text-xs text-neutral-300 leading-relaxed mt-1 font-medium font-sans">
+                      {details.pauseText}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Trigger Play button */}
+                <div className="flex justify-end gap-3 mt-6 border-t border-neutral-850 pt-5">
+                  <button
+                    onClick={() => {
+                      setActiveTransitionModal(null);
+                    }}
+                    className="px-4 py-2.5 rounded-xl border border-neutral-800 bg-neutral-950 hover:bg-neutral-900 transition-all font-mono text-xs font-semibold text-neutral-400"
+                  >
+                    Cerrar Vista
+                  </button>
+                  <button
+                    id="start-scene-btn"
+                    onClick={() => {
+                      setActiveTransitionModal(null);
+                      setIsPlaying(true);
+                      audioInstance.stop();
+                      audioInstance.start(activeTransitionModal.id, 0);
+                    }}
+                    style={{ backgroundColor: details.color }}
+                    className="px-6 py-3 rounded-xl text-neutral-950 font-black font-sans text-xs tracking-wider shadow-lg uppercase transition-transform active:scale-95 hover:brightness-110 flex items-center gap-2"
+                  >
+                    <span>¡Comenzar Escena!</span>
+                    <span className="text-lg font-bold">➔</span>
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          );
+        })()}
       </AnimatePresence>
 
     </div>

@@ -69,43 +69,216 @@ class AudioEngine {
     osc.stop(t + 0.65);
   }
 
-  // Synthesizes a high droplet (Agudo, e.g. 1500Hz) or a lower droplet (Grave, e.g. 350Hz)
+  // Synthesizes an organic bubble water droplet (Agudo is high-pitch sparkle, Grave is deep plop)
   public playDrip(isAgudo: boolean, time?: number) {
     this.initCtx();
     if (!this.ctx || this.isMuted || !this.soundEnabled) return;
 
     const t = time !== undefined ? time : this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
-    const osc2 = this.ctx.createOscillator();
+    const rippleOsc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
 
-    const baseFreq = isAgudo ? 1320 : 330; // E6 vs E4
+    // Natural fluid water bubbles sweep frequencies upwards rather than downwards
+    const startFreq = isAgudo ? 850 : 220;
+    const endFreq = isAgudo ? 1950 : 560;
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(baseFreq, t);
-    osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.9, t + 0.15);
+    osc.frequency.setValueAtTime(startFreq, t);
+    osc.frequency.exponentialRampToValueAtTime(endFreq, t + 0.12);
 
-    // Add metallic ring
-    osc2.type = 'triangle';
-    osc2.frequency.setValueAtTime(baseFreq * 2.01, t);
-    osc2.frequency.exponentialRampToValueAtTime(baseFreq * 1.8, t + 0.1);
+    rippleOsc.type = 'triangle';
+    rippleOsc.frequency.setValueAtTime(startFreq * 1.5, t);
+    rippleOsc.frequency.exponentialRampToValueAtTime(endFreq * 1.5, t + 0.08);
 
-    gain.gain.setValueAtTime(0.35, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+    gain.gain.setValueAtTime(isAgudo ? 0.3 : 0.45, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
 
     const filter = this.ctx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(2000, t);
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(isAgudo ? 1600 : 450, t);
+    filter.Q.setValueAtTime(2.5, t);
 
     osc.connect(gain);
-    osc2.connect(gain);
+    rippleOsc.connect(gain);
     gain.connect(filter);
     filter.connect(this.ctx.destination);
 
     osc.start(t);
-    osc2.start(t);
-    osc.stop(t + 0.25);
-    osc2.stop(t + 0.25);
+    rippleOsc.start(t);
+    osc.stop(t + 0.16);
+    rippleOsc.stop(t + 0.16);
+  }
+
+  // Synthesizes a happy hollow woodblock step representing walking steps
+  public playWoodblockStep(time?: number) {
+    this.initCtx();
+    if (!this.ctx || this.isMuted || !this.soundEnabled) return;
+    const t = time !== undefined ? time : this.ctx.currentTime;
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(650, t);
+    osc.frequency.exponentialRampToValueAtTime(180, t + 0.06);
+
+    gain.gain.setValueAtTime(0.18, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(t);
+    osc.stop(t + 0.1);
+  }
+
+  // Synthesizes a soft organic seed/maraca rattle (shaker) for agricultural sowing
+  public playSeedScatter(time?: number) {
+    this.initCtx();
+    if (!this.ctx || this.isMuted || !this.soundEnabled) return;
+    const t = time !== undefined ? time : this.ctx.currentTime;
+
+    const sampleRate = this.ctx.sampleRate;
+    const bufferSize = sampleRate * 0.12;
+    const buffer = this.ctx.createBuffer(1, bufferSize, sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = buffer;
+
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'highpass';
+    filter.frequency.setValueAtTime(4500, t);
+
+    const gain = this.ctx.createGain();
+    gain.gain.setValueAtTime(0.06, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    noise.start(t);
+    noise.stop(t + 0.12);
+  }
+
+  // Synthesizes a beautiful natural wind gust using bandpass-filtered pinkish noise
+  public playWindGust(durationSeconds: number, time?: number) {
+    this.initCtx();
+    if (!this.ctx || this.isMuted || !this.soundEnabled) return;
+    const t = time !== undefined ? time : this.ctx.currentTime;
+
+    const sampleRate = this.ctx.sampleRate;
+    const bufferSize = sampleRate * durationSeconds;
+    const buffer = this.ctx.createBuffer(1, bufferSize, sampleRate);
+    const data = buffer.getChannelData(0);
+    
+    // Generate organic wind-like pink-ambient noise
+    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+    for (let i = 0; i < bufferSize; i++) {
+      const white = Math.random() * 2 - 1;
+      b0 = 0.99886 * b0 + white * 0.0555179;
+      b1 = 0.99332 * b1 + white * 0.0750759;
+      b2 = 0.96900 * b2 + white * 0.1538520;
+      b3 = 0.86650 * b3 + white * 0.3104856;
+      b4 = 0.55000 * b4 + white * 0.5329522;
+      b5 = -0.7616 * b5 - white * 0.0168980;
+      const pink = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+      b6 = white * 0.115926;
+      data[i] = pink * 0.09; // volume limit
+    }
+
+    const noiseSource = this.ctx.createBufferSource();
+    noiseSource.buffer = buffer;
+
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.Q.setValueAtTime(3.8, t); // responsive whistling focus
+    filter.frequency.setValueAtTime(260, t);
+
+    const gain = this.ctx.createGain();
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.16, t + 0.4); // graceful fade-in
+
+    // Simulate leafy breeze gusts by modulation of the bandpass cutoff frequency
+    const steps = Math.floor(durationSeconds * 20);
+    for (let i = 0; i < steps; i++) {
+      const timeOffset = t + (i / 20);
+      const ratio = i / steps;
+      const wave = Math.sin(ratio * Math.PI);
+      const microWind = Math.sin(ratio * Math.PI * 4) * 60;
+      const freqVal = 260 + (wave * 420) + microWind + (Math.random() * 20);
+      filter.frequency.linearRampToValueAtTime(freqVal, timeOffset);
+
+      const ampVal = 0.04 + (wave * 0.18);
+      gain.gain.linearRampToValueAtTime(ampVal, timeOffset);
+    }
+
+    gain.gain.setValueAtTime(gain.gain.value, t + durationSeconds - 0.4);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + durationSeconds);
+
+    noiseSource.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    noiseSource.start(t);
+    noiseSource.stop(t + durationSeconds);
+  }
+
+  // Synthesizes clean solar wind chimes (gold metallic) and hollow wooden bars for solar march
+  public playSolarChime(accented: boolean, time?: number) {
+    this.initCtx();
+    if (!this.ctx || this.isMuted || !this.soundEnabled) return;
+    const t = time !== undefined ? time : this.ctx.currentTime;
+
+    if (accented) {
+      // Golden solar chime - multi-layered bell chime chord (B5, E6, G6, B6)
+      const bells = [987.77, 1318.51, 1567.98, 1975.53];
+      bells.forEach((freq, index) => {
+        const osc = this.ctx!.createOscillator();
+        const gainNode = this.ctx!.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, t);
+
+        const delay = index * 0.012; // shimmering chime sweep
+
+        gainNode.gain.setValueAtTime(0, t);
+        gainNode.gain.linearRampToValueAtTime(0.07, t + delay + 0.008);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, t + delay + 0.6);
+
+        osc.connect(gainNode);
+        gainNode.connect(this.ctx!.destination);
+
+        osc.start(t + delay);
+        osc.stop(t + delay + 0.65);
+      });
+
+      // Warm background earth pluck
+      this.playPluck(392, t);
+      this.playBom(t);
+    } else {
+      // Organic hollow wooden bar key hit
+      const osc = this.ctx.createOscillator();
+      const gainNode = this.ctx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(190, t);
+      osc.frequency.exponentialRampToValueAtTime(140, t + 0.06);
+
+      gainNode.gain.setValueAtTime(0.18, t);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+
+      osc.connect(gainNode);
+      gainNode.connect(this.ctx.destination);
+
+      osc.start(t);
+      osc.stop(t + 0.1);
+    }
   }
 
   // Synthesizes a guitar-style melodic pluck sound
@@ -299,18 +472,18 @@ class AudioEngine {
     }
 
     if (blockId === 4) {
-      // Viento: dynamic wind sound is calculated
+      // Viento: play a continuous series of beautiful, refreshing forest wind gusts
       this.startAmbientPad(220); // A3 breezy tone
-      let intensity = 0.2;
+      this.playWindGust(5, this.ctx!.currentTime);
       this.intervalId = setInterval(() => {
-        // Slowly oscillate the wind speed
-        intensity = 0.3 + 0.4 * Math.sin(stepCount * 0.25);
         if (this.ctx) {
           const t = this.ctx.currentTime;
-          this.playPluck(330, t); // soft wind melody note E4
+          // Trigger a beautiful wind gust periodically
           if (stepCount % 4 === 0) {
-            this.playPluck(440, t); // A4
+            this.playWindGust(4.2, t);
           }
+          // Soft melodic wooden pluck in the breeze
+          this.playPluck(stepCount % 2 === 0 ? 330 : 440, t);
         }
         stepCount++;
       }, 1000);
@@ -325,7 +498,7 @@ class AudioEngine {
     } else if (blockId === 3) {
       computedIntervalMs = 60000 / 100; // 100 BPM
     } else if (blockId === 5) {
-      computedIntervalMs = 60000 / 120; // 120 BPM rapid storm
+      computedIntervalMs = 60000 / 115; // 115 BPM rapid storm
     } else if (blockId === 6) {
       computedIntervalMs = 60000 / 75; // 75 BPM slow heavy industrial march
     } else if (blockId === 7) {
@@ -342,36 +515,33 @@ class AudioEngine {
 
       switch (this.activeBlockId) {
         case 2: // TIERRA: March + lanzar semillas + BOM grave
-          // Play deep BOM on beat 0, guitar plucks on other beats
           const beatInBar = stepCount % 4;
           if (beatInBar === 0) {
             this.playBom(t);
-            this.playPluck(196, t); // Sol (G3)
+            this.playSeedScatter(t);
           } else if (beatInBar === 2) {
-            this.playPluck(220, t); // La (A4)
-            this.playPluck(196 * 1.5, t); // D4 pluck
+            this.playWoodblockStep(t);
+            this.playPluck(196, t); // Hollow Sol (G3)
           } else {
-            this.playPluck(196, t); // standard guitar beat
+            this.playWoodblockStep(t);
           }
           break;
 
         case 3: // AGUA: Gotas (Agudo vs. Grave)
-          // Alternates high vs low droplets
+          // Alternates high vs low bubbles
           const dropletPattern = [true, false, true, true, false, true, false, false];
           const isAgudo = dropletPattern[stepCount % dropletPattern.length];
           this.playDrip(isAgudo, t);
-          // light guitar backing pluck
           if (stepCount % 2 === 0) {
             this.playPluck(261.63, t); // C4
           }
           break;
 
         case 5: // TRUENO 1: Contraste súbito & Rayo
-          // Continuous Wind with sudden random lightning strikes
-          if (stepCount % 12 === 0) {
+          if (stepCount % 10 === 0) {
             this.playLightning(t);
           } else {
-            this.playPluck(147 + (Math.sin(stepCount) * 10), t); // tense notes
+            this.playWoodblockStep(t);
           }
           break;
 
@@ -381,21 +551,14 @@ class AudioEngine {
             // sudden lightning strike (congelarse!)
             this.playLightning(t);
           } else {
-            // heavy metallic industrial percussion step
-            this.playMarchSnare(false, t);
+            // cautious tip-toe wooden steps
+            this.playWoodblockStep(t);
           }
           break;
 
-        case 7: // LLAMADO SOL: Marcha militar (BPM 110 -> 60) + Acentuaciones
+        case 7: // LLAMADO SOL: Acentos del Sol
           const solarBeat = stepCount % 4;
-          if (solarBeat === 0) {
-            // ACENTO - Trigger big salto jump beat!
-            this.playMarchSnare(true, t);
-            this.playBom(t);
-          } else {
-            // standard march beat step
-            this.playMarchSnare(false, t);
-          }
+          this.playSolarChime(solarBeat === 0, t);
           break;
 
         default:
@@ -458,6 +621,89 @@ class AudioEngine {
       this.bgGain.disconnect();
       this.bgGain = null;
     }
+  }
+
+  public playSoundLogo(callback?: () => void) {
+    this.initCtx();
+    if (!this.ctx) {
+      if (callback) callback();
+      return;
+    }
+    
+    this.stop();
+    const t = this.ctx.currentTime;
+    
+    // Tap x4 (woodblock)
+    this.playWoodblockStep(t);
+    this.playWoodblockStep(t + 0.25);
+    this.playWoodblockStep(t + 0.5);
+    this.playWoodblockStep(t + 0.75);
+    
+    // DO
+    setTimeout(() => {
+      if (this.isMuted || !this.soundEnabled) return;
+      this.playPluck(261.63); // C4
+    }, 1000);
+    
+    // RE
+    setTimeout(() => {
+      if (this.isMuted || !this.soundEnabled) return;
+      this.playPluck(293.66); // D4
+    }, 1500);
+    
+    // MI
+    setTimeout(() => {
+      if (this.isMuted || !this.soundEnabled) return;
+      this.playPluck(329.63); // E4
+    }, 2000);
+    
+    // Glissando / Scale leading up to LAB!
+    const glissandoNotes = [
+      349.23, // F4
+      392.00, // G4
+      440.00, // A4
+      493.88, // B4
+      523.25, // C5
+      587.33, // D5
+      659.25, // E5
+      783.99, // G5
+    ];
+    glissandoNotes.forEach((freq, idx) => {
+      setTimeout(() => {
+        if (this.isMuted || !this.soundEnabled) return;
+        this.playPluck(freq);
+      }, 2500 + (idx * 120));
+    });
+    
+    // LAB! Grand Chime & Rich C Major Chord Resolution
+    setTimeout(() => {
+      if (this.isMuted || !this.soundEnabled) return;
+      this.playSolarChime(true);
+      
+      // Synthesis of an extra-rich resonance chord: C4, E4, G4, C5, E5, C6
+      const chord = [261.63, 329.63, 392.00, 523.25, 659.25, 1046.50];
+      chord.forEach((freq, i) => {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gainNode = this.ctx.createGain();
+        osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+        
+        gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.12, this.ctx.currentTime + 0.05);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 2.0);
+        
+        osc.connect(gainNode);
+        gainNode.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 2.1);
+      });
+    }, 3500);
+
+    // Call back once fully resolved (e.g. at 5.5s)
+    setTimeout(() => {
+      if (callback) callback();
+    }, 5500);
   }
 
   public stop() {
