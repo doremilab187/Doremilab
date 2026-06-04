@@ -12,18 +12,25 @@ interface AdaggioPuppetProps {
 }
 
 const stateToGifMap: Record<string, string> = {
-  'quiet': '/adaggio_gifs/quiet.gif',
-  'listening': '/adaggio_gifs/listening.gif',
-  'fluid_raise_drop': '/adaggio_gifs/fluid_raise_drop.gif',
-  'proud_march': '/adaggio_gifs/proud_march.gif',
-  'heavy_march': '/adaggio_gifs/heavy_march.gif',
-  'accented_jump': '/adaggio_gifs/accented_jump.gif',
-  'march_sowing': '/adaggio_gifs/march_sowing.gif',
-  'celebration_victory': '/adaggio_gifs/celebration_victory.gif',
-  'scared': '/adaggio_gifs/scared.gif',
-  'shaking_electric': '/adaggio_gifs/shaking_electric.gif',
-  'congelado_estatua': '/adaggio_gifs/congelado_estatua.gif',
-  'bow': '/adaggio_gifs/bow.gif',
+  // Simplified 4-GIF configuration requested by the user
+  'saludando': '/adaggio_gifs/hablando.gif',
+  'hablando': '/adaggio_gifs/hablando.gif',
+  'marchando': '/adaggio_gifs/hablando.gif',
+  'celebrando': '/adaggio_gifs/hablando.gif',
+
+  // Legacy presets for flawless backwards compatibility
+  'quiet': '/adaggio_gifs/hablando.gif',
+  'listening': '/adaggio_gifs/hablando.gif',
+  'fluid_raise_drop': '/adaggio_gifs/hablando.gif',
+  'proud_march': '/adaggio_gifs/hablando.gif',
+  'heavy_march': '/adaggio_gifs/hablando.gif',
+  'accented_jump': '/adaggio_gifs/hablando.gif',
+  'march_sowing': '/adaggio_gifs/hablando.gif',
+  'celebration_victory': '/adaggio_gifs/hablando.gif',
+  'scared': '/adaggio_gifs/hablando.gif',
+  'shaking_electric': '/adaggio_gifs/hablando.gif',
+  'congelado_estatua': '/adaggio_gifs/hablando.gif',
+  'bow': '/adaggio_gifs/hablando.gif',
 };
 
 export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, isElectrocuting }) => {
@@ -34,9 +41,10 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
     setGifFailed(false);
   }, [animationState]);
 
-  const gifPath = stateToGifMap[animationState] || `/adaggio_gifs/${animationState}.gif`;
+  const gifPath = stateToGifMap[animationState] || '/adaggio_gifs/hablando.gif';
+  const isCoreUserGif = true;
 
-  if (!gifFailed) {
+  if (!gifFailed || isCoreUserGif) {
     return (
       <div 
         id="adaggio-puppet-container-gif" 
@@ -47,8 +55,12 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
           alt={`Adaggio - ${animationState}`}
           className="w-full h-full object-contain max-h-[320px]"
           onError={() => {
-            console.log(`Fallback: No se encontró el GIF en "${gifPath}". Mostrando títere procedural SVG.`);
-            setGifFailed(true);
+            if (!isCoreUserGif) {
+              console.log(`Fallback: No se encontró el GIF en "${gifPath}". Mostrando títere procedural SVG.`);
+              setGifFailed(true);
+            } else {
+              console.log(`Core GIF en "${gifPath}" no cargó inmediatamente, se mantiene intentar cargarlo del servidor.`);
+            }
           }}
           referrerPolicy="no-referrer"
         />
@@ -96,6 +108,8 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
       case 'accented_jump':
       case 'heavy_march':
       case 'celebration_victory':
+      case 'marchando':
+      case 'celebrando':
         // Wooden Stick (Bastón de madera ligero)
         const isHeavy = animationState === 'heavy_march';
         return (
@@ -164,6 +178,7 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
   const getEarsConfig = () => {
     switch (animationState) {
       case 'quiet':
+      case 'saludando':
         return {
           leftRotate: -15,
           rightRotate: 15,
@@ -172,6 +187,7 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
           earScaleY: 0.95,
         };
       case 'listening':
+      case 'hablando':
         // erected ears vibrating slightly
         return {
           leftRotate: -5,
@@ -202,6 +218,7 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
         return { leftRotate: -45, rightRotate: -25, leftY: 8, rightY: 10, earScaleY: 0.85 };
       case 'celebration_victory':
       case 'bow':
+      case 'celebrando':
         // happy ears or dipping downwards for bow
         return {
           leftRotate: animationState === 'bow' ? -90 : -35,
@@ -229,14 +246,14 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
   // Basic puppet body bobbing frequency
   const getBodyBobbingY = () => {
     if (animationState === 'congelado_estatua') return 0;
-    if (animationState === 'quiet') return [0, 4, 0];
-    if (animationState === 'listening') return [0, 2, 0];
+    if (animationState === 'quiet' || animationState === 'saludando') return [0, 4, 0];
+    if (animationState === 'listening' || animationState === 'hablando') return [0, 2, 0];
     if (animationState === 'scared') return [15, 18, 15];
     if (animationState === 'shaking_electric') return [0, -8, 8, -4, 4, 0];
     if (isElectrocuting) return [1, -5, 5, -3, 3, 0];
     
     // Quick paced cycles for marching
-    if (animationState === 'march_sowing' || animationState === 'proud_march') {
+    if (animationState === 'march_sowing' || animationState === 'proud_march' || animationState === 'marchando') {
       return [0, -12, 0, -12, 0];
     }
     if (animationState === 'heavy_march') {
@@ -275,6 +292,7 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
           </g>
         );
       case 'listening':
+      case 'hablando':
         return (
           // Concentrating eyes, curious smile
           <g id="face-listening">
@@ -297,6 +315,8 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
       case 'march_sowing':
       case 'proud_march':
       case 'celebration_victory':
+      case 'marchando':
+      case 'celebrando':
         return (
           // Happy smiling eyes and joyful open mouth
           <g id="face-happy">
@@ -334,7 +354,7 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
         }}
         transition={{
           repeat: animationState === 'congelado_estatua' ? 0 : Infinity,
-          duration: animationState === 'march_sowing' || animationState === 'proud_march' ? 0.65 : 2.5,
+          duration: animationState === 'march_sowing' || animationState === 'proud_march' || animationState === 'marchando' ? 0.65 : 2.5,
           ease: "easeInOut",
         }}
       >

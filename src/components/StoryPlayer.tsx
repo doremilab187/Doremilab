@@ -23,18 +23,18 @@ const BRIEF_PHRASES: Record<number, string> = {
   1: "El gran ritmo se ha dormido y el silencio rodea a Adaggio... ¡Prepárate para entrar!",
   2: "¡Camina con paso firme y saluda a la Madre Tierra sintiendo su pulso constante!",
   3: "Sigue el compás alegre y lanza tus semillas imaginarias en cada fuerte golpe del bombo.",
-  4: "Saca tus pañuelos azules y levanta los brazos hacia el cielo con las gotas más agudas.",
-  5: "El río corre ágil y rápido. Mueve tus pañuelos imitando olas enérgicas de lado a lado.",
-  6: "Siente el viento soplar de manera suave frente a tu pecho, lento y contenido. (Brisa piano)",
-  7: "¡El viento se intensifica! Abre tus brazos con fuerza de par en par, expandiendo el torso.",
-  8: "La tormenta eléctrica interrumpe el bosque. Muévete como viento y mantén máxima alerta.",
-  9: "¡Un relámpago! Sacude tu cuerpo entero en una vibración juguetona durante un segundo.",
-  10: "Caminemos en puntas de pie. Si suena un trueno: ¡conviértete en estatua de piedra inmóvil!",
-  11: "¡Llamemos al Sol radiante! Sostén el bastón con orgullo y marchen alzando alto las rodillas.",
-  12: "El sol baja despacio en el atardecer musical. Camina encorvado sintiendo el paso muy lento.",
-  13: "¡El gran ritmo ha renacido! Todos los tótems de la naturaleza brillan en plena armonía.",
-  14: "¡A celebrar! Danza alegremente con tus compañeros y comparte la sonrisa colectiva.",
-  15: "Relaja el cuerpo, siéntate en un semicírculo y respira hondo junto con Adaggio."
+  4: "Siente la lluvia suave y levanta los brazos para simular las sutiles gotas de lluvia.",
+  5: "El Agua Fluida: Estira tus brazos arriba si escuchas agudo, y hacia el suelo si escuchas grave.",
+  6: "Sigue el movimiento de las ondas y balancea suavemente tus brazos de lado a lado con fluidez.",
+  7: "Viento: Siente el viento soplar suavemente frente a tu pecho, lento y contenido.",
+  8: "Viento Fuerte: ¡El viento se intensifica! Abre tus brazos en grande de par en par.",
+  9: "El retorno de la tormenta: La tempestad eléctrica regresa. ¡Muévete rápido y en alerta!",
+  10: "¡Has logrado sobrevivir! Siente la energía limpia del rayo y baila con alegría.",
+  11: "Caminemos sigilosamente a la velocidad rítmica de los truenos lejanos.",
+  12: "¡La tormenta llega a su fin! Salta con energía y prepárate para celebrar el nuevo día.",
+  13: "¡El Sol amanece radiante! Sostén tu antorcha de luz con orgullo marchando con energía.",
+  14: "El atardecer pausado: Baja tu antorcha despacio y camina con calma bajo el Sol poniente.",
+  15: "La celebración y el latido de la paz: ¡Bailen, abrácense y relájen su respiración en semicírculo!"
 };
 
 // Helper to resolve Google Drive and Dropbox direct streaming links
@@ -107,6 +107,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
   const [congratulationsBlock, setCongratulationsBlock] = useState<NarrativeBlock | null>(null);
   const [triggeredPauses, setTriggeredPauses] = useState<number[]>([]);
   const [activePauseContent, setActivePauseContent] = useState<string | null>(null);
+  const [showStartScreen, setShowStartScreen] = useState<boolean>(true);
 
   // Refs
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -556,6 +557,60 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
     return '#1DD2C4'; // Final / Celebraciones
   };
 
+  if (showStartScreen) {
+    return (
+      <div className="bg-[#FFFDF1] rounded-3xl p-6 md:p-10 border-[4px] border-[#31C3AA] shadow-2xl relative overflow-hidden min-h-[580px] flex flex-col justify-between items-center text-center">
+        {/* Decorative fluffy white cloud vectors */}
+        <div className="absolute top-8 left-[10%] w-48 h-12 bg-white/70 rounded-full blur-md pointer-events-none opacity-60" />
+        <div className="absolute top-20 right-[5%] w-60 h-16 bg-white/70 rounded-full blur-md pointer-events-none opacity-60" />
+        
+        <div className="relative z-10 w-full flex justify-between items-center pb-4 border-b border-purple-100">
+          <span className="text-[10px] font-mono uppercase bg-[#6C3483]/10 border border-[#6C3483]/20 text-[#6C3483] px-2.5 py-0.5 rounded font-black tracking-widest block font-bold">
+            HISTORIA DE EURITMIA DETALLADA
+          </span>
+          <button 
+            onClick={() => {
+              if (onSessionComplete) onSessionComplete([]);
+            }}
+            className="text-xs text-[#472F92] font-black uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all"
+          >
+            Regresar al Inicio 🏠
+          </button>
+        </div>
+
+        <div className="relative z-10 my-auto flex flex-col items-center gap-6 max-w-lg">
+          <div className="relative w-44 h-44 bg-[#FFFDF1] border-4 border-[#31C3AA]/50 rounded-full flex items-center justify-center p-2 shadow-xl overflow-hidden group">
+            {/* Glossy sheen */}
+            <div className="absolute top-1 left-2 right-2 h-2.5 bg-white/50 rounded-full blur-[0.5px]" />
+            <div className="scale-75 transform origin-center">
+              <AdaggioPuppet animationState="saludando" />
+            </div>
+          </div>
+
+          <div className="space-y-3.5">
+            <h2 className="text-3xl font-black font-funny text-[#472F92] uppercase tracking-wide leading-tight">
+              ¡Viaje Rítmico de Adaggio! 👋
+            </h2>
+            <p className="text-[#6853a4] text-sm md:text-base leading-relaxed font-sans max-w-md mx-auto font-medium font-semibold">
+              Acompaña a Adaggio por los 15 tramos rítmicos de la naturaleza para despertar el gran pulso rítmico. Los niños jugarán sintiéndose tierra, agua, viento, trueno y sol.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setShowStartScreen(false)}
+          className="relative group w-full max-w-sm bg-gradient-to-r from-[#A3F1E3] to-[#46E4CF] hover:from-[#B4F7EC] hover:to-[#57EBD5] border-[4px] border-[#31C3AA] active:border-[#1F9F8B] px-8 py-4 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-center flex items-center justify-center gap-3 cursor-pointer overflow-hidden select-none"
+        >
+          <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/40 rounded-full blur-[0.5px]" />
+          <Play className="w-5 h-5 fill-[#472F92] text-[#472F92] animate-pulse" />
+          <span className="font-black text-lg text-[#472F92] font-funny tracking-wider uppercase">
+            Iniciar Relato Rítmico
+          </span>
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-5 w-full bg-slate-50/40 text-slate-800 rounded-2xl p-1 md:p-3">
       
@@ -623,7 +678,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                     />
                     
                     {/* Floating Manual Completion Trigger Accent for Google Drive videos */}
-                    <div className="absolute bottom-4 right-4 z-30 pointer-events-auto">
+                    <div className="absolute top-4 left-4 z-30 pointer-events-auto">
                       <button
                         onClick={() => handleBlockCompletion(activeBlock.id)}
                         className="bg-emerald-500 hover:bg-emerald-600 text-white font-black font-sans text-xs uppercase tracking-wider px-4 py-2.5 rounded-2xl shadow-xl border border-emerald-400/20 active:scale-95 hover:scale-105 transition-all cursor-pointer flex items-center gap-2"
@@ -775,132 +830,134 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
         </div>
 
         {/* MEDIA TIMELINE & CONTROLS DASHBOARD */}
-        <div id="media-timeline-dashboard" className="bg-neutral-950 rounded-2xl p-4 flex flex-col gap-3.5 shadow-2xl border border-neutral-900">
-          
-          <div className="flex justify-between items-center text-xs font-mono text-gray-400">
-            <span className="font-bold">{formatTime(currentTime)}</span>
-            <span className="text-[10.5px] uppercase font-black tracking-widest text-[#1DD2C4]">
-              {activeBlock.name} — {activeBlock.title}
-            </span>
-            <span className="text-gray-500">{formatTime(maxSesDuration)}</span>
-          </div>
+        {!isGoogleDrive && (
+          <div id="media-timeline-dashboard" className="bg-neutral-950 rounded-2xl p-4 flex flex-col gap-3.5 shadow-2xl border border-neutral-900">
+            
+            <div className="flex justify-between items-center text-xs font-mono text-gray-400">
+              <span className="font-bold">{formatTime(currentTime)}</span>
+              <span className="text-[10.5px] uppercase font-black tracking-widest text-[#1DD2C4]">
+                {activeBlock.name} — {activeBlock.title}
+              </span>
+              <span className="text-gray-500">{formatTime(maxSesDuration)}</span>
+            </div>
 
-          {/* Sizing Slider timeline */}
-          <div
-            ref={timelineRef}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            className="relative h-2.5 w-full bg-neutral-800 rounded-full cursor-pointer touch-none select-none overflow-hidden hover:h-3.5 transition-all flex items-center group"
-          >
+            {/* Sizing Slider timeline */}
             <div
-              className="absolute left-0 top-0 h-full rounded-full transition-all"
-              style={{ 
-                width: `${activePercent}%`,
-                background: `linear-gradient(to right, #472F92, ${getAccentColor(activeBlock.id)})`
-              }}
-            />
-            <div 
-              className="absolute w-3 h-3 bg-white rounded-full border-2 border-[#472F92] shadow scale-0 group-hover:scale-100 transition-transform pointer-events-none"
-              style={{ left: `calc(${activePercent}% - 6px)` }}
-            />
-
-            {/* Red Markers for Suggested Pauses */}
-            {NARRATIVE_BLOCKS.flatMap(b => b.suggestedPausas.map(p => b.durationStart + p.time)).map((point, idx) => (
+              ref={timelineRef}
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              className="relative h-2.5 w-full bg-neutral-800 rounded-full cursor-pointer touch-none select-none overflow-hidden hover:h-3.5 transition-all flex items-center group"
+            >
               <div
-                key={idx}
-                className="absolute w-1.5 h-full bg-red-600/90 z-20 pointer-events-none"
-                style={{ left: `${(point / maxSesDuration) * 100}%` }}
-                title="Pausa de Alistamiento Sugerida"
+                className="absolute left-0 top-0 h-full rounded-full transition-all"
+                style={{ 
+                  width: `${activePercent}%`,
+                  background: `linear-gradient(to right, #472F92, ${getAccentColor(activeBlock.id)})`
+                }}
               />
-            ))}
-          </div>
+              <div 
+                className="absolute w-3 h-3 bg-white rounded-full border-2 border-[#472F92] shadow scale-0 group-hover:scale-100 transition-transform pointer-events-none"
+                style={{ left: `calc(${activePercent}% - 6px)` }}
+              />
 
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleReset}
-                title="Reiniciar reproducción"
-                className="p-2 rounded-xl bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 text-gray-300 transition-all hover:scale-105 active:scale-95 cursor-pointer"
-              >
-                <RotateCcw className="w-4 h-4" />
-              </button>
-
-              {/* NEXT / PREV / PLAY TRAMO BLOCK NAVIGATION CONTROLS */}
-              <div className="flex items-center gap-1.5 bg-neutral-900 p-1 rounded-xl border border-neutral-800">
-                <button
-                  onClick={handlePrevBlock}
-                  disabled={activeBlock.id === 1}
-                  className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-neutral-800 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400 transition-all cursor-pointer"
-                  title="Tramo Anterior"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-
-                <button
-                  onClick={handlePauseToggle}
-                  className={`px-5 py-2 rounded-lg font-black flex items-center gap-2 transition-all hover:scale-105 active:scale-95 cursor-pointer ${
-                    isPlaying
-                      ? 'bg-neutral-800 hover:bg-neutral-700 text-amber-500 border border-amber-500/20'
-                      : 'bg-amber-400 hover:bg-amber-300 text-neutral-950 shadow shadow-amber-400/10'
-                  }`}
-                >
-                  {isPlaying ? <Pause className="w-3.5 h-3.5 fill-amber-500" /> : <Play className="w-3.5 h-3.5 fill-neutral-900" />}
-                  <span className="font-funny text-[13px] tracking-wide">{isPlaying ? 'PAUSAR' : 'PRODUCIR RITMO'}</span>
-                </button>
-
-                <button
-                  onClick={handleNextBlock}
-                  disabled={activeBlock.id === 15}
-                  className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-neutral-800 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400 transition-all cursor-pointer"
-                  title="Siguiente Tramo"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              {/* Dynamic Interactive Volume slider */}
-              <div className="flex items-center gap-2 bg-neutral-900 p-1 px-2.5 rounded-xl border border-neutral-800">
-                <button
-                  onClick={() => setIsMuted(prev => !prev)}
-                  className={`p-1.5 rounded-lg transition-all cursor-pointer ${
-                    isMuted ? 'text-red-400' : 'text-gray-400 hover:text-white'
-                  }`}
-                  title="Silenciar / Activar"
-                >
-                  {isMuted ? <VolumeX className="w-4 h-4" /> : volume < 0.35 ? <Volume1 className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                </button>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.05"
-                  value={isMuted ? 0 : volume}
-                  onChange={(e) => {
-                    const nextVol = parseFloat(e.target.value);
-                    setVolume(nextVol);
-                    if (nextVol > 0 && isMuted) {
-                      setIsMuted(false);
-                    }
-                  }}
-                  className="w-16 sm:w-20 md:w-24 h-1 bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-amber-400 outline-none"
-                  title="Regulador de Volumen"
+              {/* Red Markers for Suggested Pauses */}
+              {NARRATIVE_BLOCKS.flatMap(b => b.suggestedPausas.map(p => b.durationStart + p.time)).map((point, idx) => (
+                <div
+                  key={idx}
+                  className="absolute w-1.5 h-full bg-red-600/90 z-20 pointer-events-none"
+                  style={{ left: `${(point / maxSesDuration) * 100}%` }}
+                  title="Pausa de Alistamiento Sugerida"
                 />
+              ))}
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleReset}
+                  title="Reiniciar reproducción"
+                  className="p-2 rounded-xl bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 text-gray-300 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                </button>
+
+                {/* NEXT / PREV / PLAY TRAMO BLOCK NAVIGATION CONTROLS */}
+                <div className="flex items-center gap-1.5 bg-neutral-900 p-1 rounded-xl border border-neutral-800">
+                  <button
+                    onClick={handlePrevBlock}
+                    disabled={activeBlock.id === 1}
+                    className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-neutral-800 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400 transition-all cursor-pointer"
+                    title="Tramo Anterior"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+
+                  <button
+                    onClick={handlePauseToggle}
+                    className={`px-5 py-2 rounded-lg font-black flex items-center gap-2 transition-all hover:scale-105 active:scale-95 cursor-pointer ${
+                      isPlaying
+                        ? 'bg-neutral-800 hover:bg-neutral-700 text-amber-500 border border-amber-500/20'
+                        : 'bg-amber-400 hover:bg-amber-300 text-neutral-950 shadow shadow-amber-400/10'
+                    }`}
+                  >
+                    {isPlaying ? <Pause className="w-3.5 h-3.5 fill-amber-500" /> : <Play className="w-3.5 h-3.5 fill-neutral-900" />}
+                    <span className="font-funny text-[13px] tracking-wide">{isPlaying ? 'PAUSAR' : 'PRODUCIR RITMO'}</span>
+                  </button>
+
+                  <button
+                    onClick={handleNextBlock}
+                    disabled={activeBlock.id === 15}
+                    className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-neutral-800 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400 transition-all cursor-pointer"
+                    title="Siguiente Tramo"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
 
-              {/* Fullscreen control screen button */}
-              <button
-                onClick={toggleFullscreen}
-                className={`p-2 rounded-xl bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 text-gray-300 transition-all hover:scale-105 active:scale-95 cursor-pointer`}
-                title={isFullscreen ? "Regresar" : "Pantalla Completa"}
-              >
-                {isFullscreen ? <Minimize2 className="w-4.5 h-4.5" /> : <Maximize2 className="w-4.5 h-4.5" />}
-              </button>
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Dynamic Interactive Volume slider */}
+                <div className="flex items-center gap-2 bg-neutral-900 p-1 px-2.5 rounded-xl border border-neutral-800">
+                  <button
+                    onClick={() => setIsMuted(prev => !prev)}
+                    className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+                      isMuted ? 'text-red-400' : 'text-gray-400 hover:text-white'
+                    }`}
+                    title="Silenciar / Activar"
+                  >
+                    {isMuted ? <VolumeX className="w-4 h-4" /> : volume < 0.35 ? <Volume1 className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                  </button>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value={isMuted ? 0 : volume}
+                    onChange={(e) => {
+                      const nextVol = parseFloat(e.target.value);
+                      setVolume(nextVol);
+                      if (nextVol > 0 && isMuted) {
+                        setIsMuted(false);
+                      }
+                    }}
+                    className="w-16 sm:w-20 md:w-24 h-1 bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-amber-400 outline-none"
+                    title="Regulador de Volumen"
+                  />
+                </div>
+
+                {/* Fullscreen control screen button */}
+                <button
+                  onClick={toggleFullscreen}
+                  className={`p-2 rounded-xl bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 text-gray-300 transition-all hover:scale-105 active:scale-95 cursor-pointer`}
+                  title={isFullscreen ? "Regresar" : "Pantalla Completa"}
+                >
+                  {isFullscreen ? <Minimize2 className="w-4.5 h-4.5" /> : <Maximize2 className="w-4.5 h-4.5" />}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
       </div>
 
@@ -911,20 +968,20 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
           const accentColor = getAccentColor(activeTransitionModal.id);
           const iconMap: Record<number, string> = {
             1: "🐰", // Adaggio
-            2: "🪵", // Tierra
-            3: "🌱", // Tierra Siembra
-            4: "🩵", // Agua
-            5: "🌊", // Río
-            6: "🍃", // Brisa
-            7: "💨", // Viento
-            8: "⚡", // Tormenta
-            9: "💥", // Trueno
-            10: "🗿", // Estatua
-            11: "☀️", // Sol Alzando
-            12: "🌅", // Atardecer
-            13: "🌀", // Ritmo Renacido
-            14: "🎉", // Celebración
-            15: "🧘" // Calma respiración
+            2: "🪵", // Tierra I
+            3: "🌱", // Tierra II
+            4: "🩵", // Transición
+            5: "🌊", // Agua I
+            6: "💧", // Agua II
+            7: "🍃", // Viento I
+            8: "💨", // Viento II
+            9: "⚡", // Trueno I
+            10: "💥", // Trueno II
+            11: "🗿", // Trueno III
+            12: "🌧️", // Trueno IV
+            13: "☀️", // Sol I
+            14: "🌅", // Sol II
+            15: "🎉" // Celebración y Calma
           };
           const currentProgressPercent = ((activeTransitionModal.id - 1) / 15) * 100;
 
@@ -969,14 +1026,25 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
 
                 {/* Main Content Info */}
                 <div className="text-center flex flex-col items-center gap-4 mt-2">
-                  <div 
-                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center text-3xl sm:text-4xl shadow-md border-2"
-                    style={{ 
-                      borderColor: `${accentColor}30`, 
-                      backgroundColor: `${accentColor}10` 
-                    }}
-                  >
-                    {iconMap[activeTransitionModal.id] || "🎵"}
+                  <div className="flex items-center gap-4 justify-center">
+                    <div 
+                      className="w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-md border-2"
+                      style={{ 
+                        borderColor: `${accentColor}30`, 
+                        backgroundColor: `${accentColor}10` 
+                      }}
+                    >
+                      {iconMap[activeTransitionModal.id] || "🎵"}
+                    </div>
+                    {/* Talking Adaggio Puppet */}
+                    <div className="relative w-24 h-24 bg-slate-50 border-2 rounded-2xl flex items-center justify-center p-1 overflow-hidden shadow-inner" style={{ borderColor: `${accentColor}40` }}>
+                      <div className="absolute top-0.5 right-1 bg-purple-500/10 text-[#472F92] font-mono text-[7px] font-black uppercase tracking-wider px-1 rounded">
+                        Hablando
+                      </div>
+                      <div className="scale-[0.5] transform origin-center my-auto">
+                        <AdaggioPuppet animationState="hablando" />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="flex flex-col gap-1">
@@ -1010,7 +1078,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                   <span className="uppercase text-sm sm:text-base">
                     {activeTransitionModal.id < 15 
                       ? `CONTINUAR AL TRAMO ${activeTransitionModal.id + 1} ➔` 
-                      : 'FINALIZAR CLASE Y EVALUAR 🏆'}
+                      : 'FINALIZAR CLASE ➔'}
                   </span>
                 </button>
               </motion.div>
@@ -1034,8 +1102,19 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
               exit={{ scale: 0.9, y: 30 }}
               className="bg-white text-slate-800 rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl border-4 border-[#1DD2C4] relative text-center flex flex-col items-center gap-6"
             >
-              <div className="w-20 h-20 bg-[#1DD2C4]/10 border border-[#1DD2C4]/30 rounded-full flex items-center justify-center text-4xl shadow-md">
-                🏆
+              <div className="flex items-center gap-4 justify-center">
+                <div className="w-16 h-16 bg-[#1DD2C4]/10 border border-[#1DD2C4]/30 rounded-full flex items-center justify-center text-3xl shadow-md animate-bounce">
+                  🏆
+                </div>
+                {/* Adaggio Puppet */}
+                <div className="relative w-24 h-24 bg-[#FFFDF1] border-2 border-[#1DD2C4] rounded-2xl flex items-center justify-center p-1 overflow-hidden shadow-md">
+                  <div className="absolute top-0.5 right-1 bg-purple-500/10 text-[#472F92] font-mono text-[7px] font-black uppercase tracking-wider px-1 rounded">
+                    Adaggio
+                  </div>
+                  <div className="scale-[0.5] transform origin-center my-auto">
+                    <AdaggioPuppet animationState="hablando" />
+                  </div>
+                </div>
               </div>
 
               <div className="flex flex-col gap-1">
@@ -1043,15 +1122,15 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                   Clase Completada
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-black font-funny mt-3 uppercase tracking-wide text-slate-800">
-                  ¡Viaje Rítmico Exitoso!
+                  ¡FELICITACIONES! 🎉
                 </h2>
                 <p className="text-xs text-slate-400 font-sans mt-1">
-                  Has completado las 15 etapas de euritmia con Adaggio perfectamente.
+                  Has completado todo el viaje y la historia. ¡Buen trabajo!
                 </p>
               </div>
 
               <div className="bg-slate-50 border border-slate-100 p-5 rounded-2xl w-full font-sans text-sm leading-relaxed text-slate-600">
-                Los niños han experimentado el pulso, acentos, matices, tormentas, brisas, relámpagos, estatuas, sol rítmico y calma respiratoria.
+                Los niños han experimentado el pulso, acentos, matices, tormentas, brisas, relámpagos, estatuas, sol rítmico y calma respiratoria con total alegría.
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 w-full mt-2">
@@ -1073,7 +1152,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                   }}
                   className="flex-1 bg-[#1DD2C4] hover:bg-[#15BCB0] text-neutral-950 font-black font-funny text-sm tracking-wider py-3.5 rounded-xl transition-all cursor-pointer active:scale-95 shadow shadow-[#1DD2C4]/20"
                 >
-                  Cerrar y Evaluar 🏆
+                  Finalizar Clase ➔
                 </button>
               </div>
             </motion.div>

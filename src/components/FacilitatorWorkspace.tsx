@@ -121,7 +121,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
       { blockId: 4, rhythmSinc: 2, engagement: 3, understanding: 3, notes: 'Brazos expandidos.' },
       { blockId: 5, rhythmSinc: 3, engagement: 3, understanding: 2, notes: 'Sacudidas de rayo.' },
       { blockId: 6, rhythmSinc: 3, engagement: 3, understanding: 3, notes: 'Estatua silenciosa.' },
-      { blockId: 7, rhythmSinc: 3, engagement: 3, understanding: 3, notes: 'Marcha con palos.' },
+      { blockId: 7, rhythmSinc: 3, engagement: 3, understanding: 3, notes: 'Marcha con antorchas.' },
       { blockId: 8, rhythmSinc: 3, engagement: 3, understanding: 3, notes: 'Reminiscencia final.' }
     ];
 
@@ -391,7 +391,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
                             <span>🛑</span> Pausas Pedagógicas Inteligentes
                           </h3>
                           <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans font-medium">
-                            El teatrillo del StoryPlayer suspende el sonido periódicamente en hitos estratégicos del libreto musical. Esto te otorga un respiro libre de apuros técnicos para repartir pañuelos o bastones, y calmar la respiración de los estudiantes.
+                            El teatrillo del StoryPlayer suspende el sonido periódicamente en hitos estratégicos del libreto musical. Esto te otorga un respiro libre de apuros técnicos para repartir pañuelos o antorchas, y calmar la respiración de los estudiantes.
                           </p>
                           <div className="bg-amber-500/5 border border-amber-500/15 p-3 rounded-xl mt-2 flex items-start gap-2 text-amber-300">
                             <Info className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-400" />
@@ -824,7 +824,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
                   </div>
 
                   <div className="p-3.5 bg-amber-500/5 border border-amber-500/15 text-neutral-300 mt-4 leading-normal text-[10.5px] rounded-xl font-sans text-justify shadow-inner">
-                    💡 <strong>Cohesión de datos:</strong> La bitácora y el plano del aula se integran dinámicamente para facilitar el registro de evaluación al final de la sesión.
+                    💡 <strong>Cohesión de datos:</strong> La bitácora y el plano del aula se integran dinámicamente para facilitar el registro de asistencia y anotaciones en la bitácora al final de la sesión.
                   </div>
                 </div>
               </div>
@@ -930,7 +930,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
                       <span className="bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded px-1.5 py-0.5 font-mono text-[9px] font-bold">03</span>
                       <div>
                         <strong className="text-white block">Canasta de Soportes:</strong>
-                        Ordenar los pañuelos (Agua - Escena 3) y los palos rústicos (Sol - Escena 7) apilándolos limpios a la derecha del tutor para repartirlos al sonar la Pausa.
+                        Ordenar los pañuelos (Agua - Escena 3) y las antorchas ligeras (Sol - Escena 7) apilándolos limpios a la derecha del tutor para repartirlos al sonar la Pausa.
                       </div>
                     </li>
                   </ul>
@@ -939,7 +939,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
                 <div className="p-3 bg-cyan-500/5 border border-cyan-500/15 rounded-xl text-xs leading-normal font-sans">
                   <span className="font-bold text-cyan-400 block mb-1 font-mono">💡 Consejo del Facilitador:</span>
                   <span className="text-neutral-300">
-                    "Al marchar con pañuelos o bastones, enséñales que el pañuelo es suave como el agua y el bastón es noble y rígido como el Sol, reforzando la kinestesia corporal."
+                    "Al marchar con pañuelos o antorchas, enséñales que el pañuelo es suave como el agua y la antorcha es brillante y cálida como el Sol, reforzando la kinestesia corporal."
                   </span>
                 </div>
               </div>
@@ -1081,7 +1081,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
                     <span className="text-[9.5px] px-2 py-0.5 rounded bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 font-mono font-bold leading-none">Compás de Gala</span>
                   </div>
                   <p className="text-[11px] text-neutral-400 leading-normal font-sans">
-                    Marchar erguidos portando el bastón de madera al compás de tambor; elevar el bastón al cielo al oír el golpe acentuado.
+                    Marchar erguidos portando la antorcha rítmica al compás del tambor; elevar la antorcha al cielo al oír el golpe acentuado.
                   </p>
                 </div>
                 <button

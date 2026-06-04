@@ -5,8 +5,9 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, ArrowRight, Sparkles, Volume2, Activity, Play, Eye, Footprints, Info, Upload, Trash2, Pause, Music } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Sparkles, Volume2, Activity, Play, Eye, Footprints, Info, Upload, Trash2, Pause, Music, Award, Home, Smile } from 'lucide-react';
 import { audioInstance } from '../utils/AudioEngine';
+import { AdaggioPuppet } from './AdaggioPuppet';
 
 interface InteractiveTutorialProps {
   onBackToHome: () => void;
@@ -17,107 +18,51 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
   const [isSoundPlaying, setIsSoundPlaying] = useState<boolean>(false);
   const [activeSubAction, setActiveSubAction] = useState<string | null>(null);
 
-  const [customAudioUrl, setCustomAudioUrl] = useState<string | null>(null);
-  const [customAudioName, setCustomAudioName] = useState<string>('');
-  const [customTitle, setCustomTitle] = useState<string>("3. Sonido Rítmico de Tu Aula");
-  const [customDescription, setCustomDescription] = useState<string>("Sube un archivo de audio personalizado (.mp3, .wav, .m4a) para convertirlo en el tercer tramo de experimentación práctica.");
-  const [customConsigna, setCustomConsigna] = useState<string>("¡Escucha con atención y haz que tus alumnos reaccionen corporalmente siguiendo el movimiento de tu sonido subido!");
-  const [isCustomPlaying, setIsCustomPlaying] = useState<boolean>(false);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
-  const customAudioRef = React.useRef<HTMLAudioElement | null>(null);
+  const [isStepAudioPlaying, setIsStepAudioPlaying] = useState<boolean>(false);
+  const stepAudioRef = React.useRef<HTMLAudioElement | null>(null);
 
-  React.useEffect(() => {
-    if (customAudioRef.current) {
-      customAudioRef.current.pause();
-      setIsCustomPlaying(false);
-    }
-    try {
-      audioInstance.stop();
-    } catch (e) {}
-  }, [currentStep]);
+  const [showStartScreen, setShowStartScreen] = useState<boolean>(true);
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const [showFinalScreen, setShowFinalScreen] = useState<boolean>(false);
 
-  React.useEffect(() => {
-    return () => {
-      if (customAudioRef.current) {
-        customAudioRef.current.pause();
-      }
-    };
-  }, []);
-
-  const handleAudioUpload = (file: File) => {
-    if (customAudioRef.current) {
-      customAudioRef.current.pause();
-      customAudioRef.current = null;
-    }
-    const url = URL.createObjectURL(file);
-    setCustomAudioUrl(url);
-    setCustomAudioName(file.name);
-    setIsCustomPlaying(false);
-  };
-
-  const toggleCustomAudio = () => {
-    if (!customAudioUrl) return;
-    
+  const toggleStepAudio = (src: string) => {
     try {
       audioInstance.stop();
     } catch (e) {}
 
-    if (isCustomPlaying) {
-      if (customAudioRef.current) {
-        customAudioRef.current.pause();
+    if (isStepAudioPlaying) {
+      if (stepAudioRef.current) {
+        stepAudioRef.current.pause();
       }
-      setIsCustomPlaying(false);
+      setIsStepAudioPlaying(false);
     } else {
-      if (!customAudioRef.current) {
-        customAudioRef.current = new Audio(customAudioUrl);
-        customAudioRef.current.onEnded = () => {
-          setIsCustomPlaying(false);
+      if (!stepAudioRef.current || stepAudioRef.current.src !== window.location.origin + src) {
+        if (stepAudioRef.current) {
+          stepAudioRef.current.pause();
+        }
+        stepAudioRef.current = new Audio(src);
+        stepAudioRef.current.onEnded = () => {
+          setIsStepAudioPlaying(false);
         };
       }
-      customAudioRef.current.play().then(() => {
-        setIsCustomPlaying(true);
+      stepAudioRef.current.play().then(() => {
+        setIsStepAudioPlaying(true);
       }).catch(err => {
-        console.error("Error playing custom audio:", err);
+        console.error("Error playing step audio:", err);
       });
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = () => {
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      const file = e.dataTransfer.files[0];
-      if (file.type.startsWith('audio/')) {
-        handleAudioUpload(file);
-      }
-    }
-  };
-
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      handleAudioUpload(e.target.files[0]);
     }
   };
 
   const tutorialSteps = [
     {
       id: "earth-pulse",
-      title: "1. El Pulso de la Tierra (90 BPM)",
-      subtitle: "Marcha Constante",
+      title: "1. Marcha y Acentuación (Compás 4/4)",
+      subtitle: "sonido1.mp3 — Marchar y Acentuar los Fuertes",
       emoji: "👣",
       colorClass: "from-amber-600/20 to-orange-500/20 text-amber-500 border-amber-500/30",
       accentBgClass: "bg-amber-500",
-      description: "Caminen con paso firme y regular. Un paso adelante con cada latido profundo del tambor.",
-      visualTip: "Consigna: ¡Siente el ritmo en tus pies y camina como gigantes sembrando semillas!",
+      description: "Marchen con paso firme y regular siguiendo el ritmo de la música. Cuando escuchen que el sonido de la marcha se hace más fuerte, acentúen también el paso marcando el golpe con energía (siguiendo el compás de 4/4).",
+      visualTip: "Consigna: ¡Mantén una marcha regular al compás y da un golpe enérgico al suelo sincronizado con cada fuerte del ritmo!",
       hasSound: true,
       soundType: "pulse",
       actions: [
@@ -126,32 +71,19 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
     },
     {
       id: "water-pitch",
-      title: "2. Alturas del Agua",
-      subtitle: "Agudo ARRIBA ⬆️ — Grave ABAJO ⬇️",
-      emoji: "🧣",
+      title: "2. Reconocimiento de Agudos y Graves",
+      subtitle: "sonido2.mp3 — Indica si es Agudo o Grave",
+      emoji: "🌈",
       colorClass: "from-sky-600/20 to-cyan-500/20 text-sky-400 border-sky-500/30",
       accentBgClass: "bg-sky-500",
-      description: "Mover los pañuelos azules arriba cuando suenen gotas agudas y abajo cuando suenen gotas graves.",
-      visualTip: "Consigna: ¡Los pañuelos suben como vapor al cielo y caen como cascadas al lecho del río!",
+      description: "Escuchen con total atención la melodía. Los niños deberán reaccionar con su cuerpo: indicando hacia arriba con la mano o pañuelo si el sonido es agudo, o hacia abajo si el sonido es grave.",
+      visualTip: "Consigna: ¡Sintoniza bien tus oídos e indica de inmediato si percibes sonidos agudos o graves!",
       hasSound: true,
       soundType: "pitch",
       actions: [
         { label: "🔊 Sonido Agudo (Cielo ⬆️)", type: "drip-agudo" },
         { label: "🔊 Sonido Grave (Tierra ⬇️)", type: "drip-grave" }
       ]
-    },
-    {
-      id: "custom-exercise",
-      title: customTitle,
-      subtitle: customAudioName ? `Fichero: ${customAudioName}` : "Arrastra o selecciona un Audio",
-      emoji: isCustomPlaying ? "📻" : "🎵",
-      colorClass: "from-purple-600/20 to-pink-500/20 text-purple-400 border-purple-500/30",
-      accentBgClass: "bg-purple-500",
-      description: customDescription,
-      visualTip: customConsigna,
-      hasSound: !!customAudioUrl,
-      soundType: "custom",
-      actions: []
     }
   ];
 
@@ -177,6 +109,169 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
   };
 
   const currentData = tutorialSteps[currentStep];
+
+  if (showStartScreen) {
+    return (
+      <div className="bg-neutral-950 text-white rounded-3xl p-6 md:p-10 border border-neutral-800 shadow-2xl relative overflow-hidden min-h-[580px] flex flex-col justify-between items-center text-center">
+        {/* Lights / blobs */}
+        <div className="absolute top-[-50px] right-[-50px] w-72 h-72 bg-purple-500/10 rounded-full blur-[90px] pointer-events-none" />
+        <div className="absolute bottom-[-100px] left-[-50px] w-96 h-96 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none" />
+        
+        <div className="relative z-10 w-full flex justify-between items-center border-b border-neutral-800 pb-4">
+          <span className="text-[10px] font-mono uppercase bg-amber-500/10 border border-amber-500/20 text-amber-400 px-2.5 py-0.5 rounded font-black tracking-widest block">
+            Sesión de Alistamiento
+          </span>
+          <button 
+            onClick={onBackToHome}
+            className="text-xs text-neutral-400 hover:text-white transition-colors"
+          >
+            Regresar ✖
+          </button>
+        </div>
+
+        <div className="relative z-10 my-auto flex flex-col items-center gap-6 max-w-lg">
+          <div className="relative w-44 h-44 bg-neutral-900 border-2 border-[#CDA152]/40 rounded-full flex items-center justify-center p-2 shadow-2xl overflow-hidden group">
+            {/* Glossy sheen */}
+            <div className="absolute top-1 left-2 right-2 h-2.5 bg-white/20 rounded-full blur-[1px]" />
+            <div className="scale-75 transform origin-center">
+              <AdaggioPuppet animationState="saludando" />
+            </div>
+          </div>
+
+          <div className="space-y-3.5">
+            <h2 className="text-3xl font-black font-funny text-white uppercase tracking-wide leading-tight">
+              ¡Hola Guardián del Ritmo! 👋
+            </h2>
+            <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-sans max-w-md mx-auto">
+              Te damos la bienvenida al rincón sensorial. Aquí entrenaremos juntos el oído y el cuerpo para sintonizarnos con la marcha musical y distinguir las alturas graves y agudas.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setShowStartScreen(false)}
+          className="relative group w-full max-w-sm bg-gradient-to-r from-[#A3F1E3] to-[#46E4CF] hover:from-[#B4F7EC] hover:to-[#57EBD5] border-[4px] border-[#31C3AA] active:border-[#1F9F8B] px-8 py-4 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-center flex items-center justify-center gap-3 cursor-pointer overflow-hidden select-none"
+        >
+          <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/40 rounded-full blur-[0.5px]" />
+          <Play className="w-5 h-5 fill-[#472F92] text-[#472F92] animate-pulse" />
+          <span className="font-black text-lg text-[#472F92] font-funny tracking-wider uppercase">
+            Comenzar Entrenamiento
+          </span>
+        </button>
+      </div>
+    );
+  }
+
+  if (isTransitioning) {
+    return (
+      <div className="bg-neutral-950 text-white rounded-3xl p-6 md:p-10 border border-neutral-800 shadow-2xl relative overflow-hidden min-h-[580px] flex flex-col justify-between items-center text-center">
+        <div className="absolute top-[-50px] right-[-50px] w-72 h-72 bg-purple-500/10 rounded-full blur-[90px] pointer-events-none" />
+        <div className="absolute bottom-[-100px] left-[-50px] w-96 h-96 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none" />
+
+        <div className="relative z-10 w-full flex justify-between items-center border-b border-neutral-800 pb-4">
+          <span className="text-[10px] font-mono uppercase bg-sky-500/10 border border-sky-500/20 text-sky-400 px-2.5 py-0.5 rounded font-black tracking-widest block">
+            Siguiente Desafío ➔
+          </span>
+          <button 
+            onClick={onBackToHome}
+            className="text-xs text-neutral-400 hover:text-white transition-colors"
+          >
+            Salir ✖
+          </button>
+        </div>
+
+        <div className="relative z-10 my-auto flex flex-col items-center gap-6 max-w-lg">
+          <div className="relative w-44 h-44 bg-neutral-900 border-2 border-sky-500/40 rounded-full flex items-center justify-center p-2 shadow-2xl overflow-hidden">
+            <div className="absolute top-1 left-2 right-2 h-2.5 bg-white/20 rounded-full blur-[1px]" />
+            <div className="scale-75 transform origin-center">
+              <AdaggioPuppet animationState="hablando" />
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <h2 className="text-2xl sm:text-3xl font-black font-funny text-white uppercase tracking-wide">
+              ¡Marchaste con gran pulso! 👣
+            </h2>
+            <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-sans max-w-md mx-auto">
+              Adaggio está impresionado. Ahora, agudicemos el oído: vamos a aprender a reconocer velocidades acústicas y discriminar entre sonidos <strong>Agudos (Cielo)</strong> y sonidos <strong>Graves (Tierra)</strong>.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => {
+            setCurrentStep(1);
+            setIsTransitioning(false);
+          }}
+          className="relative group w-full max-w-sm bg-gradient-to-r from-[#E9CEFC] to-[#D598FB] hover:from-[#F0D9FF] hover:to-[#DEA7FE] border-[4px] border-[#BE82ED] active:border-[#A467D4] px-8 py-4 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-center flex items-center justify-center gap-3 cursor-pointer overflow-hidden select-none"
+        >
+          <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/40 rounded-full blur-[0.5px]" />
+          <span className="font-black text-lg text-[#472F92] font-funny tracking-wider uppercase">
+            ¡Siguiente Nivel! ➔
+          </span>
+        </button>
+      </div>
+    );
+  }
+
+  if (showFinalScreen) {
+    return (
+      <div className="bg-neutral-950 text-white rounded-3xl p-6 md:p-10 border border-neutral-800 shadow-2xl relative overflow-hidden min-h-[580px] flex flex-col justify-between items-center text-center">
+        <div className="absolute top-[-50px] right-[-50px] w-72 h-72 bg-purple-500/15 rounded-full blur-[90px] pointer-events-none" />
+        <div className="absolute bottom-[-100px] left-[-50px] w-96 h-96 bg-amber-500/15 rounded-full blur-[100px] pointer-events-none" />
+
+        <div className="relative z-10 w-full flex justify-center pb-2">
+          <div className="w-16 h-16 bg-amber-400/10 border border-amber-400/30 rounded-full flex items-center justify-center text-4xl shadow-md animate-bounce">
+            🏆
+          </div>
+        </div>
+
+        <div className="relative z-10 my-auto flex flex-col items-center gap-6 max-w-lg">
+          <div className="relative w-44 h-44 bg-neutral-900 border-2 border-emerald-500/40 rounded-full flex items-center justify-center p-2 shadow-2xl overflow-hidden">
+            <div className="absolute top-1 left-2 right-2 h-2.5 bg-white/20 rounded-full blur-[1px]" />
+            <div className="scale-75 transform origin-center">
+              <AdaggioPuppet animationState="celebrando" />
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex justify-center">
+              <span className="text-[10px] bg-emerald-500/10 border border-emerald-500/35 text-emerald-400 px-3 py-1 rounded-full font-black tracking-widest uppercase block self-center">
+                Entrenamiento Completado
+              </span>
+            </div>
+            <h2 className="text-3xl font-black font-funny text-white uppercase tracking-wide leading-tight">
+              ¡Felicidades, Maestro del Oído! 🎉
+            </h2>
+            <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-sans max-w-md mx-auto">
+              Has dominado los ejercicios de Euritmia Dalcroze con Adaggio perfectamente. Ahora estás preparado para guiar y motivar el movimiento corporal de tus estudiantes en la historia principal.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-3.5 w-full max-w-md mt-4 relative z-10">
+          <button
+            onClick={() => {
+              setShowStartScreen(true);
+              setIsTransitioning(false);
+              setShowFinalScreen(false);
+              setCurrentStep(0);
+            }}
+            className="flex-1 py-3.5 rounded-2xl border border-neutral-805 hover:bg-neutral-900 text-neutral-300 font-bold font-sans text-xs uppercase transition-all cursor-pointer active:scale-95"
+          >
+            Repetir Tutorial ↺
+          </button>
+          
+          <button
+            onClick={onBackToHome}
+            className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-neutral-950 font-black font-funny text-xs tracking-wider uppercase py-3.5 rounded-2xl transition-all cursor-pointer active:scale-95 shadow-lg shadow-emerald-500/10"
+          >
+            Regresar al Inicio 🏠
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div id="tutorial-full-sensory-experience" className="bg-neutral-950 text-white rounded-3xl p-6 md:p-8 border border-neutral-800 shadow-2xl relative overflow-hidden min-h-[580px] flex flex-col justify-between">
@@ -231,8 +326,7 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
             
             {/* Animated card elements representation */}
             <div className={`absolute inset-0 bg-gradient-to-b opacity-[0.03] ${
-              currentStep === 0 ? 'from-amber-500' :
-              currentStep === 1 ? 'from-sky-500' : 'from-purple-500'
+              currentStep === 0 ? 'from-amber-500' : 'from-sky-500'
             }`} />
  
             <AnimatePresence mode="wait">
@@ -245,7 +339,7 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
               >
                 {/* Massive Animated Element Emoji */}
                 <span className={`text-8xl leading-none block select-none drop-shadow-md ${
-                  activeSubAction || isCustomPlaying ? 'animate-bounce' : 'animate-pulse'
+                  activeSubAction || isStepAudioPlaying ? 'animate-bounce' : 'animate-pulse'
                 }`}>
                   {currentData.emoji}
                 </span>
@@ -256,9 +350,9 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
                     {currentData.subtitle}
                   </span>
                   <div className="flex items-center gap-1 justify-center">
-                    <Activity className={`w-3 h-3 text-emerald-400 ${activeSubAction || isCustomPlaying ? 'animate-spin' : ''}`} />
+                    <Activity className={`w-3 h-3 text-emerald-400 ${activeSubAction || isStepAudioPlaying ? 'animate-spin' : ''}`} />
                     <span className="text-[11px] text-emerald-400 font-bold font-mono">
-                      {activeSubAction || isCustomPlaying ? 'Emitiendo Sonido...' : 'Listo para Sintonizar'}
+                      {activeSubAction || isStepAudioPlaying ? 'Emitiendo Sonido...' : 'Listo para Sintonizar'}
                     </span>
                   </div>
                 </div>
@@ -270,193 +364,99 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
  
         {/* Right Side: Clean Descriptive Guidelines + Interactive Action Triggers (takes 7 cols) */}
         <div className="lg:col-span-7 flex flex-col gap-6 text-left">
-          
-          {currentStep === 2 ? (
-            // CUSTOM STEP 3 BUILDER / CONTROLS WITH FILES SUPPORT
-            <div className="flex flex-col gap-5">
+          <div>
+            <h3 className="text-2xl font-black text-white leading-tight uppercase font-funny tracking-wide">
+              {currentData.title}
+            </h3>
+            <p className="text-neutral-300 text-sm md:text-base leading-relaxed mt-2.5 max-w-xl">
+              {currentData.description}
+            </p>
+          </div>
+
+          {/* Tutorial MP3 Player Bar */}
+          <div className="bg-neutral-900 border border-neutral-800 p-4 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-md">
+            <div className="flex items-center gap-3">
+              <div className={`w-11 h-11 rounded-xl flex items-center justify-center border transition-all ${
+                isStepAudioPlaying 
+                  ? 'bg-amber-500/15 border-amber-500/40 text-amber-400 animate-pulse' 
+                  : 'bg-neutral-850 border-neutral-800 text-neutral-400'
+              }`}>
+                <Music className={`w-5 h-5 ${isStepAudioPlaying ? 'animate-bounce' : ''}`} />
+              </div>
               <div>
-                <span className="text-[10px] font-mono uppercase bg-purple-500/10 border border-purple-500/20 text-purple-400 px-2.5 py-1 rounded font-black tracking-widest block w-max mb-2 animate-pulse">
-                  RECURSO DINÁMICO DE TU PROPIO RITMO
+                <span className="text-[9px] font-mono text-neutral-500 uppercase tracking-widest font-black block">Audio Guía del Tramo</span>
+                <span className="text-xs font-black text-white block mt-0.5 font-mono">
+                  {currentStep === 0 ? "sonido1.mp3 (Marcha 4/4)" : "sonido2.mp3 (Agudos/Graves)"}
                 </span>
-                
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs text-neutral-400 font-mono font-bold uppercase tracking-wider block">Título del Ejercicio:</label>
-                  <input
-                    type="text"
-                    value={customTitle}
-                    onChange={(e) => setCustomTitle(e.target.value)}
-                    className="w-full bg-neutral-900 border border-neutral-800 text-white font-funny text-lg font-black rounded-xl px-3.5 py-2.5 uppercase focus:border-purple-500 focus:outline-none transition-all"
-                    placeholder="E.g., 3. Ritmo de las Maracas"
-                  />
-                </div>
-                
-                <div className="flex flex-col gap-2 mt-3">
-                  <label className="text-xs text-neutral-400 font-mono font-bold uppercase tracking-wider block">Descripción del Movimiento:</label>
-                  <textarea
-                    value={customDescription}
-                    onChange={(e) => setCustomDescription(e.target.value)}
-                    rows={2}
-                    className="w-full bg-neutral-900 border border-neutral-800 text-neutral-300 text-xs rounded-xl px-3.5 py-2.5 focus:border-purple-500 focus:outline-none transition-all resize-none leading-relaxed"
-                    placeholder="Sube un audio y describe qué deben hacer los niños con su cuerpo al escucharlo..."
-                  />
-                </div>
-              </div>
-
-              {/* UPLOADER / PLAYER BOX */}
-              <div 
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-                className={`border-2 border-dashed rounded-2xl p-5 flex flex-col items-center justify-center text-center transition-all min-h-[178px] ${
-                  isDragging 
-                    ? 'border-purple-500 bg-purple-500/5' 
-                    : customAudioUrl 
-                    ? 'border-emerald-500/40 bg-emerald-500/[0.02]' 
-                    : 'border-neutral-800 hover:border-neutral-700 bg-neutral-900/40'
-                }`}
-              >
-                {customAudioUrl ? (
-                  <div className="flex flex-col items-center gap-3.5 w-full">
-                    {/* Active Audio State */}
-                    <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/30">
-                      <Music className={`w-5 h-5 text-emerald-400 ${isCustomPlaying ? 'animate-bounce' : ''}`} />
-                    </div>
-                    
-                    <div className="max-w-[85%]">
-                      <p className="text-[10px] text-emerald-400 font-mono select-none uppercase font-black tracking-wider">Archivo de Audio Cargado</p>
-                      <h4 className="text-sm font-bold text-white tracking-tight truncate max-w-xs mt-0.5">{customAudioName}</h4>
-                    </div>
-
-                    <div className="flex items-center gap-2.5 mt-1.5 w-full max-w-xs">
-                      <button
-                        onClick={toggleCustomAudio}
-                        className={`flex-1 py-3 px-5 rounded-xl font-black font-sans text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                          isCustomPlaying 
-                            ? 'bg-amber-500 text-neutral-950 hover:bg-amber-400' 
-                            : 'bg-emerald-500 text-neutral-950 hover:bg-emerald-400'
-                        }`}
-                      >
-                        {isCustomPlaying ? (
-                          <>
-                            <Pause className="w-4 h-4 fill-neutral-950 text-neutral-950" />
-                            <span>Pausar Ritmo</span>
-                          </>
-                        ) : (
-                          <>
-                            <Play className="w-4 h-4 fill-neutral-950 text-neutral-950 animate-pulse" />
-                            <span>Producir Audio</span>
-                          </>
-                        )}
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          if (customAudioRef.current) {
-                            customAudioRef.current.pause();
-                            customAudioRef.current = null;
-                          }
-                          setCustomAudioUrl(null);
-                          setCustomAudioName('');
-                          setIsCustomPlaying(false);
-                        }}
-                        className="p-3 bg-neutral-900 border border-neutral-800 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/30 transition-all text-neutral-400 cursor-pointer rounded-xl"
-                        title="Borrar y subir otro audio"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <label className="cursor-pointer flex flex-col items-center gap-2.5 p-2 w-full">
-                    <input
-                      type="file"
-                      accept="audio/*"
-                      onChange={handleFileInputChange}
-                      className="hidden"
-                    />
-                    <div className="w-11 h-11 rounded-full bg-neutral-850 flex items-center justify-center border border-neutral-800">
-                      <Upload className="w-5 h-5 text-neutral-400" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-neutral-200">
-                        Sube tu audio rítmico personalizado
-                      </p>
-                      <p className="text-[10px] text-neutral-500 font-mono mt-1">
-                        Sólta tu archivo aquí o haz clic para buscarlo (MP3, WAV, M4A)
-                      </p>
-                    </div>
-                  </label>
-                )}
-              </div>
-
-              {/* Custom Consigna Field */}
-              <div className="bg-neutral-900 border border-neutral-850 p-3 rounded-xl flex flex-col gap-1.5">
-                <span className="text-[10px] font-mono text-purple-400 font-black uppercase tracking-wider block">
-                  Consigna o Frase Pedagógica (Para la clase):
-                </span>
-                <input
-                  type="text"
-                  value={customConsigna}
-                  onChange={(e) => setCustomConsigna(e.target.value)}
-                  className="w-full bg-transparent border-0 border-b border-neutral-800 text-neutral-200 text-xs px-1 py-1.5 focus:border-purple-500 focus:outline-none transition-all placeholder-neutral-600 font-medium"
-                  placeholder="E.g., ¡Caminen libremente al sonar este sonido y quédense congelados si para!"
-                />
               </div>
             </div>
-          ) : (
-            // STANDARD PRESETS STEPS 1 & 2
-            <>
-              <div>
-                <h3 className="text-2xl font-black text-white leading-tight uppercase font-funny tracking-wide">
-                  {currentData.title}
-                </h3>
-                <p className="text-neutral-300 text-sm md:text-base leading-relaxed mt-2.5 max-w-xl">
-                  {currentData.description}
-                </p>
-              </div>
+            
+            <button
+              onClick={() => toggleStepAudio(currentStep === 0 ? '/tutorial-music/sonido1.mp3' : '/tutorial-music/sonido2.mp3')}
+              className={`w-full sm:w-auto px-5 py-3 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer ${
+                isStepAudioPlaying
+                  ? 'bg-amber-500 text-neutral-950 hover:bg-amber-400'
+                  : 'bg-emerald-500 text-neutral-950 hover:bg-emerald-400'
+              }`}
+            >
+              {isStepAudioPlaying ? (
+                <>
+                  <Pause className="w-4 h-4 fill-neutral-950 text-neutral-950" />
+                  <span>Pausar Música</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4 fill-neutral-950 text-neutral-950 animate-pulse" />
+                  <span>Reproducir Música</span>
+                </>
+              )}
+            </button>
+          </div>
 
-              {/* Practical Checklist instructions boxes */}
-              <div className="bg-neutral-900 border border-neutral-800/80 p-4 rounded-xl flex items-start gap-3">
-                <div className="bg-amber-500/15 text-amber-400 p-2 rounded-lg font-mono font-bold leading-none select-none text-xs">
-                  💡
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase font-black text-amber-500 font-mono tracking-wider">
-                    Consejo de Aula para el Facilitador
-                  </p>
-                  <p className="text-neutral-300 text-xs mt-1 leading-relaxed font-sans font-medium">
-                    {currentData.visualTip}
-                  </p>
-                </div>
-              </div>
+          {/* Practical Checklist instructions boxes */}
+          <div className="bg-neutral-900 border border-neutral-800/80 p-4 rounded-xl flex items-start gap-3">
+            <div className="bg-amber-500/15 text-amber-400 p-2 rounded-lg font-mono font-bold leading-none select-none text-xs">
+              💡
+            </div>
+            <div>
+              <p className="text-[10px] uppercase font-black text-amber-500 font-mono tracking-wider">
+                Consejo de Aula para el Facilitador
+              </p>
+              <p className="text-neutral-300 text-xs mt-1 leading-relaxed font-sans font-medium">
+                {currentData.visualTip}
+              </p>
+            </div>
+          </div>
 
-              {/* Tactile interaction button triggers */}
-              <div className="flex flex-wrap gap-3">
-                {currentData.actions.map((act, index) => {
-                  const isSubActive = 
-                    (act.type === 'bom' && activeSubAction === 'bom') ||
-                    (act.type === 'drip-agudo' && activeSubAction === 'agudo') ||
-                    (act.type === 'drip-grave' && activeSubAction === 'grave');
+          {/* Tactile interaction button triggers */}
+          <div className="flex flex-col gap-2.5">
+            <span className="text-[9px] font-mono text-neutral-500 uppercase tracking-widest font-black">
+              Sonidos Sintéticos de Prueba:
+            </span>
+            <div className="flex flex-wrap gap-2.5">
+              {currentData.actions.map((act, index) => {
+                const isSubActive = 
+                  (act.type === 'bom' && activeSubAction === 'bom') ||
+                  (act.type === 'drip-agudo' && activeSubAction === 'agudo') ||
+                  (act.type === 'drip-grave' && activeSubAction === 'grave');
 
-                  return (
-                    <button
-                      key={index}
-                      onClick={() => handleSoundTest(act.type)}
-                      className={`px-5 py-3.5 rounded-xl border font-bold text-xs tracking-wider uppercase font-mono flex items-center gap-2 transition-all active:scale-95 ${
-                        isSubActive 
-                          ? 'bg-emerald-500 text-neutral-950 border-emerald-400 shadow-md shadow-emerald-500/20' 
-                          : 'bg-neutral-900 text-white border-neutral-800 hover:bg-neutral-800 hover:border-neutral-700'
-                      }`}
-                    >
-                      <Volume2 className={`w-4 h-4 ${isSubActive ? 'animate-bounce' : ''}`} />
-                      <span>{act.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
-
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleSoundTest(act.type)}
+                    className={`px-4 py-2.5 rounded-lg border font-bold text-xs tracking-wider uppercase font-mono flex items-center gap-2 transition-all active:scale-95 cursor-pointer ${
+                      isSubActive 
+                        ? 'bg-emerald-500 text-neutral-950 border-emerald-400 shadow-md shadow-emerald-500/20' 
+                        : 'bg-neutral-900 text-neutral-300 border-neutral-850 hover:bg-neutral-800 hover:border-neutral-750'
+                    }`}
+                  >
+                    <Volume2 className={`w-3.5 h-3.5 ${isSubActive ? 'animate-bounce' : ''}`} />
+                    <span>{act.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
       </div>
@@ -486,9 +486,9 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
           onClick={() => {
             audioInstance.stop();
             if (currentStep < tutorialSteps.length - 1) {
-              setCurrentStep(prev => prev + 1);
+              setIsTransitioning(true);
             } else {
-              onBackToHome();
+              setShowFinalScreen(true);
             }
           }}
           className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-neutral-950 font-funny text-[13px] font-black tracking-wide shadow transition-all active:scale-95 flex items-center gap-1 uppercase"

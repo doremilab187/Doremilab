@@ -17,7 +17,7 @@ export interface NarrativeBlock {
   instrumentProtagonist: string;
   narratorLines: string;
   facilitatorCue: string;
-  adaggioAnimationState: 'quiet' | 'listening' | 'scared' | 'march_sowing' | 'fluid_raise_drop' | 'expanding_arms' | 'shaking_electric' | 'sigilo_puntitas' | 'congelado_estatua' | 'proud_march' | 'accented_jump' | 'heavy_march' | 'celebration_victory' | 'calm_breathing' | 'bow';
+  adaggioAnimationState: 'saludando' | 'hablando' | 'marchando' | 'celebrando' | 'quiet' | 'listening' | 'scared' | 'march_sowing' | 'fluid_raise_drop' | 'expanding_arms' | 'shaking_electric' | 'sigilo_puntitas' | 'congelado_estatua' | 'proud_march' | 'accented_jump' | 'heavy_march' | 'celebration_victory' | 'calm_breathing' | 'bow';
   suggestedPausas: {
     time: number; // seconds from block start
     label: string;

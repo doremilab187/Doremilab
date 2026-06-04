@@ -46,6 +46,7 @@ export default function App() {
   if (showInitialSplash) {
     return (
       <SoundLogoSplash
+        isFirstTime={true}
         onComplete={() => setShowInitialSplash(false)}
       />
     );
