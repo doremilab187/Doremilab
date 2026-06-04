@@ -61,15 +61,29 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
   const requestRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
 
-  // Load sample sound logo into block 1 on mount to demonstrate video capabilities instantly
+  // Load sample sound logo and configure default video paths for the 9 sections
   useEffect(() => {
+    const defaultUrls: { [blockId: number]: string } = {};
+    const defaultNames: { [blockId: number]: string } = {};
+    
+    // We expect files to be located in the "/audiovisual historia principal/" directory
+    // with filenames like "tramo1.mp4", "tramo2.mp4", etc.
+    for (let i = 1; i <= 9; i++) {
+      defaultUrls[i] = `/audiovisual historia principal/tramo${i}.mp4`;
+      defaultNames[i] = `tramo${i}.mp4 (Carpeta Principal)`;
+    }
+    
+    // Default fallback for first tramo is sound-logo.mp4 as demo if nothing else is uploaded
+    defaultUrls[1] = '/sound-logo.mp4';
+    defaultNames[1] = 'sound-logo.mp4 (Demo Principal)';
+
     setVideoUrls(prev => ({
-      ...prev,
-      1: '/sound-logo.mp4'
+      ...defaultUrls,
+      ...prev
     }));
     setVideoNames(prev => ({
-      ...prev,
-      1: 'sound-logo.mp4 (Demo Principal)'
+      ...defaultNames,
+      ...prev
     }));
   }, []);
 
