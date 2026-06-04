@@ -191,9 +191,17 @@ export function SoundLogoSplash({ onComplete, autoPlayImmediately = false }: Sou
             {/* Specular layout details */}
             <div className="absolute inset-2 border-2 border-dashed border-[#DFBD7C]/60 rounded-[38px] pointer-events-none" />
 
-            <h1 className="text-5xl font-black text-[#472F92] uppercase mb-12 tracking-tight font-funny" style={{ fontFamily: "'Some Time Later', 'Fredoka', sans-serif" }}>
-              Do Re Mi Lab
-            </h1>
+            <div className="mb-12 relative z-10 flex justify-center items-center select-none">
+              <img 
+                src="/Logo do re mi lab.svg" 
+                alt="Do Re Mi Lab Logo" 
+                className="h-28 md:h-32 w-auto object-contain hover:scale-105 transition-transform duration-300 drop-shadow-md"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "/logo doremi lab.png";
+                }}
+              />
+            </div>
 
             <button
               onClick={handleStart}

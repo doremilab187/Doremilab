@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 
 interface AdaggioPuppetProps {
@@ -11,7 +11,51 @@ interface AdaggioPuppetProps {
   isElectrocuting?: boolean;
 }
 
+const stateToGifMap: Record<string, string> = {
+  'quiet': '/adaggio_gifs/quiet.gif',
+  'listening': '/adaggio_gifs/listening.gif',
+  'fluid_raise_drop': '/adaggio_gifs/fluid_raise_drop.gif',
+  'proud_march': '/adaggio_gifs/proud_march.gif',
+  'heavy_march': '/adaggio_gifs/heavy_march.gif',
+  'accented_jump': '/adaggio_gifs/accented_jump.gif',
+  'march_sowing': '/adaggio_gifs/march_sowing.gif',
+  'celebration_victory': '/adaggio_gifs/celebration_victory.gif',
+  'scared': '/adaggio_gifs/scared.gif',
+  'shaking_electric': '/adaggio_gifs/shaking_electric.gif',
+  'congelado_estatua': '/adaggio_gifs/congelado_estatua.gif',
+  'bow': '/adaggio_gifs/bow.gif',
+};
+
 export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, isElectrocuting }) => {
+  const [gifFailed, setGifFailed] = useState<boolean>(false);
+
+  // Reset error state when the animation state changes so we try the new GIF
+  useEffect(() => {
+    setGifFailed(false);
+  }, [animationState]);
+
+  const gifPath = stateToGifMap[animationState] || `/adaggio_gifs/${animationState}.gif`;
+
+  if (!gifFailed) {
+    return (
+      <div 
+        id="adaggio-puppet-container-gif" 
+        className="relative flex justify-center items-center w-64 h-80 bg-transparent select-none overflow-hidden animate-fade-in"
+      >
+        <img
+          src={gifPath}
+          alt={`Adaggio - ${animationState}`}
+          className="w-full h-full object-contain max-h-[320px]"
+          onError={() => {
+            console.log(`Fallback: No se encontró el GIF en "${gifPath}". Mostrando títere procedural SVG.`);
+            setGifFailed(true);
+          }}
+          referrerPolicy="no-referrer"
+        />
+      </div>
+    );
+  }
+
   // Derive details based on states
   const renderAccessory = () => {
     switch (animationState) {

@@ -21,14 +21,68 @@ interface StoryPlayerProps {
 
 const BRIEF_PHRASES: Record<number, string> = {
   1: "El gran ritmo se ha dormido y el silencio rodea a Adaggio... ¡Prepárate para entrar!",
-  2: "¡Camina con paso firme y siembra las semillas siguiendo el pulso de la tierra!",
-  3: "Hagamos bailar los pañuelos azules: arriba en los agudos, abajo en los graves.",
-  4: "Siente el viento soplar suave frente al pecho y ábrelo con gran fuerza.",
-  5: "¡La tormenta eléctrica ha vuelto! Muévete como el viento y vibra con el rayo.",
-  6: "Camina con sigilo en puntillas de pie. Si suena el trueno seco, ¡conviértete en estatua!",
-  7: "¡Marchemos con orgullo alzando el bastón rústico al compás del sol naciente!",
-  8: "¡El Sol ha despertado! Siente la calma y respira profundamente junto a Adaggio.",
-  9: "¡Lo logramos! El gran ritmo vive y late dentro del corazón de cada uno de nosotros."
+  2: "¡Camina con paso firme y saluda a la Madre Tierra sintiendo su pulso constante!",
+  3: "Sigue el compás alegre y lanza tus semillas imaginarias en cada fuerte golpe del bombo.",
+  4: "Saca tus pañuelos azules y levanta los brazos hacia el cielo con las gotas más agudas.",
+  5: "El río corre ágil y rápido. Mueve tus pañuelos imitando olas enérgicas de lado a lado.",
+  6: "Siente el viento soplar de manera suave frente a tu pecho, lento y contenido. (Brisa piano)",
+  7: "¡El viento se intensifica! Abre tus brazos con fuerza de par en par, expandiendo el torso.",
+  8: "La tormenta eléctrica interrumpe el bosque. Muévete como viento y mantén máxima alerta.",
+  9: "¡Un relámpago! Sacude tu cuerpo entero en una vibración juguetona durante un segundo.",
+  10: "Caminemos en puntas de pie. Si suena un trueno: ¡conviértete en estatua de piedra inmóvil!",
+  11: "¡Llamemos al Sol radiante! Sostén el bastón con orgullo y marchen alzando alto las rodillas.",
+  12: "El sol baja despacio en el atardecer musical. Camina encorvado sintiendo el paso muy lento.",
+  13: "¡El gran ritmo ha renacido! Todos los tótems de la naturaleza brillan en plena armonía.",
+  14: "¡A celebrar! Danza alegremente con tus compañeros y comparte la sonrisa colectiva.",
+  15: "Relaja el cuerpo, siéntate en un semicírculo y respira hondo junto con Adaggio."
+};
+
+// Helper to resolve Google Drive and Dropbox direct streaming links
+export const getDirectVideoUrl = (url: string): string => {
+  const trimmed = url.trim();
+  if (trimmed.includes('drive.google.com') || trimmed.includes('docs.google.com')) {
+    let fileId = '';
+    const matchD = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (matchD && matchD[1]) {
+      fileId = matchD[1];
+    } else {
+      const matchId = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (matchId && matchId[1]) {
+        fileId = matchId[1];
+      }
+    }
+    if (fileId) {
+      return `https://drive.google.com/file/d/${fileId}/preview`;
+    }
+  }
+  if (trimmed.includes('dropbox.com')) {
+    return trimmed.replace('?dl=0', '?raw=1').replace('&dl=0', '&raw=1');
+  }
+  return trimmed;
+};
+
+// ==========================================
+// CONFIGURACIÓN DE ENLACES EN LA NUBE (GLOBAL)
+// ==========================================
+// Copia y pega aquí tus enlaces de Google Drive o Dropbox para cada tramo (1 al 15).
+// El sistema los convertirá automáticamente en enlaces directos de streaming para que se reproduzcan solos en cualquier lugar.
+// Ej: "https://drive.google.com/file/d/1XyZ.../view" o "https://www.dropbox.com/s/.../video.mp4?dl=0"
+export const PRESET_CLOUD_LINKS: Record<number, string> = {
+  1: "https://drive.google.com/file/d/1T0v-AdoHVfei6pa42cgIz_iWyD_pWDdA/view?usp=drive_link",
+  2: "https://drive.google.com/file/d/13PWTEhgwejHZP6AbB9ijTxL6p2Y_ta_i/view?usp=drive_link",
+  3: "https://drive.google.com/file/d/1-xBjhi_IA722pNk4A-rBngN66fqibYrG/view?usp=drive_link",
+  4: "https://drive.google.com/file/d/1YH6pkTTKAkyxLJo68GGwq0o2Un3Fh8X1/view?usp=drive_link",
+  5: "https://drive.google.com/file/d/1EVG4kXEldXfcRga0r2Ew7_N0n9cQ2KMA/view?usp=drive_link",
+  6: "https://drive.google.com/file/d/1CX_NfNI0ZLo1ilqAUFy8DERWmhZi31us/view?usp=drive_link",
+  7: "https://drive.google.com/file/d/1lyjl5yNw8exyGG4zSfcp-wzHP72DhcHA/view?usp=drive_link",
+  8: "https://drive.google.com/file/d/16UGsMkZ8BVPir-BLTgBd86DiZsPW9CHW/view?usp=drive_link",
+  9: "https://drive.google.com/file/d/1ZnnfwFmYtJjNchnsrsNuE207LqN1XH4p/view?usp=drive_link",
+  10: "https://drive.google.com/file/d/1ROeV0eXz3OElyztu25o8DAHh_SbN8GWn/view?usp=drive_link",
+  11: "https://drive.google.com/file/d/1K5OIQTzzwYDC9pfDPJBvWEJlfag494GB/view?usp=drive_link",
+  12: "https://drive.google.com/file/d/15pax3hW2NYBdyAt1ZRwLLR48Z0nYt2Ti/view?usp=drive_link",
+  13: "https://drive.google.com/file/d/1PqMYrB6LqgH1kRpOEYeMGjkH523S4u_k/view?usp=drive_link",
+  14: "https://drive.google.com/file/d/1yfyC84CNBnhZzoOczTCZhiXbv2lESity/view?usp=drive_link",
+  15: "https://drive.google.com/file/d/1BvNsUjdzTV-z8OnbC0k4Hj_I8RlD_ce5/view?usp=drive_link"
 };
 
 export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) => {
@@ -37,8 +91,8 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(0.8);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const [showPuppet, setShowPuppet] = useState<boolean>(true);
-  const [isSynthEnabled, setIsSynthEnabled] = useState<boolean>(true);
+  const [showPuppet, setShowPuppet] = useState<boolean>(false);
+  const [isSynthEnabled, setIsSynthEnabled] = useState<boolean>(false);
   const [activeBlock, setActiveBlock] = useState<NarrativeBlock>(NARRATIVE_BLOCKS[0]);
   const [playbackRate, setPlaybackRate] = useState<number>(1);
   
@@ -61,31 +115,104 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
   const requestRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
 
-  // Load sample sound logo and configure default video paths for the 9 sections
+  const currentBlockVideoUrl = videoUrls[activeBlock.id];
+  const isGoogleDrive = !!(currentBlockVideoUrl && (
+    currentBlockVideoUrl.includes('drive.google.com') ||
+    currentBlockVideoUrl.includes('/file/d/') ||
+    currentBlockVideoUrl.includes('docs.google.com')
+  ));
+
+  // Load sample sound logo and configure default video paths for the 15 sections
   useEffect(() => {
     const defaultUrls: { [blockId: number]: string } = {};
     const defaultNames: { [blockId: number]: string } = {};
     
     // We expect files to be located in the "/audiovisual historia principal/" directory
     // with filenames like "tramo1.mp4", "tramo2.mp4", etc.
-    for (let i = 1; i <= 9; i++) {
-      defaultUrls[i] = `/audiovisual historia principal/tramo${i}.mp4`;
-      defaultNames[i] = `tramo${i}.mp4 (Carpeta Principal)`;
+    for (let i = 1; i <= 15; i++) {
+      if (PRESET_CLOUD_LINKS[i] && PRESET_CLOUD_LINKS[i].trim() !== '') {
+        defaultUrls[i] = getDirectVideoUrl(PRESET_CLOUD_LINKS[i]);
+        defaultNames[i] = `Enlace Nube Tramo ${i}`;
+      } else {
+        defaultUrls[i] = `/audiovisual historia principal/tramo${i}.mp4`;
+        defaultNames[i] = `tramo${i}.mp4 (Carpeta Principal)`;
+      }
     }
     
-    // Default fallback for first tramo is sound-logo.mp4 as demo if nothing else is uploaded
-    defaultUrls[1] = '/sound-logo.mp4';
-    defaultNames[1] = 'sound-logo.mp4 (Demo Principal)';
+    // Default fallback for first tramo is sound-logo.mp4 as demo if nothing else is preset or uploaded
+    if (!PRESET_CLOUD_LINKS[1] || PRESET_CLOUD_LINKS[1].trim() === '') {
+      defaultUrls[1] = '/sound-logo.mp4';
+      defaultNames[1] = 'sound-logo.mp4 (Demo Principal)';
+    }
 
-    setVideoUrls(prev => ({
-      ...defaultUrls,
-      ...prev
-    }));
-    setVideoNames(prev => ({
-      ...defaultNames,
-      ...prev
-    }));
+    let storedUrls: Record<number, string> = {};
+    let storedNames: Record<number, string> = {};
+    try {
+      const u = localStorage.getItem('dalcroze_video_urls');
+      const n = localStorage.getItem('dalcroze_video_names');
+      if (u) storedUrls = JSON.parse(u);
+      if (n) storedNames = JSON.parse(n);
+    } catch (e) {
+      console.warn("Could not parse loaded links:", e);
+    }
+
+    // Convert legacy export=download links to the correct preview URLs
+    Object.keys(storedUrls).forEach(k => {
+      const key = Number(k);
+      const url = storedUrls[key];
+      if (url && (url.includes('docs.google.com/uc') || url.includes('export=download'))) {
+        const fileIdMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+        if (fileIdMatch && fileIdMatch[1]) {
+          storedUrls[key] = `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
+        }
+      }
+    });
+
+    // Overlay stored values only if we didn't specify a preset in code for that tramo
+    const finalUrls = { ...defaultUrls };
+    const finalNames = { ...defaultNames };
+    
+    Object.keys(storedUrls).forEach(k => {
+      const key = Number(k);
+      const stored = storedUrls[key];
+      // Only keep stored if it is a custom uploaded blob, or if there is no code preset
+      if (stored && (stored.startsWith('blob:') || !PRESET_CLOUD_LINKS[key] || PRESET_CLOUD_LINKS[key].trim() === '')) {
+        finalUrls[key] = stored;
+        finalNames[key] = storedNames[key] || `Video Tramo ${key}`;
+      }
+    });
+
+    setVideoUrls(finalUrls);
+    setVideoNames(finalNames);
   }, []);
+
+  // Save persistent URLs and names to localStorage whenever they change
+  useEffect(() => {
+    try {
+      const persistentUrls: { [blockId: number]: string } = {};
+      const persistentNames: { [blockId: number]: string } = {};
+      let hasCustom = false;
+
+      Object.keys(videoUrls).forEach(k => {
+        const key = Number(k);
+        const url = videoUrls[key];
+        // We only save actual cloud/web links; exclude local file blob URLs and original local defaults
+        if (url && !url.startsWith('blob:') && !url.startsWith('/audiovisual') && url !== '/sound-logo.mp4') {
+          persistentUrls[key] = url;
+          persistentNames[key] = videoNames[key] || `Video Tramo ${key}`;
+          hasCustom = true;
+        }
+      });
+
+      // Update localStorage
+      if (hasCustom) {
+        localStorage.setItem('dalcroze_video_urls', JSON.stringify(persistentUrls));
+        localStorage.setItem('dalcroze_video_names', JSON.stringify(persistentNames));
+      }
+    } catch (e) {
+      console.warn("Could not save video links to localStorage:", e);
+    }
+  }, [videoUrls, videoNames]);
 
   // Sync Synth and Mute values with the audio engine
   useEffect(() => {
@@ -95,10 +222,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
 
   // Synchronize audio engine state when block or play status changes
   useEffect(() => {
-    if (isPlaying) {
-      const remainingSecondsInBlock = activeBlock.durationEnd - currentTime;
-      audioInstance.start(activeBlock.id, remainingSecondsInBlock);
-    } else {
+    if (!isPlaying) {
       audioInstance.stop();
     }
     return () => audioInstance.stop();
@@ -116,7 +240,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
       if (isPlaying) {
         setCurrentTime(prev => {
           const nextTime = prev + delta * playbackRate;
-          const totalDuration = 505; // 8:25 min total
+          const totalDuration = NARRATIVE_BLOCKS[NARRATIVE_BLOCKS.length - 1].durationEnd; // 600 seconds total
 
           if (nextTime >= totalDuration) {
             setIsPlaying(false);
@@ -138,9 +262,19 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
     };
   }, [isPlaying, playbackRate, activeBlock]);
 
+  const handleBlockCompletion = (completedBlockId: number) => {
+    setIsPlaying(false);
+    audioInstance.stop();
+    const completedBlock = NARRATIVE_BLOCKS.find(b => b.id === completedBlockId);
+    if (completedBlock) {
+      setActiveTransitionModal(completedBlock);
+    }
+  };
+
   // Track block boundaries and trigger pause helpers
   useEffect(() => {
     if (congratulationsBlock !== null) return;
+    if (isGoogleDrive) return; // Disregard timeline-based automatic transitions when watching cloud Google Drive videos
 
     const currentBlock = NARRATIVE_BLOCKS.find(
       b => currentTime >= b.durationStart && currentTime < b.durationEnd
@@ -148,20 +282,17 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
 
     if (currentBlock && currentBlock.id !== activeBlock.id) {
       if (isPlaying && currentTime >= activeBlock.durationEnd) {
-        setIsPlaying(false);
-        audioInstance.stop();
-        setCurrentTime(activeBlock.durationEnd);
-        setCongratulationsBlock(activeBlock);
+        handleBlockCompletion(activeBlock.id);
       } else {
         setActiveBlock(currentBlock);
         if (isPlaying) {
           audioInstance.stop();
-          audioInstance.start(currentBlock.id, 0);
         }
       }
     }
 
-    // Check pre-populated pause triggers
+    // Suggested pauses disabled for peaceful video streaming since all instruction details are already in the custom video file
+    /*
     const activeBlockElapsed = currentTime - currentBlock.durationStart;
     currentBlock.suggestedPausas.forEach(pausa => {
       const globalPauseTime = currentBlock.durationStart + pausa.time;
@@ -172,6 +303,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
         audioInstance.stop();
       }
     });
+    */
 
   }, [currentTime, activeBlock, triggeredPauses, isPlaying, congratulationsBlock]);
 
@@ -231,11 +363,9 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
   };
 
   const handleNextBlock = () => {
-    const nextId = activeBlock.id + 1;
-    const nextBlock = NARRATIVE_BLOCKS.find(b => b.id === nextId);
-    if (nextBlock) {
-      handleSkipToBlock(nextId);
-    }
+    // Show the transition modal of the current block so they see its text narrative,
+    // and can click 'Continuar' to advance to the next block automatically.
+    handleBlockCompletion(activeBlock.id);
   };
 
   const handlePrevBlock = () => {
@@ -325,9 +455,8 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
       setCurrentTime(block.durationStart);
       setActiveBlock(block);
       setTriggeredPauses(prev => prev.filter(p => p < block.durationStart));
-      setIsPlaying(false);
+      setIsPlaying(true);
       audioInstance.stop();
-      setActiveTransitionModal(block);
     }
   };
 
@@ -351,12 +480,29 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
     }
   };
 
+  const handleContinueToNext = (completedBlock: NarrativeBlock) => {
+    setActiveTransitionModal(null);
+    const nextBlock = NARRATIVE_BLOCKS.find(b => b.id === completedBlock.id + 1);
+    if (nextBlock) {
+      setActiveBlock(nextBlock);
+      setCurrentTime(nextBlock.durationStart);
+      setIsPlaying(true);
+      if (videoRef.current) {
+        videoRef.current.currentTime = 0;
+        videoRef.current.play().catch(() => {});
+      }
+    } else {
+      setCongratulationsBlock(completedBlock);
+    }
+  };
+
   const handlePointerScrub = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!timelineRef.current) return;
     const rect = timelineRef.current.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const percentage = Math.max(0, Math.min(1, clickX / rect.width));
-    const newTime = percentage * 505;
+    const maxDuration = NARRATIVE_BLOCKS[NARRATIVE_BLOCKS.length - 1].durationEnd;
+    const newTime = percentage * maxDuration;
 
     setCurrentTime(newTime);
     const block = NARRATIVE_BLOCKS.find(
@@ -371,8 +517,6 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
       
       if (isPlaying) {
         audioInstance.stop();
-        const remainingSecondsInBlock = block.durationEnd - newTime;
-        audioInstance.start(block.id, remainingSecondsInBlock);
       }
     }
   };
@@ -398,21 +542,18 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
     return `${min}:${sec < 10 ? '0' : ''}${sec}`;
   };
 
-  const activePercent = (currentTime / 505) * 100;
-  const currentBlockVideoUrl = videoUrls[activeBlock.id];
+  const maxSesDuration = NARRATIVE_BLOCKS[NARRATIVE_BLOCKS.length - 1].durationEnd;
+  const activePercent = (currentTime / maxSesDuration) * 100;
 
   // Element styles of active element for the timeline color background
   const getAccentColor = (id: number) => {
-    switch (id) {
-      case 1: return '#472F92'; // Inicio
-      case 2: return '#FF8C00'; // Tierra
-      case 3: return '#40E0D0'; // Agua
-      case 4: return '#87CEEB'; // Viento
-      case 5:
-      case 6: return '#7B68EE'; // Trueno/Estatua
-      case 7: return '#FFD700'; // Sol
-      default: return '#1DD2C4';
-    }
+    if (id === 1) return '#472F92'; // Inicio
+    if (id === 2 || id === 3) return '#FF8C00'; // Tierra
+    if (id === 4 || id === 5) return '#40E0D0'; // Agua
+    if (id === 6 || id === 7) return '#87CEEB'; // Viento
+    if (id >= 8 && id <= 10) return '#7B68EE'; // Trueno / Estatuas
+    if (id === 11 || id === 12) return '#FFD700'; // Sol
+    return '#1DD2C4'; // Final / Celebraciones
   };
 
   return (
@@ -422,8 +563,8 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
       <div id="narrative-blocks-flow-roadmap" className="w-full bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm flex flex-wrap gap-2.5 justify-between items-center">
         <div className="flex items-center gap-2">
           <Sparkles className="text-[#472F92] w-5 h-5 animate-pulse" />
-          <h3 className="text-sm font-black font-sans text-slate-800 uppercase tracking-wide">
-            Ruta Escénica de Euritmia (9 Bloques — 8:25 min)
+          <h3 className="text-sm font-black font-funny text-slate-800 uppercase tracking-wide">
+            Ruta Escénica de Euritmia (15 Bloques — 10:00 min)
           </h3>
         </div>
         
@@ -431,13 +572,14 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
           {NARRATIVE_BLOCKS.map(block => {
             const isActive = activeBlock.id === block.id;
             const isPassed = currentTime >= block.durationEnd;
-            const blockNameShort = block.name.split(' ')[2] || block.name.split('—')[1];
+            const splitName = block.name.split(' ');
+            const blockNameShort = splitName[2] ? `${splitName[2]} ${splitName[3] || ''}` : block.name.split('—')[1] || block.name;
             
             return (
               <button
                 key={block.id}
                 onClick={() => handleSkipToBlock(block.id)}
-                className={`px-3 py-1.5 text-xs rounded-xl transition-all duration-300 font-bold flex items-center gap-1.5 border ${
+                className={`px-2.5 py-1.5 text-xs rounded-xl transition-all duration-300 font-bold flex items-center gap-1.5 border ${
                   isActive
                     ? 'bg-[#472F92] text-white border-[#472F92] shadow-md scale-105'
                     : isPassed
@@ -446,7 +588,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                 }`}
               >
                 <span className="text-[10px] font-black">{block.id}</span>
-                <span className="hidden sm:inline font-sans text-[10.5px]">
+                <span className="hidden sm:inline font-funny text-[11px] tracking-wide">
                   {blockNameShort}
                 </span>
               </button>
@@ -466,18 +608,45 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
           {/* THEATRE AUDIOVISUAL CANVAS */}
           <div
             id="theatre-visual-stage"
-            className="relative w-full aspect-video bg-neutral-950 flex flex-col items-center justify-center overflow-hidden border-b border-neutral-900"
+            className="relative w-full aspect-video bg-neutral-950 flex flex-col items-center justify-center overflow-hidden"
           >
             {currentBlockVideoUrl ? (
               <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-black">
-                <video
-                  ref={videoRef}
-                  src={currentBlockVideoUrl}
-                  className="w-full h-full object-contain"
-                  loop
-                  muted={isMuted}
-                  playsInline
-                />
+                {isGoogleDrive ? (
+                  <>
+                    <iframe
+                      src={currentBlockVideoUrl}
+                      className="w-full h-full absolute inset-0 border-0 bg-black"
+                      allow="autoplay; encrypted-media; picture-in-picture"
+                      allowFullScreen
+                      title={`Video Tramo ${activeBlock.id}`}
+                    />
+                    
+                    {/* Floating Manual Completion Trigger Accent for Google Drive videos */}
+                    <div className="absolute bottom-4 right-4 z-30 pointer-events-auto">
+                      <button
+                        onClick={() => handleBlockCompletion(activeBlock.id)}
+                        className="bg-emerald-500 hover:bg-emerald-600 text-white font-black font-sans text-xs uppercase tracking-wider px-4 py-2.5 rounded-2xl shadow-xl border border-emerald-400/20 active:scale-95 hover:scale-105 transition-all cursor-pointer flex items-center gap-2"
+                        title="Ver frase narrativa e instrucciones"
+                      >
+                        <Award className="w-4 h-4 text-emerald-100" />
+                        <span>¿Terminó el video? Ver Frase ➔</span>
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <video
+                    ref={videoRef}
+                    src={currentBlockVideoUrl}
+                    className="w-full h-full object-contain"
+                    muted={isMuted}
+                    playsInline
+                    controls
+                    onPlay={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
+                    onEnded={() => handleBlockCompletion(activeBlock.id)}
+                  />
+                )}
                 
                 {/* Floating Top Indicator of Loaded Video Source */}
                 <div className="absolute top-3 left-3 right-3 z-20 flex justify-between items-center pointer-events-none">
@@ -520,7 +689,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-2 items-center relative z-20">
-                  <label className="bg-[#472F92] hover:bg-[#5C3DBA] border border-[#372370] text-white font-black font-sans text-[10px] uppercase tracking-wider px-3.5 py-1.5 rounded-lg cursor-pointer shadow active:scale-95 flex items-center gap-1">
+                  <label className="bg-[#472F92] hover:bg-[#5C3DBA] border border-[#372370] text-white font-black font-funny text-[11px] uppercase tracking-wide px-3.5 py-1.5 rounded-lg cursor-pointer shadow active:scale-95 flex items-center gap-1">
                     <Upload className="w-3 h-3" />
                     <span>Elegir Video</span>
                     <input
@@ -533,10 +702,52 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
 
                   <button
                     onClick={() => handleLoadDemoVideo(activeBlock.id)}
-                    className="bg-neutral-950 hover:bg-neutral-850 border border-neutral-800 text-zinc-300 font-bold font-sans text-[10px] uppercase tracking-wider px-3.5 py-1.5 rounded-lg cursor-pointer transition-colors"
+                    className="bg-neutral-950 hover:bg-neutral-850 border border-neutral-800 text-zinc-300 font-black font-funny text-[11px] uppercase tracking-wide px-3.5 py-1.5 rounded-lg cursor-pointer transition-all active:scale-95"
                   >
                     Cargar Demo
                   </button>
+                </div>
+
+                <div className="w-full max-w-xs mt-3 relative z-20">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="h-[1px] bg-neutral-800 flex-1"></div>
+                    <span className="text-[8px] font-mono font-bold text-neutral-500 uppercase tracking-widest">O con Enlace Nube</span>
+                    <div className="h-[1px] bg-neutral-800 flex-1"></div>
+                  </div>
+                  <div className="flex gap-1.5 bg-neutral-950/80 p-1 border border-neutral-800 rounded-lg">
+                    <input
+                      type="text"
+                      placeholder="Pegar URL .mp4 (Google Drive, Dropbox, S3...)"
+                      className="bg-transparent border-0 text-[10px] text-white placeholder-neutral-500 px-2 py-1 outline-none w-full"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          const target = e.currentTarget;
+                          const val = target.value.trim();
+                          if (val) {
+                            const parsedUrl = getDirectVideoUrl(val);
+                            setVideoUrls(prev => ({ ...prev, [activeBlock.id]: parsedUrl }));
+                            setVideoNames(prev => ({ ...prev, [activeBlock.id]: val.split('/').pop() || `URL Tramo ${activeBlock.id}` }));
+                            target.value = '';
+                          }
+                        }
+                      }}
+                    />
+                    <button
+                      onClick={(e) => {
+                        const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                        const val = input.value.trim();
+                        if (val) {
+                          const parsedUrl = getDirectVideoUrl(val);
+                          setVideoUrls(prev => ({ ...prev, [activeBlock.id]: parsedUrl }));
+                          setVideoNames(prev => ({ ...prev, [activeBlock.id]: val.split('/').pop() || `URL Tramo ${activeBlock.id}` }));
+                          input.value = '';
+                        }
+                      }}
+                      className="bg-[#472F92] hover:bg-[#5C3DBA] text-white text-[9px] px-2.5 py-1 rounded font-bold uppercase transition-colors cursor-pointer select-none"
+                    >
+                      Cargar
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -560,33 +771,6 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
               )}
             </AnimatePresence>
 
-            {/* FLOATING INSTRUMENT TAG ON TOP RIGHT OF VIDEO */}
-            <div className="absolute top-3 right-3 z-10">
-              <span className="bg-black/80 backdrop-blur-sm border border-neutral-800 px-2 py-0.5 rounded text-[9px] font-mono text-amber-500 font-semibold shadow">
-                🎵 {activeBlock.instrumentProtagonist.split('→')[0]}
-              </span>
-            </div>
-
-            {/* BOTTOM RIGHT STATE CHIP */}
-            <div className="absolute bottom-3 right-3 z-10">
-              <span className={`px-2 py-0.5 rounded text-[9px] font-black shadow tracking-wider uppercase ${
-                activeBlock.stateType === 'ACCIÓN' || activeBlock.stateType === 'ACCIÓN_DIRECCIÓN'
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-amber-600 text-white'
-              }`}>
-                {activeBlock.stateType}
-              </span>
-            </div>
-          </div>
-
-          {/* ACTIVE NARRATOR BRIEF SUBTITLE BANNER */}
-          <div id="theatre-digital-transcripts" className="bg-neutral-950 border-t border-neutral-900 p-4 min-h-[76px] flex flex-col justify-center items-center z-10 gap-1 select-none">
-            <p className="text-amber-500 text-[10px] font-black uppercase tracking-widest font-mono">
-              Narración Audiovisual (Tramo {activeBlock.id} / 9)
-            </p>
-            <p className="text-base md:text-lg text-amber-100 text-center font-sans tracking-wide leading-relaxed max-w-2xl px-2 font-semibold">
-              "{BRIEF_PHRASES[activeBlock.id] || activeBlock.narratorLines}"
-            </p>
           </div>
         </div>
 
@@ -598,7 +782,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
             <span className="text-[10.5px] uppercase font-black tracking-widest text-[#1DD2C4]">
               {activeBlock.name} — {activeBlock.title}
             </span>
-            <span className="text-gray-500">8:25</span>
+            <span className="text-gray-500">{formatTime(maxSesDuration)}</span>
           </div>
 
           {/* Sizing Slider timeline */}
@@ -626,7 +810,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
               <div
                 key={idx}
                 className="absolute w-1.5 h-full bg-red-600/90 z-20 pointer-events-none"
-                style={{ left: `${(point / 505) * 100}%` }}
+                style={{ left: `${(point / maxSesDuration) * 100}%` }}
                 title="Pausa de Alistamiento Sugerida"
               />
             ))}
@@ -655,19 +839,19 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
 
                 <button
                   onClick={handlePauseToggle}
-                  className={`px-5 py-2 rounded-lg font-black text-xs flex items-center gap-2 transition-all hover:scale-105 active:scale-95 cursor-pointer ${
+                  className={`px-5 py-2 rounded-lg font-black flex items-center gap-2 transition-all hover:scale-105 active:scale-95 cursor-pointer ${
                     isPlaying
                       ? 'bg-neutral-800 hover:bg-neutral-700 text-amber-500 border border-amber-500/20'
                       : 'bg-amber-400 hover:bg-amber-300 text-neutral-950 shadow shadow-amber-400/10'
                   }`}
                 >
                   {isPlaying ? <Pause className="w-3.5 h-3.5 fill-amber-500" /> : <Play className="w-3.5 h-3.5 fill-neutral-900" />}
-                  <span>{isPlaying ? 'PAUSAR' : 'PRODUCIR RITMO'}</span>
+                  <span className="font-funny text-[13px] tracking-wide">{isPlaying ? 'PAUSAR' : 'PRODUCIR RITMO'}</span>
                 </button>
 
                 <button
                   onClick={handleNextBlock}
-                  disabled={activeBlock.id === 9}
+                  disabled={activeBlock.id === 15}
                   className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-neutral-800 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400 transition-all cursor-pointer"
                   title="Siguiente Tramo"
                 >
@@ -677,40 +861,12 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-              {/* Skip rates panel */}
-              <div className="flex items-center gap-1 bg-neutral-900 p-1.5 rounded-xl border border-neutral-800">
-                <span className="text-[9px] font-mono text-gray-500 uppercase px-1.5">Acelerar:</span>
-                {[1, 2.5, 5].map((rate) => (
-                  <button
-                    key={rate}
-                    onClick={() => setPlaybackRate(rate)}
-                    className={`px-2 py-0.5 text-[9.5px] font-mono rounded-lg transition-colors cursor-pointer ${
-                      playbackRate === rate ? 'bg-amber-400 text-neutral-950 font-black' : 'text-gray-400 hover:text-white'
-                    }`}
-                  >
-                    {rate}x
-                  </button>
-                ))}
-              </div>
-
-              {/* Show/Hide Adaggio Puppet Overlay */}
-              <button
-                onClick={() => setShowPuppet(prev => !prev)}
-                className={`px-3 py-2 rounded-xl transition-all cursor-pointer text-xs font-bold leading-none flex items-center gap-1.5 border ${
-                  showPuppet ? 'bg-[#472F92] text-white border-[#472F92] shadow-md scale-105' : 'bg-neutral-900 text-gray-400 border border-neutral-800 hover:bg-neutral-850'
-                }`}
-                title="Mostrar/Ocultar acompañante Adaggio"
-              >
-                <span>🐰</span>
-                <span className="hidden sm:inline font-sans">{showPuppet ? 'Adaggio visible' : 'Adaggio oculto'}</span>
-              </button>
-
               {/* Dynamic Interactive Volume slider */}
               <div className="flex items-center gap-2 bg-neutral-900 p-1 px-2.5 rounded-xl border border-neutral-800">
                 <button
                   onClick={() => setIsMuted(prev => !prev)}
                   className={`p-1.5 rounded-lg transition-all cursor-pointer ${
-                    isMuted ? 'text-red-400' : 'text-gray-400 hover:text-white animate-pulse'
+                    isMuted ? 'text-red-400' : 'text-gray-400 hover:text-white'
                   }`}
                   title="Silenciar / Activar"
                 >
@@ -742,232 +898,187 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
               >
                 {isFullscreen ? <Minimize2 className="w-4.5 h-4.5" /> : <Maximize2 className="w-4.5 h-4.5" />}
               </button>
-
-              <label className="flex items-center gap-1.5 text-xs text-neutral-400 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={isSynthEnabled}
-                  onChange={(e) => setIsSynthEnabled(e.target.checked)}
-                  className="rounded border-neutral-700 bg-neutral-900 text-amber-400 focus:ring-amber-500 w-3.5 h-3.5 cursor-pointer"
-                />
-                <span className="font-mono text-[10.5px]">Sintetizador Web</span>
-              </label>
             </div>
           </div>
         </div>
 
       </div>
 
-
-
-      {/* PAUSE / RE-ALISTAMIENTO POPUP SCREEN CONTROLLER */}
+      {/* PANTALLA TRANSICIÓN SUITE (SIENTE EL SIGUIENTE RITMO) */}
       <AnimatePresence>
-        {activePauseContent && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
-          >
+        {activeTransitionModal && (() => {
+          const phrase = BRIEF_PHRASES[activeTransitionModal.id] || activeTransitionModal.narratorLines;
+          const accentColor = getAccentColor(activeTransitionModal.id);
+          const iconMap: Record<number, string> = {
+            1: "🐰", // Adaggio
+            2: "🪵", // Tierra
+            3: "🌱", // Tierra Siembra
+            4: "🩵", // Agua
+            5: "🌊", // Río
+            6: "🍃", // Brisa
+            7: "💨", // Viento
+            8: "⚡", // Tormenta
+            9: "💥", // Trueno
+            10: "🗿", // Estatua
+            11: "☀️", // Sol Alzando
+            12: "🌅", // Atardecer
+            13: "🌀", // Ritmo Renacido
+            14: "🎉", // Celebración
+            15: "🧘" // Calma respiración
+          };
+          const currentProgressPercent = ((activeTransitionModal.id - 1) / 15) * 100;
+
+          return (
             <motion.div
-              initial={{ scale: 0.95, y: 15 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: 15 }}
-              className="bg-white text-neutral-900 rounded-3xl w-full max-w-[540px] p-6 shadow-2xl relative overflow-hidden"
-              style={{ borderTop: `8px solid ${getAccentColor(activeBlock.id)}` }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-950/90 backdrop-blur-md"
             >
-              <div className="flex gap-4 items-start mb-4">
+              <motion.div
+                initial={{ scale: 0.9, y: 30 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.9, y: 30 }}
+                transition={{ type: "spring", damping: 20 }}
+                className="bg-white text-slate-800 rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl border-4 relative overflow-hidden flex flex-col gap-6"
+                style={{ borderColor: accentColor }}
+              >
+                {/* Decorative background visual accent */}
                 <div 
-                  className="w-14 h-14 rounded-full border border-neutral-200 flex items-center justify-center text-3xl select-none"
-                  style={{ backgroundColor: `${getAccentColor(activeBlock.id)}1A` }}
-                >
-                  ⏳
+                  className="absolute -top-24 -right-24 w-48 h-48 rounded-full blur-3xl opacity-20 pointer-events-none"
+                  style={{ backgroundColor: accentColor }}
+                />
+
+                {/* Top tracker */}
+                <div className="flex flex-col gap-2">
+                  <div className="flex justify-between items-center text-xs font-black tracking-widest text-slate-400 uppercase font-mono">
+                    <span className="text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg font-black font-sans text-[10px] uppercase">¡Tramo {activeTransitionModal.id} Completado!</span>
+                    <span style={{ color: accentColor }} className="font-bold">Tramo {activeTransitionModal.id} de 15</span>
+                  </div>
+                  {/* Small progress index bar */}
+                  <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden font-mono">
+                    <div 
+                      className="h-full rounded-full transition-all duration-500" 
+                      style={{ 
+                        width: `${currentProgressPercent}%`,
+                        backgroundColor: accentColor 
+                      }} 
+                    />
+                  </div>
                 </div>
 
-                <div className="flex-1 text-left">
-                  <h2 className="text-lg font-black text-black font-sans uppercase leading-tight tracking-tight mb-1.5">
-                    Alerta de Alistamiento: Bloque {activeBlock.id}
-                  </h2>
-                  <p className="text-xs text-neutral-500 font-mono tracking-wider font-bold mb-3 uppercase">
-                    Pausa Pedagógica Sugerida
-                  </p>
-
-                  <div className="p-3.5 bg-amber-50 rounded-xl border border-amber-200 text-xs font-medium text-slate-800 leading-relaxed italic mb-4">
-                    "{activePauseContent}"
+                {/* Main Content Info */}
+                <div className="text-center flex flex-col items-center gap-4 mt-2">
+                  <div 
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center text-3xl sm:text-4xl shadow-md border-2"
+                    style={{ 
+                      borderColor: `${accentColor}30`, 
+                      backgroundColor: `${accentColor}10` 
+                    }}
+                  >
+                    {iconMap[activeTransitionModal.id] || "🎵"}
                   </div>
 
-                  <p className="text-xs text-neutral-600 font-sans leading-relaxed">
-                    💡 Aproveche estos momentos para confirmar el alistamiento físico de materiales y despejar el centro de juego.
-                  </p>
-                </div>
-              </div>
+                  <div className="flex flex-col gap-1">
+                    <h2 className="text-2xl sm:text-3xl font-black font-funny uppercase tracking-wide text-slate-800">
+                      {activeTransitionModal.title}
+                    </h2>
+                    <span className="text-[11px] font-mono tracking-wider font-bold text-[#472F92] uppercase">
+                      {activeTransitionModal.rhythmicConcept}
+                    </span>
+                  </div>
 
-              <div className="border-t border-neutral-100 p-2.5 flex justify-end">
+                  {/* VERY SHORT INDIVIDUAL PHRASE */}
+                  <div className="bg-slate-50 border border-slate-150 p-5 rounded-2xl w-full relative mt-1">
+                    <span className="absolute -top-3 left-6 px-2 bg-white border border-slate-150 text-[9px] font-black uppercase text-slate-400 rounded-full tracking-wider font-mono">
+                      Instrucción del Tramo
+                    </span>
+                    <p className="text-base sm:text-lg text-center font-sans tracking-tight leading-relaxed text-slate-700 font-bold italic">
+                      "{phrase}"
+                    </p>
+                  </div>
+                </div>
+
+                {/* Action button to proceed automatically */}
                 <button
-                  onClick={() => {
-                    setActivePauseContent(null);
-                    setIsPlaying(true);
-                  }}
-                  className="bg-neutral-905 bg-black text-white hover:opacity-90 font-black font-sans text-xs uppercase px-5 py-2.5 rounded-xl shadow active:scale-95 transition-all"
+                  id="btn-transition-continue"
+                  onClick={() => handleContinueToNext(activeTransitionModal)}
+                  style={{ backgroundColor: accentColor }}
+                  className="w-full py-4 rounded-2xl text-white font-black font-funny text-lg tracking-wider hover:brightness-110 active:scale-95 shadow-lg transition-all flex items-center justify-center gap-3 cursor-pointer"
                 >
-                  Entendido, Continuar ➔
+                  <Play className="w-5 h-5 fill-white stroke-white" />
+                  <span className="uppercase text-sm sm:text-base">
+                    {activeTransitionModal.id < 15 
+                      ? `CONTINUAR AL TRAMO ${activeTransitionModal.id + 1} ➔` 
+                      : 'FINALIZAR CLASE Y EVALUAR 🏆'}
+                  </span>
                 </button>
-              </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
+          );
+        })()}
       </AnimatePresence>
 
-      {/* CONGRATULATIONS / NEXT BLOCK BANNER POPUP */}
+      {/* FINAL CONGRATULATIONS COMPLETED SCREEN */}
       <AnimatePresence>
         {congratulationsBlock && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-950/90 backdrop-blur-md"
           >
             <motion.div
-              initial={{ scale: 0.9, y: 15 }}
+              initial={{ scale: 0.9, y: 30 }}
               animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 15 }}
-              className="bg-neutral-900 border-2 border-emerald-500 rounded-3xl w-full max-w-xl p-6 shadow-2xl relative overflow-hidden text-white text-left"
+              exit={{ scale: 0.9, y: 30 }}
+              className="bg-white text-slate-800 rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl border-4 border-[#1DD2C4] relative text-center flex flex-col items-center gap-6"
             >
-              <div className="flex items-center gap-3.5 mb-4 border-b border-neutral-800 pb-3">
-                <div className="p-3 bg-emerald-500/15 rounded-full border border-emerald-500/35">
-                  <span className="text-3xl leading-none block select-none">🏆</span>
-                </div>
-                <div>
-                  <h3 className="text-base md:text-lg font-black text-emerald-400 font-sans tracking-tight uppercase leading-snug">
-                    {congratulationsBlock.id === 9 ? "¡Fin de la experiencia con Adaggio! 🌸" : `¡El Ritmo de la ${
-                      congratulationsBlock.id === 1 ? "Escucha" :
-                      congratulationsBlock.id === 2 ? "Tierra" :
-                      congratulationsBlock.id === 3 ? "Agua" :
-                      congratulationsBlock.id === 4 ? "Viento" :
-                      congratulationsBlock.id === 5 || congratulationsBlock.id === 6 ? "Quietud" :
-                      "Sol"
-                    } ha regresado!`}
-                  </h3>
-                  <p className="text-[9px] text-neutral-400 font-mono uppercase tracking-wider">
-                    Felicidades: Bloque {congratulationsBlock.id} completado con éxito
-                  </p>
-                </div>
+              <div className="w-20 h-20 bg-[#1DD2C4]/10 border border-[#1DD2C4]/30 rounded-full flex items-center justify-center text-4xl shadow-md">
+                🏆
               </div>
 
-              <div className="bg-emerald-950/20 text-neutral-200 border border-emerald-800/35 p-5 rounded-xl mb-5">
-                <h4 className="font-bold text-emerald-300 text-sm font-sans mb-1 uppercase tracking-wide">
-                  {congratulationsBlock.name}
-                </h4>
-                <p className="text-xs text-neutral-400 italic mb-3">
-                  “{congratulationsBlock.title}”
-                </p>
-                
-                <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed font-sans font-medium">
-                  {congratulationsBlock.id === 1 && "¡Súper comienzo! Han despertado la magia de Adaggio y preparado el salón de euritmia con una escucha grandiosa."}
-                  {congratulationsBlock.id === 2 && "¡Increíble esfuerzo! Conseguimos sintonizar los pies de todo el grupo con el pulso profundo de la tierra y sembrar al ritmo de la música."}
-                  {congratulationsBlock.id === 3 && "¡Qué fluidez! Los movimientos de pañuelos arriba y abajo sintieron el caudal del arroyo con una armonía maravillosa."}
-                  {congratulationsBlock.id === 4 && "¡Magnífico! Controlaron su respiración expandiendo la energía corporal suavemente, de piano a forte, sintiendo el viento."}
-                  {congratulationsBlock.id === 5 && "¡Excelente reacción! Lograron sintonizar la reacción ágil ante el rayo y la calma silenciosa del reposo."}
-                  {congratulationsBlock.id === 6 && "¡Gran concentración grupal! Caminaron en puntillas de pies coordinados, dominando la marcha silenciosa del sigilo nocturno."}
-                  {congratulationsBlock.id === 7 && "¡Insuperable energía colectiva! Alzaron los bastones rústicos de madera coordinando un compás alegre bajo el Sol radiante."}
-                  {congratulationsBlock.id === 8 && "¡LO LOGRARON EN CIUDAD BOLÍVAR! Todos los tótems de la naturaleza brillan. Adaggio y la Fundación Monte Tabor brillan con alegría eurítmica, celebrando la participación grupal."}
-                  {congratulationsBlock.id === 9 && "¡LOS CORAZONES BRILAN EN SINTONÍA! Adaggio les susurra una gran verdad: El gran ritmo no estaba dormido en el teatrillo, sino latiendo dentro de cada uno de ustedes. ¡Enhorabuena guardianes!"}
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full font-black tracking-widest uppercase self-center w-max">
+                  Clase Completada
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-black font-funny mt-3 uppercase tracking-wide text-slate-800">
+                  ¡Viaje Rítmico Exitoso!
+                </h2>
+                <p className="text-xs text-slate-400 font-sans mt-1">
+                  Has completado las 15 etapas de euritmia con Adaggio perfectamente.
                 </p>
               </div>
 
-              <div className="flex justify-end pt-2">
+              <div className="bg-slate-50 border border-slate-100 p-5 rounded-2xl w-full font-sans text-sm leading-relaxed text-slate-600">
+                Los niños han experimentado el pulso, acentos, matices, tormentas, brisas, relámpagos, estatuas, sol rítmico y calma respiratoria.
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 w-full mt-2">
                 <button
-                  onClick={handleContinueNextBlock}
-                  className="bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-black px-6 py-3 rounded-xl transition-all text-xs tracking-wider uppercase font-mono shadow-md flex items-center gap-1.5"
+                  onClick={() => {
+                    setCongratulationsBlock(null);
+                    handleReset();
+                  }}
+                  className="flex-1 py-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold font-sans text-[13px] transition-all cursor-pointer active:scale-95"
                 >
-                  <span>{congratulationsBlock.id === 9 ? "Completar Ruta 🌸" : "Iniciar Siguiente Bloque"}</span>
-                  <span className="text-base leading-none">➔</span>
+                  Volver a Empezar ↺
+                </button>
+                <button
+                  onClick={() => {
+                    setCongratulationsBlock(null);
+                    if (onSessionComplete) {
+                      onSessionComplete([]);
+                    }
+                  }}
+                  className="flex-1 bg-[#1DD2C4] hover:bg-[#15BCB0] text-neutral-950 font-black font-funny text-sm tracking-wider py-3.5 rounded-xl transition-all cursor-pointer active:scale-95 shadow shadow-[#1DD2C4]/20"
+                >
+                  Cerrar y Evaluar 🏆
                 </button>
               </div>
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
-
-      {/* TRANSITION MODAL OVERLAY */}
-      <AnimatePresence>
-        {activeTransitionModal && (() => {
-          const is9 = activeTransitionModal.id === 9;
-          
-          return (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-            >
-              <motion.div
-                initial={{ scale: 0.95, y: 15 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.95, y: 15 }}
-                className="bg-neutral-900 border-2 rounded-3xl w-full max-w-lg p-6 md:p-8 shadow-2xl text-white relative text-left"
-                style={{ borderColor: getAccentColor(activeTransitionModal.id) }}
-              >
-                <div className="mb-4">
-                  <span 
-                    className="px-3 py-1 bg-white/5 border text-[9px] font-mono font-bold tracking-widest uppercase rounded-full" 
-                    style={{ color: getAccentColor(activeTransitionModal.id), borderColor: `${getAccentColor(activeTransitionModal.id)}33` }}
-                  >
-                    🚀 Siguiente Escena / Nivel
-                  </span>
-                  
-                  <h1 className="text-2xl font-black mt-3 font-sans tracking-tight uppercase text-white">
-                    {activeTransitionModal.title}
-                  </h1>
-                </div>
-
-                <div className="space-y-4 my-5">
-                  <div className="bg-neutral-950 p-4 rounded-xl border border-neutral-800">
-                    <span className="text-[10px] uppercase font-mono font-bold text-neutral-400 block tracking-wider">
-                      🎒 Elementos requeridos:
-                    </span>
-                    <p className="text-sm font-semibold mt-1.5 flex items-center gap-2">
-                      <span>🎬</span>
-                      <span>{activeTransitionModal.physicalMaterials[0] || "Solo cuerpo libre y sintonía grupal"}</span>
-                    </p>
-                  </div>
-
-                  <div className="bg-amber-400/5 p-4 rounded-xl border border-amber-400/10">
-                    <span className="text-[9.5px] uppercase font-mono font-black text-amber-500 block tracking-wider">
-                      🧘 Preparación corporal activa:
-                    </span>
-                    <p className="text-xs text-neutral-200 leading-relaxed mt-1 font-medium italic">
-                      "{activeTransitionModal.facilitatorCue}"
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex justify-end gap-3 mt-6 border-t border-neutral-850 pt-4">
-                  <button
-                    onClick={() => setActiveTransitionModal(null)}
-                    className="px-4 py-2.5 rounded-xl border border-neutral-800 bg-neutral-950 hover:bg-neutral-900 transition-all font-mono text-xs font-semibold text-neutral-400 cursor-pointer"
-                  >
-                    Volver
-                  </button>
-                  <button
-                    id="start-scene-btn"
-                    onClick={() => {
-                      setActiveTransitionModal(null);
-                      setIsPlaying(true);
-                      audioInstance.stop();
-                      audioInstance.start(activeTransitionModal.id, 0);
-                    }}
-                    style={{ backgroundColor: getAccentColor(activeTransitionModal.id) }}
-                    className="px-5 py-3 rounded-xl text-neutral-955 font-black font-sans text-xs tracking-wider shadow-lg uppercase transition-transform active:scale-95 hover:brightness-110 flex items-center gap-2 cursor-pointer"
-                  >
-                    <span>¡Comenzar Escena!</span>
-                    <span className="text-base leading-none">➔</span>
-                  </button>
-                </div>
-              </motion.div>
-            </motion.div>
-          );
-        })()}
       </AnimatePresence>
 
     </div>

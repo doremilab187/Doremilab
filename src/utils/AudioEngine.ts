@@ -441,6 +441,17 @@ class AudioEngine {
     this.filterNode.frequency.setValueAtTime(220 + (intensity * 600), this.ctx.currentTime);
   }
 
+  private getProfileId(blockId: number): number {
+    if (blockId <= 1) return 1;
+    if (blockId === 2 || blockId === 3) return 2; // Tierra
+    if (blockId === 4 || blockId === 5) return 3; // Agua
+    if (blockId === 6 || blockId === 7) return 4; // Viento
+    if (blockId === 8 || blockId === 9) return 5; // Trueno 1
+    if (blockId === 10) return 6; // Trueno 2
+    if (blockId === 11 || blockId === 12) return 7; // Sol
+    return 8; // Final
+  }
+
   // Metronome clock loop which triggers synthesized rhythm events automatically!
   public start(blockId: number, blockProgress: number) {
     this.initCtx();
@@ -448,15 +459,16 @@ class AudioEngine {
     this.soundEnabled = true;
 
     this.activeBlockId = blockId;
+    const profileId = this.getProfileId(blockId);
     let stepCount = 0;
 
     // Background pads for narrative blocks
-    if (blockId === 1) {
+    if (profileId === 1) {
       this.startAmbientPad(130.81); // C3 deep ambient pad
       return;
     }
 
-    if (blockId === 8) {
+    if (profileId === 8) {
       this.startAmbientPad(261.63); // Victory C4 major harmony pad
       this.intervalId = setInterval(() => {
         // Play a beautiful, happy combined arpeggio periodically!
@@ -471,7 +483,7 @@ class AudioEngine {
       return;
     }
 
-    if (blockId === 4) {
+    if (profileId === 4) {
       // Viento: play a continuous series of beautiful, refreshing forest wind gusts
       this.startAmbientPad(220); // A3 breezy tone
       this.playWindGust(5, this.ctx!.currentTime);
@@ -493,15 +505,15 @@ class AudioEngine {
     // Set custom BPM tempo parameters based on active block instructions
     let computedIntervalMs = 60000 / 90; // Default 90 BPM
     
-    if (blockId === 2) {
+    if (profileId === 2) {
       computedIntervalMs = 60000 / 90; // 90 BPM
-    } else if (blockId === 3) {
+    } else if (profileId === 3) {
       computedIntervalMs = 60000 / 100; // 100 BPM
-    } else if (blockId === 5) {
+    } else if (profileId === 5) {
       computedIntervalMs = 60000 / 115; // 115 BPM rapid storm
-    } else if (blockId === 6) {
+    } else if (profileId === 6) {
       computedIntervalMs = 60000 / 75; // 75 BPM slow heavy industrial march
-    } else if (blockId === 7) {
+    } else if (profileId === 7) {
       // Progressively slows down according to block narrative (from 110 to 60)
       const tPercent = Math.min(blockProgress / 80, 1); // 80s block length
       const currentBpm = 110 - (tPercent * 50); // scales down
@@ -512,8 +524,9 @@ class AudioEngine {
       this.initCtx();
       if (!this.ctx) return;
       const t = this.ctx.currentTime;
+      const currentProfile = this.getProfileId(this.activeBlockId || blockId);
 
-      switch (this.activeBlockId) {
+      switch (currentProfile) {
         case 2: // TIERRA: March + lanzar semillas + BOM grave
           const beatInBar = stepCount % 4;
           if (beatInBar === 0) {
@@ -568,7 +581,8 @@ class AudioEngine {
       stepCount++;
 
       // Recalculate tempo dynamically for block 7 (solar transition)
-      if (this.activeBlockId === 7) {
+      const dynamicProfile = this.getProfileId(this.activeBlockId || blockId);
+      if (dynamicProfile === 7) {
         // Adjust the timer interval
         clearInterval(this.intervalId);
         const elapsed = stepCount * (computedIntervalMs / 1000);

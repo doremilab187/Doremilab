@@ -1,0 +1,32 @@
+========================================================================
+📁 CARPETA DE GIFS DE ADAGGIO (/public/adaggio_gifs/)
+========================================================================
+
+¡Hola! En esta carpeta puedes colocar tus propios archivos GIF para representar
+al tierno personaje "Adaggio".
+
+El sistema buscará automáticamente las imágenes de esta carpeta según la escena o estado
+del juego. Si el GIF existe, se reproducirá en pantalla sustituyendo el títere de vector (SVG).
+Si algún GIF no se encuentra todavía, el sistema usará automáticamente el títere animado
+por defecto o un placeholder elegante.
+
+Nombres de archivos que puedes subir aquí:
+------------------------------------------
+1. quiet.gif                - Estado de reposo o silencio (pantalla principal y pausas)
+2. listening.gif            - Cuando Adaggio escucha instrucciones antes de salir a escena
+3. fluid_raise_drop.gif     - Danza fluida (Elemento Agua / Pañuelo celeste)
+4. proud_march.gif          - Marcha orgullosa (Elemento Sol / Bastón de madera)
+5. heavy_march.gif          - Marcha pesada de gigantes
+6. accented_jump.gif        - Saltos acentuados
+7. march_sowing.gif         - Marcha de siembra (suave)
+8. celebration_victory.gif  - Celebración del final del bloque o victoria
+9. scared.gif               - Susto / Sorpresa
+10. shaking_electric.gif    - Sacudida eléctrica rápida (si ocurre un estímulo trueno)
+11. congelado_estatua.gif   - Estatua congelada / Detenido
+12. bow.gif                 - Saludo final elegante
+
+Recomendaciones:
+----------------
+- Procura utilizar GIFs transparentes si deseas que se integren de manera hermosa con los fondos del juego.
+- Puedes utilizar cualquier herramienta o diseño y simplemente arrastrarlo/pegarlo a este subdirectorio.
+- ¡Disfruta de la creación de tu experiencia musical en Do Re Mi Lab!

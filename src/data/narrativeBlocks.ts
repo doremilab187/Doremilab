@@ -9,17 +9,17 @@ export const NARRATIVE_BLOCKS: NarrativeBlock[] = [
   {
     id: 1,
     name: "BLOQUE 1 — INICIO",
-    title: "El mundo olvidó el ritmo",
+    title: "El despertar de Adaggio",
     durationStart: 0,
-    durationEnd: 50,
+    durationEnd: 40,
     stateType: 'NARRATIVO',
     pedagogicalObjective: "Establecer contexto emocional, preparar escucha atenta.",
     rhythmicConcept: "Silencio activo (escucha consciente)",
     soundMovementEquivalency: "Silencio = quietud, preparación corporal",
     physicalMaterials: [],
     instrumentProtagonist: "Silencio absoluto → pad ambiental misterioso",
-    narratorLines: "El mundo ha quedado sumido en un silencio extraño. Adaggio, el conejo del teatrillo, solía saltar al compás del viento, pero el ruido ensordecedor de los truenos lo ha distraído por completo. El gran ritmo se ha dormido...",
-    facilitatorCue: "Por favor, siéntense o quédense de pie, pero muy, muy quietos. Escuchemos el silencio antes de activar los tótems.",
+    narratorLines: "El gran teatro está en silencio. Adaggio despierta lentamente de un sueño profundo... ¡Prepárate para entrar en sintonía!",
+    facilitatorCue: "Por favor, siéntense muy, muy quietos y escuchen el silencio antes de activar los tótems.",
     adaggioAnimationState: "quiet",
     suggestedPausas: [],
     observables: [
@@ -29,207 +29,307 @@ export const NARRATIVE_BLOCKS: NarrativeBlock[] = [
   },
   {
     id: 2,
-    name: "BLOQUE 2 — TIERRA",
-    title: "La siembra y el ciclo día/noche",
-    durationStart: 50,
-    durationEnd: 120, // 2:00 = 120 seconds
+    name: "BLOQUE 2 — TIERRA I",
+    title: "Saludos a la Tierra",
+    durationStart: 40,
+    durationEnd: 80,
     stateType: 'ACCIÓN',
-    pedagogicalObjective: "Introducir PULSO CONSTANTE (latido regular de la música en compás de 4/4 a 90 BPM).",
-    rhythmicConcept: "Pulso = BOM-BOM-BOM-BOM (4/4, 90 BPM constante)",
-    soundMovementEquivalency: "Pulso constante = marcha rítmica con pisadas marcadas lanzando semillas con arco amplio. Agacharse e interactuar en el 'BOM!' grave.",
+    pedagogicalObjective: "Introducir PULSO CONSTANTE en compás de 4/4 a 90 BPM.",
+    rhythmicConcept: "Pulso = BOM-BOM (4/4, 90 BPM constante)",
+    soundMovementEquivalency: "Marcha rítmica con pisadas marcadas sintiendo el suelo.",
     physicalMaterials: [],
-    instrumentProtagonist: "Guitarra acústica marcando el pulso + percusión profunda (bombo)",
-    narratorLines: "¡Pónganse de pie! Imaginen un campo fértil bajo un sol que apenas despierta. Lancemos semillas al ritmo de la tierra... ¡Caminen con pisada alegre! Y cuando la percusión diga ¡BOM!, nos agachamos para tocar el suelo con las palmas. ¡De día y de noche, sembrando vida!",
+    instrumentProtagonist: "Percusión profunda (bombo)",
+    narratorLines: "Siente el latido de la Madre Tierra. Levantémonos para marchar alegremente con pasos firmes.",
     facilitatorCue: "Levántense, dense espacio entre ustedes sin tropezar.",
     adaggioAnimationState: "march_sowing",
-    suggestedPausas: [
-      {
-        time: 15, // 0:50 + 15s = 1:05
-        label: "PAUSA 1 (1:05)",
-        text: "Verificación de espacio: El facilitador confirma que todos los niños están de pie y tienen espacio para marchar y simular el lanzamiento de semillas antes de que comience el ritmo."
-      }
-    ],
+    suggestedPausas: [],
     observables: [
-      { id: "pulse_sync", label: "Sincronía con el Pulso", description: "¿Los niños marchan sincronizados con el latido regular de la guitarra y el bombo?" },
-      { id: "accent_squat", label: "Reacción al Golpe Grave", description: "¿Sincronizan el gesto de agacharse y tocar el suelo coincidiendo con el golpe BOM de baja frecuencia?" }
+      { id: "pulse_sync", label: "Sincronía con el Pulso", description: "¿Los niños marchan sincronizados con el latido regular?" }
     ],
     hexColors: ["#FF8C00", "#8B4513", "#6B8E23"]
   },
   {
     id: 3,
-    name: "BLOQUE 3 — AGUA",
-    title: "Las gotas y el río",
-    durationStart: 120, // 2:00
-    durationEnd: 185, // 3:05 = 185 seconds
+    name: "BLOQUE 3 — TIERRA II",
+    title: "La siembra del ritmo",
+    durationStart: 80,
+    durationEnd: 120,
     stateType: 'ACCIÓN',
-    pedagogicalObjective: "Introducir ALTURAS TONALES (discriminación entre sonidos agudos y graves).",
-    rhythmicConcept: "Altura = agudo (arriba) vs. grave (abajo)",
-    soundMovementEquivalency: "Sonidos agudos (notas altas de xilófono) = brazos arriba ondeando el pañuelo azul. Sonidos graves = brazos abajo.",
-    physicalMaterials: ["Pañuelo o trapo azul ligero (1 por niño)"],
-    instrumentProtagonist: "Gotas cristalinas (Xilófono/metalófono agudo) + guitarra de acompañamiento",
-    narratorLines: "La tierra está lista, pero tiene sed. Miren al cielo: caen gotas cristalinas. Saquen sus pañuelos azules y hagámoslos bailar. Si las gotas suenan agudas, el pañuelo sube al cielo; si suenan graves, bajan. ¡Y miren, las gotas se convierten en un río caudaloso! ¡Hagamos ondas amplias como el vaivén del agua!",
-    facilitatorCue: "Saquen su pañuelo azul y sujétenlo con una mano. ¿Todos listos?",
+    pedagogicalObjective: "Explorar ACENTOS pesados en el primer tiempo.",
+    rhythmicConcept: "Acento en el primer pulso (BOM!)",
+    soundMovementEquivalency: "Lanzar semillas imaginarias en el BOM de la percusión.",
+    physicalMaterials: [],
+    instrumentProtagonist: "Guitarra acústica marcando el pulso + bombo",
+    narratorLines: "¡Lancemos semillas al compás de la siembra! Agáchate y toca el suelo en cada ¡BOM! fuerte.",
+    facilitatorCue: "Simulemos lanzar una semilla con un arco grande del brazo cada vez que suene fuerte.",
+    adaggioAnimationState: "march_sowing",
+    suggestedPausas: [],
+    observables: [
+      { id: "accent_squat", label: "Reacción al Golpe Grave", description: "¿Se agachan coincidiendo con el golpe BOM de baja frecuencia?" }
+    ],
+    hexColors: ["#FF8C00", "#8B4513", "#6B8E23"]
+  },
+  {
+    id: 4,
+    name: "BLOQUE 4 — AGUA I",
+    title: "Las primeras gotas de lluvia",
+    durationStart: 120,
+    durationEnd: 160,
+    stateType: 'ACCIÓN',
+    pedagogicalObjective: "Introducir ALTURAS TONALES (sonidos agudos).",
+    rhythmicConcept: "Altura = notas agudas del xilófono",
+    soundMovementEquivalency: "Mover el pañuelo azul en lo alto del cielo.",
+    physicalMaterials: ["Pañuelo azul (1 por niñoID)"],
+    instrumentProtagonist: "Xilófono agudo (gotas cristalinas)",
+    narratorLines: "Caen gotas cristalinas del cielo. Hagamos bailar los pañuelos azules en lo más alto.",
+    facilitatorCue: "Saquen sus pañuelos azules y levanten los brazos para simular la suave lluvia.",
     adaggioAnimationState: "fluid_raise_drop",
     suggestedPausas: [
       {
-        time: 18, // 2:00 + 18s = 2:18
-        label: "PAUSA 2 (2:18)",
-        text: "Distribución de Material: El facilitador se asegura de que cada infante cuente con su pañuelo o trapo azul antes de reanudar la acción musical."
+        time: 5,
+        label: "PAUSA PAÑUELOS",
+        text: "Distribución de pañuelos: El facilitador entrega un pañuelo azul a cada participante."
       }
     ],
     observables: [
-      { id: "pitch_discrimination", label: "Discriminación Agudo/Grave", description: "¿Los niños logran levantar el pañuelo ante sonidos agudos y bajarlo ante los graves?" },
-      { id: "fluid_motion", label: "Movimiento de Vaivén", description: "¿Participan suavemente y coordinan el movimiento amplio de olas en la sección del río caudaloso?" }
+      { id: "pitch_high", label: "Movimiento arriba", description: "¿Los niños levantan el pañuelo coordinando con notas agudas?" }
     ],
     hexColors: ["#87CEEB", "#40E0D0", "#F0F8FF"]
   },
   {
-    id: 4,
-    name: "BLOQUE 4 — VIENTO",
-    title: "El sonido del aire",
-    durationStart: 185, // 3:05
-    durationEnd: 240, // 4:00 = 240 seconds
+    id: 5,
+    name: "BLOQUE 5 — AGUA II",
+    title: "El río caudaloso",
+    durationStart: 160,
+    durationEnd: 200,
     stateType: 'ACCIÓN',
-    pedagogicalObjective: "Introducir DINÁMICAS (la intensidad de la sonoridad: piano vs. forte).",
-    rhythmicConcept: "Dinámica = piano (movimiento pequeño, brazos frente al pecho) vs. forte (brazos abiertos amplios)",
-    soundMovementEquivalency: "Música suave (piano) = brazos recogidos frente al pecho, movimiento contenido. Música intensa (forte) = brazos totalmente extendidos hacia afuera.",
-    physicalMaterials: [],
-    instrumentProtagonist: "Melodía aérea flotante (flauta/sintetizador) + ráfagas de viento y crescendo armónico",
-    narratorLines: "El viento acaricia la tierra labrada y el río brillante. Sientan el flujo de las ráfagas. Junten los brazos frente a su pecho como una pequeña brisa... a medida que escuchen el viento crecer ruidosamente, abran sus brazos con fuerza, ¡lo más grande que puedan! ¡Sientan el pecho expandirse y respirar en grande!",
-    facilitatorCue: "Guardemos o soltemos el pañuelo. Pongamos las manos frente al pecho, listos para abrir caminos como el viento.",
-    adaggioAnimationState: "expanding_arms",
-    suggestedPausas: [
-      {
-        time: 15, // 3:05 + 15s = 3:20
-        label: "PAUSA 3 (3:20)",
-        text: "Modelado Previo: El facilitador verifica que todos guarden los pañuelos y adopten la postura inicial con los brazos cruzados o recogidos frente al pecho."
-      }
-    ],
+    pedagogicalObjective: "Contrastar agudos arriba y graves abajo.",
+    rhythmicConcept: "Contrarios espaciales de altura (agudo/grave, alto/bajo)",
+    soundMovementEquivalency: "Pañuelo arriba para agudos, pañuelo abajo para graves. Movimiento de vaivén.",
+    physicalMaterials: ["Pañuelo azul"],
+    instrumentProtagonist: "Xilófono y guitarra con notas fluctuantes",
+    narratorLines: "Las gotas se unen en un río caudaloso. Arriba cuando suene agudo, y abajo si suena grave.",
+    facilitatorCue: "Sigan la corriente del río haciendo ondas amplias con todo el cuerpo.",
+    adaggioAnimationState: "fluid_raise_drop",
+    suggestedPausas: [],
     observables: [
-      { id: "dynamic_scaling", label: "Graduación de Dinámicas", description: "¿Los infantes regulan de manera proporcional la apertura de brazos según la amplitud y volumen del viento sonoro?" },
-      { id: "posture_expansion", label: "Expansión del Pecho", description: "¿Se involucra el torso y el pecho en las respiraciones y aperturas amplias?" }
+      { id: "pitch_discrimination", label: "Discriminación Agudo/Grave", description: "¿Siguen correctamente la indicación corporal agudo/grave?" }
+    ],
+    hexColors: ["#87CEEB", "#40E0D0", "#F0F8FF"]
+  },
+  {
+    id: 6,
+    name: "BLOQUE 6 — VIENTO I",
+    title: "La brisa suave (Piano)",
+    durationStart: 200,
+    durationEnd: 240,
+    stateType: 'ACCIÓN',
+    pedagogicalObjective: "Introducir DINÁMICAS (sonoridad piano / movimiento contenido).",
+    rhythmicConcept: "Dinámica = piano (movimiento pequeño, brazos frente al pecho)",
+    soundMovementEquivalency: "Brazos juntos frente al pecho, simulando una pequeña brisa.",
+    physicalMaterials: [],
+    instrumentProtagonist: "Sintetizador suave y flauta",
+    narratorLines: "Un viento sutil acaricia el bosque. Mantengamos las manos juntas frente al pecho.",
+    facilitatorCue: "Movimientos pequeños y delicados como una suave brisa.",
+    adaggioAnimationState: "expanding_arms",
+    suggestedPausas: [],
+    observables: [
+      { id: "dynamic_piano", label: "Control de Movimiento Pequeño", description: "¿Los infantes logran mantener movimientos suaves y contenidos?" }
     ],
     hexColors: ["#FFFFFF", "#87CEEB", "#D3D3D3"]
   },
   {
-    id: 5,
-    name: "BLOQUE 5 — TRUENO PARTE 1",
-    title: "El ruido que volvió",
-    durationStart: 240, // 4:00
-    durationEnd: 280, // 4:40 = 280 seconds
-    stateType: 'ACCIÓN_DIRECCIÓN',
-    pedagogicalObjective: "Introducir CONTRASTE SÚBITO (reacción de detención/congelamiento ante interrupciones de alta intensidad).",
-    rhythmicConcept: "Contraste súbito = mantener movimiento base + vibrar por completo ante chispa eléctrica",
-    soundMovementEquivalency: "Flujo continuo del viento soplado por los brazos + reacción de sacudida y vibración instantánea de 1 segundo coincidiendo con el chispazo agudo eléctrico.",
+    id: 7,
+    name: "BLOQUE 7 — VIENTO II",
+    title: "Las grandes ráfagas (Forte)",
+    durationStart: 240,
+    durationEnd: 280,
+    stateType: 'ACCIÓN',
+    pedagogicalObjective: "Expandir dinámicas (forte / movimiento amplio y respiración).",
+    rhythmicConcept: "Dinámica = forte (brazos abiertos amplios)",
+    soundMovementEquivalency: "Extender los brazos hacia afuera de par en par con respiraciones.",
     physicalMaterials: [],
-    instrumentProtagonist: "Percusión caótica + truenos fuertes + inesperados golpes agudos de rayo",
-    narratorLines: "El cielo se vuelve oscuro de repente... morado... ¡la tormenta regresa! Mantengan sus brazos moviéndose como el viento temeroso, ¡pero cuidado! Si escuchan un chispazo muy agudo y chirriante, el rayo nos sacude el cuerpo con un cosquilleo eléctrico durante un segundo. ¡Bzzz! Y volvemos al viento inmediatamente.",
-    facilitatorCue: "Manténganse de pie. Solo vibramos o temblamos cuando suene el relámpago agudo. ¡Estén muy atentos con sus oídos!",
+    instrumentProtagonist: "Ráfagas crescendos y flauta con aire ascendente",
+    narratorLines: "¡El viento sopla fuerte! Abre tus brazos en grande, ¡lo más amplio que puedas!",
+    facilitatorCue: "Inhalemos llenando el pecho de aire y abramos los brazos con energía de viento.",
+    adaggioAnimationState: "expanding_arms",
+    suggestedPausas: [],
+    observables: [
+      { id: "dynamic_forte", label: "Apertura en Forte", description: "¿Los niños expanden sus movimientos proporcionalmente al volumen?" }
+    ],
+    hexColors: ["#FFFFFF", "#87CEEB", "#D3D3D3"]
+  },
+  {
+    id: 8,
+    name: "BLOQUE 8 — TRUENO I",
+    title: "El retorno de la tormenta",
+    durationStart: 280,
+    durationEnd: 320,
+    stateType: 'ACCIÓN_DIRECCIÓN',
+    pedagogicalObjective: "Reaccionar a CONTRASTE SÚBITO (estallido ruidoso).",
+    rhythmicConcept: "Contraste sorpresivo (flujo continuo vs. corte)",
+    soundMovementEquivalency: "Moverse como el viento y detenerse/temblar ante el trueno.",
+    physicalMaterials: [],
+    instrumentProtagonist: "Percusión caótica y truenos",
+    narratorLines: "El cielo se vuelve oscuro... ¡la tormenta regresa! Prepárate para el chispazo eléctrico.",
+    facilitatorCue: "Sigan moviéndose pero muy alertas a la señal del trueno.",
     adaggioAnimationState: "shaking_electric",
     suggestedPausas: [],
     observables: [
-      { id: "sudden_contrast", label: "Contraste Súbito", description: "¿Los niños reaccionan al estallido agudo interrumpiendo fluidamente su movimiento para temblar y congelarse?" },
-      { id: "rapid_recovery", label: "Recuperación Rápida", description: "¿Regresan al flujo continuo del viento justo después de disiparse el sonido de la descarga?" }
+      { id: "sudden_contrast", label: "Reacción al Trueno", description: "¿Detienen el movimiento de viento para reaccionar al trueno?" }
     ],
     hexColors: ["#4B0082", "#696969", "#7B68EE"]
   },
   {
-    id: 6,
-    name: "BLOQUE 6 — TRUENO PARTE 2",
-    title: "El ruido musical (Juego del sigilo)",
-    durationStart: 280, // 4:40
-    durationEnd: 325, // 5:25 = 325 seconds
+    id: 9,
+    name: "BLOQUE 9 — TRUENO II",
+    title: "El rayo de luz",
+    durationStart: 320,
+    durationEnd: 360,
     stateType: 'ACCIÓN_DIRECCIÓN',
-    pedagogicalObjective: "Introducir PULSO OCULTO y CONGELAMIENTO SÚBITO (estatuas en silencio).",
-    rhythmicConcept: "Pulso oculto (caminar sigiloso) + Congelamiento instantáneo ante el rayo seco (permanecer 2-3 seg inmóviles)",
-    soundMovementEquivalency: "Percusión industrial pesada = caminar en puntillas levantando rodillas lenta y sigilosamente. Trueno o estruendo seco = convertirse en estatuas de piedra sin mover un solo músculo.",
+    pedagogicalObjective: "Interpolar ráfagas de movimientos rápidos de temblor.",
+    rhythmicConcept: "Duración de reacción (vibración corta, 1 segundo)",
+    soundMovementEquivalency: "Sacudida instantánea corporal simulando un cosquilleo eléctrico.",
     physicalMaterials: [],
-    instrumentProtagonist: "Percusión metálica pesada (marcando compás) + estruendos de rayo repentinos",
-    narratorLines: "El ruido se vuelve musical... pero es un ritmo pesado. Caminemos en puntillas del pie, muy sigilosos, como si cruzáramos la alcoba de un gigante. Sigan el golpe oculto. ¡Puntitas... puntitas...! ¡CUIDADO! Un estallido truena... ¡Estatuas! Nadie se mueve... mantengan la postura por dos, tres segundos... hasta que retorne el silencio sigiloso.",
-    facilitatorCue: "Caminen lento en puntas de pies. Si suena el rayo: congelados como rocas. ¡Yo los vigilo a ver quién no pestañea!",
-    adaggioAnimationState: "congelado_estatua",
-    suggestedPausas: [
-      {
-        time: 10, // 4:40 + 10s = 4:50
-        label: "PAUSA 4 (4:50)",
-        text: "Ensayo de Estatua: Si el facilitador observa que más del 70% de la clase se distrae o sigue moviéndose durante los rayos, se realiza una pequeña práctica interactiva independiente del video antes de continuar."
-      }
-    ],
+    instrumentProtagonist: "Estrepitoso golpe agudo de rayo seco",
+    narratorLines: "¡Bzzz! Un rayo nos sacude el cuerpo con un cosquilleo de luz durante un segundo.",
+    facilitatorCue: "¡Tiemblen como gelatina por un segundo cuando suene el chispazo!",
+    adaggioAnimationState: "shaking_electric",
+    suggestedPausas: [],
     observables: [
-      { id: "stealth_pulse_walk", label: "Caminar en Sigilo", description: "¿Siguen la marcha en punta de pies siguiendo de forma constante e internalizada el paso métrico?" },
-      { id: "stone_statue_freeze", label: "Congelamiento Absoluto", description: "¿Los niños logran detenerse y conservar total inmovilidad corporal durante los 2 y 3 segundos del estallido del rayo?" }
+      { id: "rapid_vibration", label: "Vibración Eléctrica", description: "¿Coordinan la sacudida corporal súbita con el sonido del rayo?" }
     ],
     hexColors: ["#4B0082", "#2F4F4F", "#000000"]
   },
   {
-    id: 7,
-    name: "BLOQUE 7 — LLAMADO AL SOL",
-    title: "La marcha de la luz",
-    durationStart: 325, // 5:25
-    durationEnd: 405, // 6:45 = 405 seconds
+    id: 10,
+    name: "BLOQUE 10 — TRUENO III",
+    title: "El juego de las estatuas",
+    durationStart: 360,
+    durationEnd: 400,
+    stateType: 'ACCIÓN_DIRECCIÓN',
+    pedagogicalObjective: "Entrenar control de inhibición motriz y estatuas.",
+    rhythmicConcept: "Inhibición / Congelamiento y silencio absoluto",
+    soundMovementEquivalency: "Caminar sigiloso y congelamiento total de estatua por 3 segundos.",
+    physicalMaterials: [],
+    instrumentProtagonist: "Golpes pesados de percusión + silencios repentinos",
+    narratorLines: "Caminemos en puntas de pie bajo la lluvia pesada... y si hay un trueno: ¡Estatuas de piedra!",
+    facilitatorCue: "Nadie se mueve. ¡Seamos rocas firmes y silenciosas por un instante!",
+    adaggioAnimationState: "congelado_estatua",
+    suggestedPausas: [],
+    observables: [
+      { id: "inhib_control", label: "Estatua Perfecta", description: "¿Los niños logran congelar todo movimiento corporal en el silencio?" }
+    ],
+    hexColors: ["#4B0082", "#2F4F4F", "#000000"]
+  },
+  {
+    id: 11,
+    name: "BLOQUE 11 — SOL I",
+    title: "La gran marcha de luz",
+    durationStart: 400,
+    durationEnd: 440,
     stateType: 'ACCIÓN',
-    pedagogicalObjective: "Integrar conceptos previos: PULSO + ACENTOS rítmicos + VARIACIONES DE TEMPO (acelerando, ritardando).",
-    rhythmicConcept: "Acentos = saltos verticales con caída firme. Tempo cambiante = rápido alegre a lento pesado.",
-    soundMovementEquivalency: "Bombo de marcha = levantar rodillas con orgullo al andar. Salto enérgico coincidiendo con el acento cada 4 pulsos. Tempo de marcha pesado lento = caminar encorvados cargando el bastón en la espalda.",
-    physicalMaterials: ["Bastón o palo de madera ligero sin astillas de 50-80 cm de longitud (1 por niño)"],
-    instrumentProtagonist: "Bombo de marcha militar acústica y percusión brillante progresiva",
-    narratorLines: "La tormenta ya se desvanece, es momento de llamar al Sol. Tomen sus bastones mágicos con firmeza con ambas manos. ¡Y marchen con la cabeza en alto! Uno, dos, uno, dos... Y cuando sientan la gran llamada de luz... ¡Damos un salto hacia el cielo y golpeamos el suelo sutilmente al caer! ¡Eso es! Pero miren, la luz viene despacio ahora... la música frena... bajen los hombros, carguen su bastón en la espalda... caminamos despacio y sintiendo el peso...",
-    facilitatorCue: "Tomen sus bastones con ambas manos, mantengan la espalda recta para marchar como líderes.",
+    pedagogicalObjective: "Marchar a tempo ágil y saltar en los acentos métricos.",
+    rhythmicConcept: "Tempo de marcha animado (110 BPM) + saltos en el acento",
+    soundMovementEquivalency: "Marcha triunfal con elevación de rodillas sosteniendo bastones.",
+    physicalMaterials: ["Bastones de madera ligeros (1 por niñoID)"],
+    instrumentProtagonist: "Bombo acústico y trompetas",
+    narratorLines: "Sujeten sus bastones mágicos y marchemos con orgullo. ¡Demos un salto alto en cada gran acento!",
+    facilitatorCue: "Pala en mano o bastón arriba, marchemos con la cabeza alta.",
     adaggioAnimationState: "proud_march",
     suggestedPausas: [
       {
-        time: 25, // 5:25 + 25s = 5:50
-        label: "PAUSA 5 (5:50)",
-        text: "Verificación de Seguridad de Bastones: El facilitador coordina que cada niño porte su palo de manera segura, evitando juegos bruscos, antes de iniciar la marcha activa."
+        time: 5,
+        label: "PAUSA BASTONES",
+        text: "Distribución de bastones: Repartir los bastones antes del llamado del sol con precauciones de seguridad."
       }
     ],
     observables: [
-      { id: "accent_jump", label: "Coordinación de Saltos en Acentos", description: "¿Los niños saltan con fuerza de forma anticipada o coordinada sincronizándose con la señal del acento métrico cada 4 pulsos?" },
-      { id: "tempo_tracking", label: "Transición de Tempos", description: "¿Los niños logran desacelerar sensiblemente su marcha y cambiar su actitud corporal hacia un paso pesado corporal cuando la música pasa de ágil (110 BPM) a lenta (60 BPM)?" }
+      { id: "marching_sync", label: "Coordinación de Marcha", description: "¿Sincronizan los pies con el bombo y saltan firmemente?" }
     ],
     hexColors: ["#FFD700", "#DAA520", "#FF4500"]
   },
   {
-    id: 8,
-    name: "BLOQUE 8 — FINAL DE ACCIÓN",
-    title: "El ritmo recordado",
-    durationStart: 405, // 6:45
-    durationEnd: 455, // 7:35 = 455 seconds
-    stateType: 'CONCLUSIÓN',
-    pedagogicalObjective: "Cierre emocional, integración de conceptos y celebración colectiva.",
-    rhythmicConcept: "Síntesis armónica (descanso físico, retroalimentación mental y respiración)",
-    soundMovementEquivalency: "Marcha triunfal → soltar el bastón → respiraciones lentas simétricas acompañando los brazos libres.",
-    physicalMaterials: ["Bastones (se guardan hacia el final)"],
-    instrumentProtagonist: "Fusión integradora (guitarra, metalófono, viento y tambores en armonía floreciente)",
-    narratorLines: "¡El sol ha despertado! Miren los tótems brillar en armonía. ¡Saltemos de alegría! Hemos rescatado el ritmo, que no estaba perdido, sino guardado en el latido de nuestros propios corazones. Respiremos hondo... subiendo los brazos... soltando el aire lentamente. ¡Gracias por esta gran danza de vida!",
-    facilitatorCue: "Suelten sus bastones en el suelo con suavidad. Respiremos hondo junto con Adaggio. Inhalen... Exhalen...",
-    adaggioAnimationState: "bow",
+    id: 12,
+    name: "BLOQUE 12 — SOL II",
+    title: "El atardecer pausado",
+    durationStart: 440,
+    durationEnd: 480,
+    stateType: 'ACCIÓN',
+    pedagogicalObjective: "Experimentar RITARDANDO (desaceleración progresiva de la velocidad métrica).",
+    rhythmicConcept: "Tempo ritardando (desaceleración rítmica)",
+    soundMovementEquivalency: "Estilo encorvado de marcha cargando el bastón como si pesara mucho.",
+    physicalMaterials: ["Bastones de madera"],
+    instrumentProtagonist: "Metrónomo decreciente y percusión pesada",
+    narratorLines: "La luz solar disminuye lentamente... el tempo se hace pesado. Camina con calma y pesadez.",
+    facilitatorCue: "Sientan el peso en sus hombros, caminemos cada vez más despacio.",
+    adaggioAnimationState: "heavy_march",
     suggestedPausas: [],
     observables: [
-      { id: "climax_joy", label: "Celebración y Clímax", description: "¿Los niños experimentan entusiasmo y júbilo sincronizado en la explosión musical?" },
-      { id: "calm_respiration", label: "Relajación Final", description: "¿Adquieren con naturalidad el estado de paz, respirando coordinadamente al final?" }
+      { id: "ritardando_tracking", label: "Adaptación al Ritardando", description: "¿Los niños adaptan su velocidad de marcha al freno musical?" }
+    ],
+    hexColors: ["#FFD700", "#DAA520", "#FF4500"]
+  },
+  {
+    id: 13,
+    name: "BLOQUE 13 — FINAL I",
+    title: "El ritmo rescatado",
+    durationStart: 480,
+    durationEnd: 520,
+    stateType: 'CONCLUSIÓN',
+    pedagogicalObjective: "Cerrar con síntesis armónica combinada.",
+    rhythmicConcept: "Sincronía de grupo total",
+    soundMovementEquivalency: "Soltar los bastones, mímica libre de tótems iluminados.",
+    physicalMaterials: [],
+    instrumentProtagonist: "Guitarra, metalófonos y percusiones en armonía",
+    narratorLines: "¡El sol ha despertado del todo! Los tótems resplandecen. ¡El gran ritmo ha renacido!",
+    facilitatorCue: "Soltemos los bastones con suavidad en el suelo y dancemos con los brazos libres.",
+    adaggioAnimationState: "celebration_victory",
+    suggestedPausas: [],
+    observables: [
+      { id: "climax_enthusiasm", label: "Danza Alegre", description: "¿Demuestran felicidad y disfrutan la fiesta musical?" }
     ],
     hexColors: ["#DAA520", "#32CD32", "#FF69B4"]
   },
   {
-    id: 9,
-    name: "BLOQUE 9 — FIN DE LA EXPERIENCIA",
-    title: "Mensaje Motivador de Adaggio",
-    durationStart: 455, // 7:35
-    durationEnd: 505, // 8:25 = 505 seconds
+    id: 14,
+    name: "BLOQUE 14 — FINAL II",
+    title: "La celebración colectiva",
+    durationStart: 520,
+    durationEnd: 560,
     stateType: 'CONCLUSIÓN',
-    pedagogicalObjective: "Reforzar positivamente el logro del grupo y fomentar la empatía.",
-    rhythmicConcept: "Relajación pacífica e internalización afectiva del ritmo",
-    soundMovementEquivalency: "Sentarse en semicírculo para recibir un mensaje especial de motivación o celebrar con mímica suave.",
+    pedagogicalObjective: "Compartir el logro grupal y abrazar el ritmo común.",
+    rhythmicConcept: "Comunidad / Ritmo colectivo",
+    soundMovementEquivalency: "Saltar, aplaudir y abrazar en ronda con los compañeros.",
     physicalMaterials: [],
-    instrumentProtagonist: "Arpa celestial, flauta andina y sonidos ambientales luminosos",
-    narratorLines: "¡Queridos valientes del ritmo! Adaggio se siente inmensamente feliz hoy. Han devuelto el color y la música con cada una de sus pisadas fuertes, con cada suave vuelo de los pañuelos y saltando juntos. Recuerden: la mayor música rítmica del mundo es su sonrisa y cariño. ¡Ustedes son los guardianes de la luz en Ciudad Bolívar! ¡Un enorme y cálido aplauso de corazón para todos!",
-    facilitatorCue: "Sentaos cómodamente en el suelo en semicírculo frente a Adaggio. Dense un fuerte aplauso y un abrazo rítmico grupal.",
+    instrumentProtagonist: "Arpa, flauta y ritmos festivos luminosos",
+    narratorLines: "¡Qué bella celebración! El ritmo vive y late fuerte dentro del corazón del teatrillo.",
+    facilitatorCue: "Démonos un fuerte aplauso grupal rindiendo homenaje a nuestro gran esfuerzo.",
     adaggioAnimationState: "celebration_victory",
     suggestedPausas: [],
     observables: [
-      { id: "positive_reflection", label: "Recepción de Mensaje", description: "¿Los niños asimilan el mensaje positivo con sonrisas, atención y gestos de felicidad?" },
-      { id: "peer_empathy", label: "Empatía entre Compañeros", description: "¿Se aplauden y felicitan mutuamente con amabilidad rindiendo homenaje al esfuerzo del grupo?" }
+      { id: "social_empathy", label: "Abrazo Colectivo", description: "¿Aplauden y felicitan a sus compañeros por el logro?" }
+    ],
+    hexColors: ["#DAA520", "#32CD32", "#FF69B4"]
+  },
+  {
+    id: 15,
+    name: "BLOQUE 15 — FINAL III",
+    title: "El latido de la paz",
+    durationStart: 560,
+    durationEnd: 600,
+    stateType: 'CONCLUSIÓN',
+    pedagogicalObjective: "Relajación final, vuelta a la calma.",
+    rhythmicConcept: "Pulso cardiaco en reposo / respiración",
+    soundMovementEquivalency: "Sentarse en semicírculo respirando hondo con Adaggio.",
+    physicalMaterials: [],
+    instrumentProtagonist: "Pad ambiental y arpa celestial lenta",
+    narratorLines: "Recuerden guardianes: la mayor música rítmica es su sonrisa. ¡Gracias por esta gran danza de vida!",
+    facilitatorCue: "Sentaos en el suelo respirando suavemente. Sientan su pulso calmado. Inhalar... Exhalar...",
+    adaggioAnimationState: "bow",
+    suggestedPausas: [],
+    observables: [
+      { id: "calm_regained", label: "Paz Recuperada", description: "¿Logran sintonizar un estado de relajación y respirar con Adaggio?" }
     ],
     hexColors: ["#FFD700", "#FF69B4", "#00FFFF"]
   }

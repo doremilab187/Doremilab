@@ -1,6 +1,8 @@
 @font-face {
   font-family: 'Some Time Later';
-  src: url('/fonts/Some Time Later.otf') format('opentype');
+  src: url('/fonts/rethink/static/SomeTimeLater.otf?v=3') format('opentype'),
+       url('/fonts/rethink/static/SomeTimeLater.otf?v=3') format('truetype'),
+       url('/fonts/rethink/static/SomeTimeLater.otf?v=3');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -48,4 +50,8 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #af7cec;
+}
+
+.font-funny {
+  font-family: 'Some Time Later', 'Fredoka', sans-serif !important;
 }
