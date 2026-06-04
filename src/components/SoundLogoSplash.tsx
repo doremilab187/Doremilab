@@ -186,33 +186,23 @@ export function SoundLogoSplash({ onComplete, autoPlayImmediately = false }: Sou
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="relative z-20 text-center max-w-md p-8 bg-[#FFEAB3] border-[6px] border-[#CDA152] rounded-[40px] shadow-2xl flex flex-col items-center mx-4"
+            className="relative z-20 text-center max-w-md p-12 bg-white border-[6px] border-[#ffffff] rounded-[48px] shadow-2xl flex flex-col items-center mx-4"
           >
             {/* Specular layout details */}
-            <div className="absolute inset-2 border-2 border-dashed border-[#DFBD7C]/60 rounded-[30px] pointer-events-none" />
+            <div className="absolute inset-2 border-2 border-dashed border-[#DFBD7C]/60 rounded-[38px] pointer-events-none" />
 
-            {/* Glowing staff icon */}
-            <div className="relative w-20 h-20 bg-[#7B46F7] border-4 border-white rounded-3xl flex items-center justify-center shadow-lg transform rotate-[-8deg] hover:rotate-[8deg] transition-transform duration-300">
-              <span className="text-white text-4xl font-funny font-black">♫</span>
-            </div>
-
-            <h2 className="text-3xl font-black text-[#472F92] uppercase mt-6 mb-2 tracking-tight font-funny">
+            <h1 className="text-5xl font-black text-[#472F92] uppercase mb-12 tracking-tight font-funny" style={{ fontFamily: "'Some Time Later', 'Fredoka', sans-serif" }}>
               Do Re Mi Lab
-            </h2>
-            <p className="text-[#875F11] text-sm font-bold max-w-sm mb-6 leading-relaxed font-sans">
-              ¡Hola! Presiona el botón para entrar al Laboratorio con nuestro sound logo principal.
-            </p>
+            </h1>
 
             <button
               onClick={handleStart}
-              className="group relative bg-gradient-to-r from-[#A3F1E3] to-[#46E4CF] hover:from-[#B4F7EC] hover:to-[#57EBD5] border-[4px] border-[#31C3AA] active:border-[#1F9F8B] px-8 py-4.5 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.05] active:scale-[0.95] transition-all duration-300 text-left flex items-center gap-4 cursor-pointer overflow-hidden text-center justify-center min-w-[240px]"
+              className="group relative w-24 h-24 bg-[#472f92] hover:bg-[#3b2779] border-[5px] border-[#ffffff] active:border-[#edf2f7] rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 flex items-center justify-center cursor-pointer overflow-hidden"
+              aria-label="Play"
             >
               {/* Specular gloss glow */}
-              <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/40 rounded-full blur-[0.5px]" />
-              <span className="font-funny font-black text-2xl text-[#472F92] uppercase tracking-wide">
-                ¡Entrar Lab!
-              </span>
-              <Play className="w-6 h-6 fill-[#472F92] text-[#472F92]" />
+              <div className="absolute top-1 left-2 right-2 h-3 bg-white/25 rounded-full blur-[0.5px]" />
+              <Play className="w-10 h-10 fill-white text-white ml-1.5 transform group-hover:scale-110 transition-transform" />
             </button>
           </motion.div>
 
