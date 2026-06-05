@@ -61,6 +61,25 @@ export const getDirectVideoUrl = (url: string): string => {
   return trimmed;
 };
 
+export const getTotemImageForBlock = (blockId: number): { src: string; name: string } | null => {
+  if (blockId === 3) {
+    return { src: "/totems/totem_tierra.png", name: "Amuleto de la Tierra" };
+  }
+  if (blockId === 6) {
+    return { src: "/totems/totem_agua.png", name: "Amuleto del Agua" };
+  }
+  if (blockId === 8) {
+    return { src: "/totems/totem_viento.png", name: "Amuleto del Viento" };
+  }
+  if (blockId === 12) {
+    return { src: "/totems/totem_rayo.png", name: "Amuleto del Rayo" };
+  }
+  if (blockId === 14) {
+    return { src: "/totems/totem_sol.png", name: "Amuleto del Sol" };
+  }
+  return null;
+};
+
 // ==========================================
 // CONFIGURACIÓN DE ENLACES EN LA NUBE (GLOBAL)
 // ==========================================
@@ -95,6 +114,8 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
   const [isSynthEnabled, setIsSynthEnabled] = useState<boolean>(false);
   const [activeBlock, setActiveBlock] = useState<NarrativeBlock>(NARRATIVE_BLOCKS[0]);
   const [playbackRate, setPlaybackRate] = useState<number>(1);
+  const [isMobileTheaterExpanded, setIsMobileTheaterExpanded] = useState<boolean>(false);
+  const [isMobileCinemaMode, setIsMobileCinemaMode] = useState<boolean>(false);
   
   // Video loader state
   // Mapping of blockId to loaded video object URL strings
@@ -658,37 +679,27 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
         <div 
           ref={theaterFrameRef}
           id="teatrillo-marionette-stage-frame"
-          className="w-full rounded-2xl border-[5px] border-amber-950 overflow-hidden flex flex-col shadow-2xl bg-neutral-950 relative"
+          className="w-full rounded-2xl border-2 sm:border-[5px] border-amber-950 overflow-hidden flex flex-col shadow-2xl bg-neutral-950 relative"
         >
           {/* THEATRE AUDIOVISUAL CANVAS */}
           <div
             id="theatre-visual-stage"
-            className="relative w-full aspect-video bg-neutral-950 flex flex-col items-center justify-center overflow-hidden"
+            className={`relative w-full transition-all duration-300 bg-neutral-950 flex flex-col items-center justify-center overflow-hidden ${
+              isMobileTheaterExpanded 
+                ? 'aspect-[3/4] xs:aspect-[4/3] sm:aspect-video min-h-[460px] xs:min-h-[500px] sm:min-h-0' 
+                : 'aspect-[4/3] xs:aspect-[16/10] sm:aspect-video'
+            }`}
           >
             {currentBlockVideoUrl ? (
               <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-black">
                 {isGoogleDrive ? (
-                  <>
-                    <iframe
-                      src={currentBlockVideoUrl}
-                      className="w-full h-full absolute inset-0 border-0 bg-black"
-                      allow="autoplay; encrypted-media; picture-in-picture"
-                      allowFullScreen
-                      title={`Video Tramo ${activeBlock.id}`}
-                    />
-                    
-                    {/* Floating Manual Completion Trigger Accent for Google Drive videos */}
-                    <div className="absolute top-4 left-4 z-30 pointer-events-auto">
-                      <button
-                        onClick={() => handleBlockCompletion(activeBlock.id)}
-                        className="bg-emerald-500 hover:bg-emerald-600 text-white font-black font-sans text-xs uppercase tracking-wider px-4 py-2.5 rounded-2xl shadow-xl border border-emerald-400/20 active:scale-95 hover:scale-105 transition-all cursor-pointer flex items-center gap-2"
-                        title="Ver frase narrativa e instrucciones"
-                      >
-                        <Award className="w-4 h-4 text-emerald-100" />
-                        <span>¿Terminó el video? Ver Frase ➔</span>
-                      </button>
-                    </div>
-                  </>
+                  <iframe
+                    src={currentBlockVideoUrl}
+                    className="w-full h-full absolute inset-0 border-0 bg-black"
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowFullScreen
+                    title={`Video Tramo ${activeBlock.id}`}
+                  />
                 ) : (
                   <video
                     ref={videoRef}
@@ -705,17 +716,23 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                 
                 {/* Floating Top Indicator of Loaded Video Source */}
                 <div className="absolute top-3 left-3 right-3 z-20 flex justify-between items-center pointer-events-none">
-                  <span className="bg-black/90 border border-white/10 text-white font-mono text-[9px] px-2 py-1 rounded-lg backdrop-blur-md flex items-center gap-1 pointer-events-auto">
-                    <Video className="w-3 h-3 text-emerald-400" />
-                    <span className="truncate max-w-[120px]">{videoNames[activeBlock.id]}</span>
-                  </span>
-                  
+                  {/* Left Side: Cinema Mode Button (with only an icon as requested) */}
                   <button
-                    onClick={() => handleRemoveVideo(activeBlock.id)}
-                    className="bg-red-500 hover:bg-red-600 text-white font-black text-[9px] px-2 py-1 rounded shadow pointer-events-auto transition-colors cursor-pointer"
+                    onClick={() => setIsMobileCinemaMode(true)}
+                    className="bg-black/90 hover:bg-neutral-850 border border-white/15 text-amber-400 p-2 rounded-xl backdrop-blur-md hover:scale-105 active:scale-95 transition-all pointer-events-auto flex items-center justify-center shadow-lg cursor-pointer"
+                    title="Modo Cine (Pantalla Completa)"
                   >
-                    Quitar
+                    <span className="text-sm select-none">🎬</span>
                   </button>
+                  
+                  <div className="flex gap-2 pointer-events-auto">
+                    <button
+                      onClick={() => handleRemoveVideo(activeBlock.id)}
+                      className="bg-red-500 hover:bg-red-600 text-white font-black text-[9px] px-2 py-1 rounded shadow pointer-events-auto transition-colors cursor-pointer"
+                    >
+                      Quitar
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -814,11 +831,8 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                   initial={{ opacity: 0, scale: 0.8, y: 10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.8, y: 10 }}
-                  className="absolute bottom-4 left-4 z-20 w-24 h-24 sm:w-28 sm:h-28 bg-neutral-950/85 border-2 border-[#CDA152] rounded-2xl flex flex-col items-center justify-center shadow-2xl p-1 pointer-events-auto"
+                  className="absolute bottom-4 left-4 z-20 w-24 h-24 sm:w-28 sm:h-28 bg-neutral-950/85 border-2 border-[#CDA152] rounded-2xl flex items-center justify-center shadow-2xl p-0.5 pointer-events-auto"
                 >
-                  <div className="absolute top-1 left-1.5 bg-amber-400/20 text-amber-300 font-mono text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded">
-                    🐰 Adaggio
-                  </div>
                   <div className="scale-[0.55] sm:scale-[0.65] transform origin-center my-auto">
                     <AdaggioPuppet animationState={isPlaying ? activeBlock.adaggioAnimationState : 'quiet'} />
                   </div>
@@ -828,6 +842,30 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
 
           </div>
         </div>
+
+        {/* BOTÓN DE VALIDACIÓN DIRECTO BAJO EL REPRODUCTOR */}
+        {currentBlockVideoUrl && (
+          <div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-white border border-slate-200/80 p-4 rounded-2xl shadow-md mt-1 animate-fadeIn">
+            <div className="flex items-center gap-2 text-slate-700">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span className="text-xs font-bold font-sans">
+                {isGoogleDrive ? "Video en reproducción desde la nube (Drive)" : "Video interactivo cargado"}
+              </span>
+            </div>
+            
+            <button
+              onClick={() => handleBlockCompletion(activeBlock.id)}
+              className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-black font-sans text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-lg shadow-emerald-500/10 border-b-2 border-emerald-700 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              title="Validar este video y pasar a las indicaciones"
+            >
+              <Award className="w-3.5 h-3.5 text-emerald-100" />
+              <span>Validar</span>
+            </button>
+          </div>
+        )}
 
         {/* MEDIA TIMELINE & CONTROLS DASHBOARD */}
         {!isGoogleDrive && (
@@ -946,10 +984,19 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                   />
                 </div>
 
-                {/* Fullscreen control screen button */}
+                {/* Mobile Cinema Mode Button */}
+                <button
+                  onClick={() => setIsMobileCinemaMode(true)}
+                  className="sm:hidden p-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-neutral-950 transition-all hover:scale-105 active:scale-95 cursor-pointer font-black flex items-center justify-center text-sm"
+                  title="Modo Cine Pantalla Completa"
+                >
+                  <span>🎬</span>
+                </button>
+
+                {/* Desktop Native Fullscreen Button */}
                 <button
                   onClick={toggleFullscreen}
-                  className={`p-2 rounded-xl bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 text-gray-300 transition-all hover:scale-105 active:scale-95 cursor-pointer`}
+                  className="hidden sm:block p-2 rounded-xl bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 text-gray-300 transition-all hover:scale-105 active:scale-95 cursor-pointer"
                   title={isFullscreen ? "Regresar" : "Pantalla Completa"}
                 >
                   {isFullscreen ? <Minimize2 className="w-4.5 h-4.5" /> : <Maximize2 className="w-4.5 h-4.5" />}
@@ -984,6 +1031,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
             15: "🎉" // Celebración y Calma
           };
           const currentProgressPercent = ((activeTransitionModal.id - 1) / 15) * 100;
+          const totem = getTotemImageForBlock(activeTransitionModal.id);
 
           return (
             <motion.div
@@ -1026,35 +1074,63 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
 
                 {/* Main Content Info */}
                 <div className="text-center flex flex-col items-center gap-4 mt-2">
-                  <div className="flex items-center gap-4 justify-center">
-                    <div 
-                      className="w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-md border-2"
-                      style={{ 
-                        borderColor: `${accentColor}30`, 
-                        backgroundColor: `${accentColor}10` 
-                      }}
-                    >
-                      {iconMap[activeTransitionModal.id] || "🎵"}
-                    </div>
-                    {/* Talking Adaggio Puppet */}
-                    <div className="relative w-24 h-24 bg-slate-50 border-2 rounded-2xl flex items-center justify-center p-1 overflow-hidden shadow-inner" style={{ borderColor: `${accentColor}40` }}>
-                      <div className="absolute top-0.5 right-1 bg-purple-500/10 text-[#472F92] font-mono text-[7px] font-black uppercase tracking-wider px-1 rounded">
-                        Hablando
-                      </div>
-                      <div className="scale-[0.5] transform origin-center my-auto">
-                        <AdaggioPuppet animationState="hablando" />
-                      </div>
-                    </div>
-                  </div>
+                  {totem ? (
+                    /* HERO AMULET PRESENTATION (When totem is collected) */
+                    <div className="flex flex-col items-center w-full gap-4">
+                      {/* Sub-label */}
+                      <span className="text-[10px] sm:text-xs font-black font-mono text-amber-500 uppercase tracking-widest animate-pulse block">
+                        ✨ ¡Recogiste un Amuleto Escénico! ✨
+                      </span>
+                      
+                      {/* Big Hero Amulet Image */}
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.85, rotate: -8 }}
+                        animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                        transition={{ type: "spring", stiffness: 100, delay: 0.1 }}
+                        className="relative w-44 h-44 bg-gradient-to-b from-amber-50 to-orange-100/40 border-4 border-amber-300 rounded-3xl flex items-center justify-center p-5 shadow-xl overflow-hidden"
+                      >
+                        {/* Shimmer/glow effects in back */}
+                        <div 
+                          className="absolute inset-0 opacity-20 blur-xl pointer-events-none animate-pulse"
+                          style={{ backgroundColor: accentColor }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/50 to-transparent pointer-events-none" />
+                        
+                        <motion.img 
+                          src={totem.src} 
+                          alt={totem.name}
+                          referrerPolicy="no-referrer"
+                          className="w-full h-full object-contain relative z-10 drop-shadow-md select-none"
+                          animate={{ y: [0, -6, 0] }}
+                          transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                        />
+                      </motion.div>
 
-                  <div className="flex flex-col gap-1">
-                    <h2 className="text-2xl sm:text-3xl font-black font-funny uppercase tracking-wide text-slate-800">
-                      {activeTransitionModal.title}
-                    </h2>
-                    <span className="text-[11px] font-mono tracking-wider font-bold text-[#472F92] uppercase">
-                      {activeTransitionModal.rhythmicConcept}
-                    </span>
-                  </div>
+                      {/* Collection Heading */}
+                      <div className="flex flex-col gap-1">
+                        <h2 className="text-2xl sm:text-3xl font-black font-funny text-amber-600 uppercase tracking-wide leading-tight px-2">
+                          ¡Recogiste el {totem.name}!
+                        </h2>
+                      </div>
+                    </div>
+                  ) : (
+                    /* STANDARD TRAMO WITH ADAGGIO (When no totem is collected) */
+                    <div className="flex flex-col items-center w-full gap-4">
+                      {/* Adaggio Puppet (Always constant in standard tramos but with dynamic states) */}
+                      <div className="relative w-44 h-44 bg-gradient-to-b from-[#FFFDF1] to-slate-50 border-4 rounded-3xl flex items-center justify-center p-2 shadow-xl overflow-hidden" style={{ borderColor: `${accentColor}50` }}>
+                        <div className="absolute top-1 left-2 right-2 h-2.5 bg-white/50 rounded-full blur-[0.5px]" />
+                        <div className="scale-75 transform origin-center">
+                          <AdaggioPuppet animationState={activeTransitionModal.adaggioAnimationState || 'hablando'} />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-1">
+                        <h2 className="text-2xl sm:text-3xl font-black font-funny uppercase tracking-wide text-slate-800">
+                          {activeTransitionModal.title}
+                        </h2>
+                      </div>
+                    </div>
+                  )}
 
                   {/* VERY SHORT INDIVIDUAL PHRASE */}
                   <div className="bg-slate-50 border border-slate-150 p-5 rounded-2xl w-full relative mt-1">
@@ -1107,12 +1183,10 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                   🏆
                 </div>
                 {/* Adaggio Puppet */}
-                <div className="relative w-24 h-24 bg-[#FFFDF1] border-2 border-[#1DD2C4] rounded-2xl flex items-center justify-center p-1 overflow-hidden shadow-md">
-                  <div className="absolute top-0.5 right-1 bg-purple-500/10 text-[#472F92] font-mono text-[7px] font-black uppercase tracking-wider px-1 rounded">
-                    Adaggio
-                  </div>
-                  <div className="scale-[0.5] transform origin-center my-auto">
-                    <AdaggioPuppet animationState="hablando" />
+                <div className="relative w-36 h-36 bg-[#FFFDF1] border-4 border-[#1DD2C4] rounded-full flex items-center justify-center p-2 overflow-hidden shadow-lg">
+                  <div className="absolute top-1 left-2 right-2 h-2.5 bg-white/50 rounded-full blur-[0.5px]" />
+                  <div className="scale-[0.65] transform origin-center">
+                    <AdaggioPuppet animationState="celebrando" />
                   </div>
                 </div>
               </div>
@@ -1156,6 +1230,192 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                 </button>
               </div>
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* MODO CINE / PANTALLA COMPLETA EXCLUSIVO MÓVIL (No afecta a la vista de escritorio) */}
+      <AnimatePresence>
+        {isMobileCinemaMode && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            className="fixed inset-0 z-50 bg-neutral-950 flex flex-col justify-between"
+          >
+            {/* Header del Modo Cine */}
+            <div className="bg-neutral-900/90 border-b border-neutral-800 text-white px-4 py-3 flex items-center justify-between backdrop-blur-md">
+              <div className="flex flex-col gap-0.5 truncate max-w-[70%]">
+                <span className="text-[9px] font-mono text-amber-400 font-black uppercase tracking-widest">
+                  TRAMO {activeBlock.id} DE 15 • MODO CINE
+                </span>
+                <span className="text-xs font-bold truncate text-gray-200">
+                  {activeBlock.name.split('—')[1] || activeBlock.name} — {activeBlock.title}
+                </span>
+              </div>
+              
+              <button
+                onClick={() => setIsMobileCinemaMode(false)}
+                className="bg-neutral-800 hover:bg-neutral-750 border border-neutral-700 text-gray-200 font-bold text-xs uppercase px-3 py-1.5 rounded-lg active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+              >
+                Cerrar ✕
+              </button>
+            </div>
+
+            {/* Canvas de Video en Alta Visibilidad */}
+            <div className="flex-1 w-full bg-black flex items-center justify-center relative overflow-hidden">
+              {currentBlockVideoUrl ? (
+                <>
+                  {isGoogleDrive ? (
+                    <iframe
+                      src={currentBlockVideoUrl}
+                      className="w-full h-full absolute inset-0 border-0 bg-black"
+                      allow="autoplay; encrypted-media; picture-in-picture"
+                      allowFullScreen
+                      title={`Cinema Video Tramo ${activeBlock.id}`}
+                    />
+                  ) : (
+                    <video
+                      src={currentBlockVideoUrl}
+                      className="w-full h-full object-contain"
+                      muted={isMuted}
+                      playsInline
+                      controls
+                      autoPlay={isPlaying}
+                      onPlay={() => setIsPlaying(true)}
+                      onPause={() => setIsPlaying(false)}
+                      onEnded={() => {
+                        setIsMobileCinemaMode(false);
+                        handleBlockCompletion(activeBlock.id);
+                      }}
+                    />
+                  )}
+                  
+
+
+                  {/* Marioneta de Adaggio Sincronizada */}
+                  {showPuppet && (
+                    <div className="absolute bottom-4 left-4 z-40 w-16 h-16 xs:w-20 xs:h-20 bg-neutral-950/80 border border-amber-400/30 rounded-xl flex items-center justify-center p-0.5 pointer-events-none shadow-xl transform scale-90 xs:scale-100 origin-bottom-left">
+                      <div className="scale-[0.45] xs:scale-[0.5] transform origin-center">
+                        <AdaggioPuppet animationState={isPlaying ? activeBlock.adaggioAnimationState : 'quiet'} />
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-center p-6 flex flex-col items-center gap-3">
+                  <span className="text-4xl text-neutral-600">📹</span>
+                  <p className="text-neutral-400 font-sans text-xs">No hay un video guardado para este tramo rítmico.</p>
+                  <button
+                    onClick={() => {
+                      setIsMobileCinemaMode(false);
+                      handleLoadDemoVideo(activeBlock.id);
+                    }}
+                    className="bg-[#472F92] hover:bg-[#5C3DBA] text-white text-[11px] uppercase font-black px-4 py-2 rounded-lg cursor-pointer transition-colors shadow-md"
+                  >
+                    Activar Video Demo
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Controles para Pantallas Táctil / Dedos en Móvil */}
+            <div className="bg-neutral-900 border-t border-neutral-800 px-4 py-3.5 flex flex-col gap-3">
+              {/* Progreso del Relato */}
+              <div className="flex justify-between items-center text-[10px] font-mono text-zinc-400">
+                <span className="font-bold">{formatTime(currentTime)}</span>
+                <span className="text-amber-400 tracking-wider">TRAMO ACÚSTICO: {activeBlock.id} / 15</span>
+                <span className="text-zinc-500">{formatTime(maxSesDuration)}</span>
+              </div>
+
+              {/* Slider de progreso táctil cómodo */}
+              <div
+                onClick={(e) => {
+                  if (timelineRef.current) {
+                    const rect = timelineRef.current.getBoundingClientRect();
+                    const clickX = e.clientX - rect.left;
+                    const nextTime = (clickX / rect.width) * maxSesDuration;
+                    setCurrentTime(parseFloat(Math.max(0, Math.min(maxSesDuration, nextTime)).toFixed(2)));
+                  }
+                }}
+                className="relative h-2.5 w-full bg-neutral-800 rounded-full cursor-pointer touch-none flex items-center"
+              >
+                <div
+                  className="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-purple-600 to-[#1DD2C4]"
+                  style={{ width: `${activePercent}%` }}
+                />
+                <div 
+                  className="absolute w-3.5 h-3.5 bg-white rounded-full border-2 border-purple-600 shadow"
+                  style={{ left: `calc(${activePercent}% - 7px)` }}
+                />
+              </div>
+
+              {/* Botonera de reproducción rápida tactil */}
+              <div className="flex items-center justify-between gap-3 pt-1">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handlePrevBlock}
+                    disabled={activeBlock.id === 1}
+                    className="p-3 rounded-xl text-gray-200 bg-neutral-800 hover:bg-neutral-750 border border-neutral-700 disabled:opacity-30 disabled:pointer-events-none transition-all active:scale-95 cursor-pointer"
+                    title="Tramo Anterior"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+
+                  <button
+                    onClick={handlePauseToggle}
+                    className={`px-5 py-3 rounded-xl flex items-center gap-2 transition-all active:scale-95 text-neutral-950 font-black cursor-pointer ${
+                      isPlaying ? 'bg-neutral-800 border border-neutral-700 text-amber-400' : 'bg-amber-400 hover:bg-amber-350 shadow'
+                    }`}
+                  >
+                    {isPlaying ? <Pause className="w-4 h-4 fill-amber-400 stroke-amber-400" /> : <Play className="w-4 h-4 fill-neutral-950" />}
+                    <span className="font-funny text-xs tracking-wider uppercase">{isPlaying ? 'PAUSA' : 'REPRODUCIR'}</span>
+                  </button>
+
+                  <button
+                    onClick={handleNextBlock}
+                    disabled={activeBlock.id === 15}
+                    className="p-3 rounded-xl text-gray-200 bg-neutral-800 hover:bg-neutral-750 border border-neutral-700 disabled:opacity-30 disabled:pointer-events-none transition-all active:scale-95 cursor-pointer"
+                    title="Siguiente Tramo"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+
+                  {/* Botón de validación limpio y cómodo */}
+                  {currentBlockVideoUrl && (
+                    <button
+                      onClick={() => {
+                        setIsMobileCinemaMode(false);
+                        handleBlockCompletion(activeBlock.id);
+                      }}
+                      className="px-4 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-black font-sans text-xs uppercase tracking-wider active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-emerald-500/20"
+                      title="Validar video e ir al siguiente"
+                    >
+                      <Award className="w-3.5 h-3.5 text-emerald-100 animate-pulse" />
+                      <span>Validar</span>
+                    </button>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {/* Botón Silenciador Táctil */}
+                  <button
+                    onClick={() => setIsMuted(prev => !prev)}
+                    className={`p-3 rounded-xl bg-neutral-800 border border-neutral-700 transition-all active:scale-95 cursor-pointer ${
+                      isMuted ? 'text-red-400' : 'text-gray-300'
+                    }`}
+                    title="Silenciar"
+                  >
+                    {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                  </button>
+
+                  {/* Recordatorio de orientación horizontal */}
+                  <div className="hidden xs:flex items-center gap-1.5 text-[9.5px] font-black tracking-wide text-amber-400 bg-neutral-950/80 border border-neutral-800 px-3 py-2.5 rounded-xl">
+                    <span>🔄 Gira pantalla para ver más grande</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -189,7 +189,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
               </span>
             </div>
             
-            <h2 className="text-base sm:text-lg font-mono font-black text-slate-900 tracking-wide leading-none mb-1">
+            <h2 className="text-base sm:text-lg font-funny font-black text-slate-900 tracking-wide leading-none mb-1">
               Espacio y Caja del Facilitador de Aula
             </h2>
             <p className="text-xs text-slate-500 font-medium">
@@ -341,7 +341,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
                     <AnimatePresence mode="wait">
                       {tutorialStep === 0 && (
                         <motion.div initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 6 }} className="flex flex-col gap-2.5">
-                          <h3 className="text-sm font-black text-amber-400 uppercase font-mono flex items-center gap-2 tracking-wide">
+                          <h3 className="text-sm font-black text-amber-400 uppercase font-funny flex items-center gap-2 tracking-wide">
                             <span>👤</span> El Rol Protagónico del Facilitador
                           </h3>
                           <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans font-medium">
@@ -358,7 +358,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
 
                       {tutorialStep === 1 && (
                         <motion.div initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 6 }} className="flex flex-col gap-2.5">
-                          <h3 className="text-sm font-black text-amber-400 uppercase font-mono flex items-center gap-2 tracking-wide">
+                          <h3 className="text-sm font-black text-amber-400 uppercase font-funny flex items-center gap-2 tracking-wide">
                             <span>🍂</span> Los 5 Tótems de Ritmo Co-Creados
                           </h3>
                           <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans font-medium">
@@ -387,7 +387,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
 
                       {tutorialStep === 2 && (
                         <motion.div initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 6 }} className="flex flex-col gap-2.5">
-                          <h3 className="text-sm font-black text-amber-400 uppercase font-mono flex items-center gap-2 tracking-wide">
+                          <h3 className="text-sm font-black text-amber-400 uppercase font-funny flex items-center gap-2 tracking-wide">
                             <span>🛑</span> Pausas Pedagógicas Inteligentes
                           </h3>
                           <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans font-medium">
@@ -404,7 +404,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
 
                       {tutorialStep === 3 && (
                         <motion.div initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 6 }} className="flex flex-col gap-2.5">
-                          <h3 className="text-sm font-black text-amber-400 uppercase font-mono flex items-center gap-2 tracking-wide">
+                          <h3 className="text-sm font-black text-amber-400 uppercase font-funny flex items-center gap-2 tracking-wide">
                             <span>📋</span> Bitácora Integrada de Conservación
                           </h3>
                           <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-sans font-medium">
@@ -489,7 +489,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
                 <div id="classroom-materials-checklist" className="md:col-span-7 bg-neutral-950 border border-neutral-850 p-5 md:p-6 rounded-2xl flex flex-col justify-between shadow-lg min-h-[360px]">
                   <div>
                     <div className="flex items-center justify-between border-b border-neutral-850 pb-3 mb-4">
-                      <h3 className="text-sm font-black text-white font-mono uppercase tracking-wide flex items-center gap-2">
+                      <h3 className="text-sm font-black text-white font-funny uppercase tracking-wide flex items-center gap-2">
                         <span>📦</span> 1. Lista de Alistamiento Físico de Aula
                       </h3>
                       <span className="text-[10px] bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-2.5 py-0.5 rounded font-mono font-black uppercase">
@@ -639,7 +639,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
                 <div className="md:col-span-5 bg-neutral-950 border border-neutral-850 p-5 md:p-6 rounded-2xl flex flex-col justify-between shadow-lg min-h-[360px] text-center">
                   <div>
                     <div className="flex items-center justify-between border-b border-neutral-850 pb-3 mb-4">
-                      <h3 className="text-sm font-black text-white font-mono uppercase tracking-wide flex items-center gap-2">
+                      <h3 className="text-sm font-black text-white font-funny uppercase tracking-wide flex items-center gap-2">
                         <span>🔊</span> 2. Test Sonoro del Altavoz
                       </h3>
                       <span className="text-[10px] bg-amber-500/10 text-amber-450 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded font-mono font-black">
@@ -730,7 +730,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
                       Aula Calibrada y Conectada
                     </span>
 
-                    <h3 className="text-base font-black uppercase text-white font-sans mt-3.5 tracking-tight leading-tight">
+                    <h3 className="text-base font-black uppercase text-white font-funny mt-3.5 tracking-tight leading-tight">
                       Lanzar Aventura Rítmica Completa
                     </h3>
                     <p className="text-xs text-neutral-400 max-w-sm font-sans leading-relaxed mt-2 mx-auto text-center">
@@ -837,7 +837,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 animate-fade-in text-left">
             <div className="md:col-span-7 bg-neutral-950 p-5 border border-neutral-850 rounded-2xl flex flex-col items-center justify-between shadow-lg min-h-[380px]">
               <div className="w-full">
-                <h3 className="text-xs font-extrabold text-white mb-4 font-mono uppercase tracking-wider text-center">
+                <h3 className="text-xs font-extrabold text-white mb-4 font-funny uppercase tracking-wider text-center">
                   Planificación Espacial del Aula (Área Libre 3x3 metros)
                 </h3>
                 
@@ -951,7 +951,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
         {activeTab === 'sandbox' && (
           <div className="flex flex-col gap-5 animate-fade-in text-left">
             <div className="bg-neutral-950 p-5 border border-neutral-850 rounded-2xl shadow-lg">
-              <h3 className="text-xs font-black text-white mb-1 font-mono uppercase tracking-wider">Teclado Sonos y Modelador de Instrumentos</h3>
+              <h3 className="text-xs font-black text-white mb-1 font-funny uppercase tracking-wider">Teclado Sonos y Modelador de Instrumentos</h3>
               <p className="text-xs text-neutral-400 font-sans leading-relaxed">
                 Utiliza estas teclas sonoras en tiempo real para practicar la imitación corporal de las escenas pedagógicas y familiarizarte con las sintonías del Método Dalcroze:
               </p>
@@ -1106,7 +1106,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
             {/* Form logger */}
             <form onSubmit={handleSaveSession} className="lg:col-span-5 bg-neutral-950 p-5 border border-neutral-850 rounded-2xl flex flex-col gap-4 text-left shadow-lg">
               <div className="border-b border-neutral-850 pb-2">
-                <h3 className="text-xs font-black font-mono text-amber-400 uppercase tracking-wider">
+                <h3 className="text-xs font-black font-funny text-amber-400 uppercase tracking-wider">
                   Registrar Resultados de Sesión (Bitácora)
                 </h3>
                 <p className="text-[10px] text-neutral-400 mt-1">

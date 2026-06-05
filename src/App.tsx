@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Play, BookOpen, Volume2, VolumeX, HelpCircle, Home, Sparkles, Heart, Activity, Settings, Music, RefreshCw } from 'lucide-react';
 import { StoryPlayer } from './components/StoryPlayer';
 import { InteractiveTutorial } from './components/InteractiveTutorial';
+import { AmuletsGallery } from './components/AmuletsGallery';
 import { FacilitatorWorkspace } from './components/FacilitatorWorkspace';
 import { AdaggioPuppet } from './components/AdaggioPuppet';
 import { SoundLogoSplash } from './components/SoundLogoSplash';
@@ -15,7 +16,7 @@ import { audioInstance } from './utils/AudioEngine';
 import { SessionEvaluation } from './types';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'tutorial' | 'story' | 'facilitator'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'tutorial' | 'story' | 'facilitator' | 'gallery'>('home');
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [showHelpModal, setShowHelpModal] = useState<boolean>(false);
   const [activeEvaluations, setActiveEvaluations] = useState<SessionEvaluation[] | undefined>(undefined);
@@ -92,11 +93,11 @@ export default function App() {
               {/* 1.1 THREE COPIED GLASSY BUBBLE JELLY PILL BUTTONS */}
               <div className="flex flex-col gap-5 w-full max-w-md px-2 md:px-0 text-left">
                 
-                {/* Button A: Historia (Aqua/Mint Bubbly Styling) */}
+                {/* Button A: Historia (Aqua/Mint Bubbly Styling but off-white) */}
                 <button
                   id="btn-historia-play"
                   onClick={() => setViewLoadingOverlay('story')}
-                  className="relative group bg-gradient-to-r from-[#A3F1E3] to-[#46E4CF] hover:from-[#B4F7EC] hover:to-[#57EBD5] border-[4px] border-[#31C3AA] active:border-[#1F9F8B] px-5 py-4 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-left flex items-center gap-4 cursor-pointer overflow-hidden select-none"
+                  className="relative group bg-gradient-to-r from-[#FAFDFB] to-[#F2FCF9] hover:from-[#FCFDFD] hover:to-[#F6FCFA] border-[4px] border-[#31C3AA] active:border-[#1F9F8B] px-5 py-4 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-left flex items-center gap-4 cursor-pointer overflow-hidden select-none"
                 >
                   {/* Bubbly Gloss Highlight Reflection Overlay */}
                   <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/40 rounded-full blur-[0.5px]" />
@@ -126,11 +127,11 @@ export default function App() {
                   </div>
                 </button>
 
-                {/* Button B: Tutorial (Lilac/Lavender Bubbly Styling) */}
+                {/* Button B: Tutorial (Lilac/Lavender Bubbly Styling but off-white) */}
                 <button
                   id="btn-tutorial-play"
                   onClick={() => setViewLoadingOverlay('tutorial')}
-                  className="relative group bg-gradient-to-r from-[#E9CEFC] to-[#D598FB] hover:from-[#F0D9FF] hover:to-[#DEA7FE] border-[4px] border-[#BE82ED] active:border-[#A467D4] px-5 py-4 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-left flex items-center gap-4 cursor-pointer overflow-hidden select-none"
+                  className="relative group bg-gradient-to-r from-[#FDFBFF] to-[#FAF6FF] hover:from-[#FFFEFF] hover:to-[#FAF7FF] border-[4px] border-[#BE82ED] active:border-[#A467D4] px-5 py-4 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-left flex items-center gap-4 cursor-pointer overflow-hidden select-none"
                 >
                   {/* Gloss Reflection Layer */}
                   <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/45 rounded-full blur-[0.5px]" />
@@ -150,6 +151,34 @@ export default function App() {
                     </h3>
                     <p className="text-[#965EA5] text-xs font-semibold leading-tight font-sans">
                       Entrena tus sonidos • Trueno, viento, agua, sol y tierra.
+                    </p>
+                  </div>
+                </button>
+
+                {/* Button C: Galería de Amuletos (Golden/Amber Bubbly Styling but off-white) */}
+                <button
+                  id="btn-gallery-play"
+                  onClick={() => setCurrentView('gallery')}
+                  className="relative group bg-gradient-to-r from-[#FFFDF9] to-[#FFFBF2] hover:from-[#FFFEFC] hover:to-[#FFFDF6] border-[4px] border-[#CDA152] active:border-[#B18A3E] px-5 py-4 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-left flex items-center gap-4 cursor-pointer overflow-hidden select-none"
+                >
+                  {/* Gloss Reflection Layer */}
+                  <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/45 rounded-full blur-[0.5px]" />
+                  <div className="absolute top-1 right-3 w-4 h-4 bg-white/25 rounded-full blur-[1px]" />
+
+                  {/* Icon: Golden amulet shield */}
+                  <div className="w-14 h-14 rounded-2xl bg-[#CDA152] border-2 border-white flex items-center justify-center shadow-md flex-shrink-0 group-hover:rotate-3 transition-transform">
+                    <div className="relative">
+                      <Sparkles className="w-6 h-6 text-white animate-pulse" />
+                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-400 border border-white animate-ping" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="font-black text-[25px] text-[#472F92] leading-none mb-1 font-funny tracking-wide uppercase">
+                      Galería de Amuletos
+                    </h3>
+                    <p className="text-[#A07B37] text-xs font-semibold leading-tight font-sans">
+                      Colección de Tótems • Contempla los talismanes rítmicos.
                     </p>
                   </div>
                 </button>
@@ -256,9 +285,22 @@ export default function App() {
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
-              className="w-full bg-white border border-slate-200 rounded-2xl shadow-2xl p-4 md:p-6"
+              className="w-full bg-white border border-slate-200 rounded-2xl shadow-2xl p-1.5 xs:p-3 sm:p-4 md:p-6"
             >
               <StoryPlayer onSessionComplete={handleSessionComplete} />
+            </motion.div>
+          )}
+
+          {/* 6. AMULETS GALLERY SCREEN */}
+          {currentView === 'gallery' && (
+            <motion.div
+              key="gallery-view"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              className="w-full max-w-5xl mx-auto"
+            >
+              <AmuletsGallery onBackToHome={handleGoHome} />
             </motion.div>
           )}
 
@@ -330,7 +372,7 @@ export default function App() {
             >
               <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
 
-              <h3 className="text-lg font-black font-sans uppercase tracking-wide text-amber-500 flex items-center gap-1.5 flex-wrap">
+              <h3 className="text-lg font-black font-funny uppercase tracking-wide text-amber-500 flex items-center gap-1.5 flex-wrap">
                 <Activity className="w-4 h-4 text-amber-400 animate-pulse" />
                 <span>Acerca de</span>
                 <img 

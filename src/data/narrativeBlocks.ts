@@ -198,7 +198,7 @@ export const NARRATIVE_BLOCKS: NarrativeBlock[] = [
   {
     id: 10,
     name: "BLOQUE 10 — TRUENO II",
-    title: "Sobrevivir a la chispa",
+    title: "Esquiva el trueno",
     durationStart: 360,
     durationEnd: 400,
     stateType: 'ACCIÓN_DIRECCIÓN',

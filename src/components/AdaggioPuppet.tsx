@@ -13,24 +13,24 @@ interface AdaggioPuppetProps {
 
 const stateToGifMap: Record<string, string> = {
   // Simplified 4-GIF configuration requested by the user
-  'saludando': '/adaggio_gifs/hablando.gif',
+  'saludando': '/adaggio_gifs/saludando.gif',
   'hablando': '/adaggio_gifs/hablando.gif',
-  'marchando': '/adaggio_gifs/hablando.gif',
-  'celebrando': '/adaggio_gifs/hablando.gif',
+  'marchando': '/adaggio_gifs/marchando.gif',
+  'celebrando': '/adaggio_gifs/celebrando.gif',
 
   // Legacy presets for flawless backwards compatibility
-  'quiet': '/adaggio_gifs/hablando.gif',
+  'quiet': '/adaggio_gifs/saludando.gif',
   'listening': '/adaggio_gifs/hablando.gif',
-  'fluid_raise_drop': '/adaggio_gifs/hablando.gif',
-  'proud_march': '/adaggio_gifs/hablando.gif',
-  'heavy_march': '/adaggio_gifs/hablando.gif',
-  'accented_jump': '/adaggio_gifs/hablando.gif',
-  'march_sowing': '/adaggio_gifs/hablando.gif',
-  'celebration_victory': '/adaggio_gifs/hablando.gif',
+  'fluid_raise_drop': '/adaggio_gifs/marchando.gif',
+  'proud_march': '/adaggio_gifs/marchando.gif',
+  'heavy_march': '/adaggio_gifs/marchando.gif',
+  'accented_jump': '/adaggio_gifs/celebrando.gif',
+  'march_sowing': '/adaggio_gifs/marchando.gif',
+  'celebration_victory': '/adaggio_gifs/celebrando.gif',
   'scared': '/adaggio_gifs/hablando.gif',
-  'shaking_electric': '/adaggio_gifs/hablando.gif',
-  'congelado_estatua': '/adaggio_gifs/hablando.gif',
-  'bow': '/adaggio_gifs/hablando.gif',
+  'shaking_electric': '/adaggio_gifs/celebrando.gif',
+  'congelado_estatua': '/adaggio_gifs/saludando.gif',
+  'bow': '/adaggio_gifs/saludando.gif',
 };
 
 export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, isElectrocuting }) => {

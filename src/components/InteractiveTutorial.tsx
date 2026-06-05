@@ -295,7 +295,7 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
             <span className="text-[10px] font-mono uppercase bg-amber-500/10 border border-amber-500/20 text-amber-500 px-2 py-0.5 rounded font-black tracking-widest block w-max">
               EXPERIENCIA PRÁCTICA
             </span>
-            <h2 className="text-lg md:text-xl font-extrabold tracking-tight">Guía de Movimiento Dalcroze</h2>
+            <h2 className="text-lg md:text-xl font-black font-funny uppercase tracking-wide text-white">Guía de Movimiento Dalcroze</h2>
           </div>
         </div>
 
@@ -425,36 +425,6 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
               <p className="text-neutral-300 text-xs mt-1 leading-relaxed font-sans font-medium">
                 {currentData.visualTip}
               </p>
-            </div>
-          </div>
-
-          {/* Tactile interaction button triggers */}
-          <div className="flex flex-col gap-2.5">
-            <span className="text-[9px] font-mono text-neutral-500 uppercase tracking-widest font-black">
-              Sonidos Sintéticos de Prueba:
-            </span>
-            <div className="flex flex-wrap gap-2.5">
-              {currentData.actions.map((act, index) => {
-                const isSubActive = 
-                  (act.type === 'bom' && activeSubAction === 'bom') ||
-                  (act.type === 'drip-agudo' && activeSubAction === 'agudo') ||
-                  (act.type === 'drip-grave' && activeSubAction === 'grave');
-
-                return (
-                  <button
-                    key={index}
-                    onClick={() => handleSoundTest(act.type)}
-                    className={`px-4 py-2.5 rounded-lg border font-bold text-xs tracking-wider uppercase font-mono flex items-center gap-2 transition-all active:scale-95 cursor-pointer ${
-                      isSubActive 
-                        ? 'bg-emerald-500 text-neutral-950 border-emerald-400 shadow-md shadow-emerald-500/20' 
-                        : 'bg-neutral-900 text-neutral-300 border-neutral-850 hover:bg-neutral-800 hover:border-neutral-750'
-                    }`}
-                  >
-                    <Volume2 className={`w-3.5 h-3.5 ${isSubActive ? 'animate-bounce' : ''}`} />
-                    <span>{act.label}</span>
-                  </button>
-                );
-              })}
             </div>
           </div>
         </div>

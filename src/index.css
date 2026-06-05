@@ -1,8 +1,6 @@
 @font-face {
   font-family: 'Some Time Later';
-  src: url('/fonts/rethink/static/SomeTimeLater.otf?v=3') format('opentype'),
-       url('/fonts/rethink/static/SomeTimeLater.otf?v=3') format('truetype'),
-       url('/fonts/rethink/static/SomeTimeLater.otf?v=3');
+  src: url('/fonts/Some%20Time%20Later.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -54,4 +52,8 @@
 
 .font-funny {
   font-family: 'Some Time Later', 'Fredoka', sans-serif !important;
+}
+
+.font-sans {
+  font-family: 'Rethink Sans Local', 'Fredoka', 'Rethink Sans', ui-sans-serif, system-ui, sans-serif !important;
 }
