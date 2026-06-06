@@ -70,14 +70,14 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
         {/* INTERACTIVE ADAGGIO CAP (Left side: 5 cols) */}
         <div className="md:col-span-5 flex flex-col items-center justify-between bg-white border-[3px] border-[#BE82ED]/40 rounded-3xl p-5 shadow-sm">
           <div className="text-center w-full">
-            <span className="bg-[#BE82ED]/15 text-[#8534C0] text-sm font-black uppercase tracking-wider px-4 py-1.5 rounded-full">
+            <span className="bg-[#BE82ED]/15 text-[#8534C0] text-2xl font-funny font-black uppercase tracking-wider px-5 py-2.5 rounded-2xl shadow-sm inline-block">
               Adaggio
             </span>
           </div>
 
           {/* Centered Adaggio Frame with custom background */}
-          <div className="relative w-full h-72 flex items-center justify-center bg-gradient-to-b from-purple-50/40 to-yellow-50/20 rounded-2xl overflow-hidden my-3">
-            <div className="scale-[0.85] transform origin-center flex items-center justify-center">
+          <div className="relative w-full h-76 flex items-center justify-center bg-gradient-to-b from-purple-50/40 to-yellow-50/20 rounded-2xl overflow-hidden my-4">
+            <div className="scale-[1.25] xs:scale-[1.3] transform origin-center flex items-center justify-center">
               <AdaggioPuppet animationState={puppetState} />
             </div>
           </div>

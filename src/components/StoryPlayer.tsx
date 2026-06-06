@@ -280,18 +280,37 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
       lastTimeRef.current = now;
 
       if (isPlaying) {
-        setCurrentTime(prev => {
-          const nextTime = prev + delta * playbackRate;
-          const totalDuration = NARRATIVE_BLOCKS[NARRATIVE_BLOCKS.length - 1].durationEnd; // 600 seconds total
-
-          if (nextTime >= totalDuration) {
-            setIsPlaying(false);
-            audioInstance.stop();
-            setCongratulationsBlock(activeBlock);
-            return totalDuration;
+        if (videoRef.current && currentBlockVideoUrl && !isGoogleDrive) {
+          // If a custom video is loaded, let the video's own progress determine the current time!
+          const vidCurrent = videoRef.current.currentTime;
+          const vidDuration = videoRef.current.duration;
+          if (vidDuration && vidDuration > 0) {
+            const ratio = vidCurrent / vidDuration;
+            const mappedTime = activeBlock.durationStart + ratio * (activeBlock.durationEnd - activeBlock.durationStart);
+            const isEnded = videoRef.current.ended || vidCurrent >= vidDuration;
+            if (isEnded) {
+              setCurrentTime(activeBlock.durationEnd);
+            } else {
+              // Clamp it so it doesn't cross durationEnd prematurely
+              const maxAllowed = activeBlock.durationEnd - 0.15;
+              setCurrentTime(Math.min(maxAllowed, Math.max(activeBlock.durationStart, mappedTime)));
+            }
           }
-          return nextTime;
-        });
+        } else {
+          // Standard timeline progression when no custom video is loaded or it is Google Drive
+          setCurrentTime(prev => {
+            const nextTime = prev + delta * playbackRate;
+            const totalDuration = NARRATIVE_BLOCKS[NARRATIVE_BLOCKS.length - 1].durationEnd; // 600 seconds total
+
+            if (nextTime >= totalDuration) {
+              setIsPlaying(false);
+              audioInstance.stop();
+              setCongratulationsBlock(activeBlock);
+              return totalDuration;
+            }
+            return nextTime;
+          });
+        }
       }
       requestRef.current = requestAnimationFrame(handleTick);
     };
@@ -302,7 +321,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
         cancelAnimationFrame(requestRef.current);
       }
     };
-  }, [isPlaying, playbackRate, activeBlock]);
+  }, [isPlaying, playbackRate, activeBlock, currentBlockVideoUrl, isGoogleDrive]);
 
   const handleBlockCompletion = (completedBlockId: number) => {
     setIsPlaying(false);
@@ -316,7 +335,13 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
   // Track block boundaries and trigger pause helpers
   useEffect(() => {
     if (congratulationsBlock !== null) return;
-    if (isGoogleDrive) return; // Disregard timeline-based automatic transitions when watching cloud Google Drive videos
+
+    // If any video is loaded (built-in, custom, cloud or Google Drive),
+    // we do NOT want the automatic 40-second timeline transition to force close the video!
+    // The video plays to its actual completion, and then the native onEnded event transitions.
+    if (currentBlockVideoUrl) {
+      return;
+    }
 
     const currentBlock = NARRATIVE_BLOCKS.find(
       b => currentTime >= b.durationStart && currentTime < b.durationEnd
@@ -347,7 +372,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
     });
     */
 
-  }, [currentTime, activeBlock, triggeredPauses, isPlaying, congratulationsBlock]);
+  }, [currentTime, activeBlock, triggeredPauses, isPlaying, congratulationsBlock, currentBlockVideoUrl, isGoogleDrive]);
 
   // Control video tag playback in sync with state
   useEffect(() => {
@@ -1292,6 +1317,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                     />
                   ) : (
                     <video
+                      ref={videoRef}
                       src={currentBlockVideoUrl}
                       className="w-full h-full object-contain"
                       muted={isMuted}

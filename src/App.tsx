@@ -101,7 +101,6 @@ export default function App() {
                 >
                   {/* Bubbly Gloss Highlight Reflection Overlay */}
                   <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/40 rounded-full blur-[0.5px]" />
-                  <div className="absolute top-1 right-3 w-4 h-4 bg-white/20 rounded-full blur-[1px]" />
                   
                   {/* Left Icon Panel: Specular purple clapperboard */}
                   <div className="w-14 h-14 rounded-2xl bg-[#7052E6] border-2 border-white flex flex-col items-center justify-center shadow-md relative overflow-hidden flex-shrink-0 group-hover:rotate-[-3deg] transition-transform">
@@ -122,7 +121,7 @@ export default function App() {
                       Historia
                     </h3>
                     <p className="text-[#309A87] text-xs font-semibold leading-tight font-sans">
-                      Audioguía Animada • ¡Viaja y juega con Adaggio!
+                      Audioguía Animada | ¡Viaja y juega con Adaggio!
                     </p>
                   </div>
                 </button>
@@ -135,7 +134,6 @@ export default function App() {
                 >
                   {/* Gloss Reflection Layer */}
                   <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/45 rounded-full blur-[0.5px]" />
-                  <div className="absolute top-1 right-3 w-4 h-4 bg-white/25 rounded-full blur-[1px]" />
 
                   {/* Icon: Purple graduation cap with gold tassel */}
                   <div className="w-14 h-14 rounded-2xl bg-[#7052E6] border-2 border-white flex items-center justify-center shadow-md flex-shrink-0 group-hover:rotate-3 transition-transform">
@@ -149,7 +147,7 @@ export default function App() {
                       Tutorial
                     </h3>
                     <p className="text-[#965EA5] text-xs font-semibold leading-tight font-sans">
-                      Entrena tus sonidos • Trueno, viento, agua, sol y tierra.
+                      Entrena tus sonidos: Trueno, viento, agua, sol y tierra.
                     </p>
                   </div>
                 </button>
@@ -162,7 +160,6 @@ export default function App() {
                 >
                   {/* Gloss Reflection Layer */}
                   <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/45 rounded-full blur-[0.5px]" />
-                  <div className="absolute top-1 right-3 w-4 h-4 bg-white/25 rounded-full blur-[1px]" />
 
                   {/* Icon: Golden amulet shield */}
                   <div className="w-14 h-14 rounded-2xl bg-[#CDA152] border-2 border-white flex items-center justify-center shadow-md flex-shrink-0 group-hover:rotate-3 transition-transform">
@@ -176,7 +173,7 @@ export default function App() {
                       Galería de Amuletos
                     </h3>
                     <p className="text-[#A07B37] text-xs font-semibold leading-tight font-sans">
-                      Colección de Tótems • Contempla los talismanes rítmicos.
+                      Colección de Tótems: Contempla los talismanes rítmicos.
                     </p>
                   </div>
                 </button>
