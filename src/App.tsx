@@ -60,7 +60,7 @@ export default function App() {
       id="dalcroze-app-root" 
       className={`min-h-screen text-[#472F92] font-sans antialiased ${isHome ? 'pb-4' : 'pb-28'} relative selection:bg-yellow-250 selection:text-neutral-900 flex flex-col justify-between overflow-x-hidden transition-all duration-700 bg-cover bg-center bg-no-repeat`}
       style={{
-        backgroundImage: isHome ? 'url("/Portada/Portada.png")' : 'none',
+        backgroundImage: isHome ? 'url("./Portada/Portada.png")' : 'none',
         backgroundColor: '#FFFDF1'
       }}
     >
@@ -370,12 +370,12 @@ export default function App() {
                 <Activity className="w-4 h-4 text-amber-400 animate-pulse" />
                 <span>Acerca de</span>
                 <img 
-                  src="/Logo%20do%20re%20mi%20lab.svg" 
+                  src="/Logo do re mi lab.svg" 
                   alt="Do Re Mi Lab" 
                   className="h-5 w-auto object-contain inline-block relative -top-[1px] ml-1 select-none"
                   onError={(e) => {
                     e.currentTarget.onerror = null;
-                    e.currentTarget.src = "/logo%20doremi%20lab.png";
+                    e.currentTarget.src = "/logo doremi lab.png";
                   }}
                 />
               </h3>

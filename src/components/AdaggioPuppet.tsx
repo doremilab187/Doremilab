@@ -13,24 +13,24 @@ interface AdaggioPuppetProps {
 
 const stateToGifMap: Record<string, string> = {
   // Simplified 4-GIF configuration corrected to fix inverted states
-  'saludando': '/adaggio_gifs/saludando.gif',
-  'hablando': '/adaggio_gifs/hablando.gif',
-  'marchando': '/adaggio_gifs/marchando.gif',
-  'celebrando': '/adaggio_gifs/celebrando.gif',
+  'saludando': './adaggio_gifs/saludando.gif',
+  'hablando': './adaggio_gifs/hablando.gif',
+  'marchando': './adaggio_gifs/marchando.gif',
+  'celebrando': './adaggio_gifs/celebrando.gif',
 
   // Legacy presets for flawless backwards compatibility
-  'quiet': '/adaggio_gifs/saludando.gif', // fallback to greeting
-  'listening': '/adaggio_gifs/hablando.gif',
-  'fluid_raise_drop': '/adaggio_gifs/marchando.gif',
-  'proud_march': '/adaggio_gifs/marchando.gif',
-  'heavy_march': '/adaggio_gifs/marchando.gif',
-  'accented_jump': '/adaggio_gifs/celebrando.gif', // fallback to celebrating
-  'march_sowing': '/adaggio_gifs/marchando.gif',
-  'celebration_victory': '/adaggio_gifs/celebrando.gif', // fallback to celebrating
-  'scared': '/adaggio_gifs/hablando.gif',
-  'shaking_electric': '/adaggio_gifs/celebrando.gif',
-  'congelado_estatua': '/adaggio_gifs/saludando.gif',
-  'bow': '/adaggio_gifs/saludando.gif',
+  'quiet': './adaggio_gifs/saludando.gif', // fallback to greeting
+  'listening': './adaggio_gifs/hablando.gif',
+  'fluid_raise_drop': './adaggio_gifs/marchando.gif',
+  'proud_march': './adaggio_gifs/marchando.gif',
+  'heavy_march': './adaggio_gifs/marchando.gif',
+  'accented_jump': './adaggio_gifs/celebrando.gif', // fallback to celebrating
+  'march_sowing': './adaggio_gifs/marchando.gif',
+  'celebration_victory': './adaggio_gifs/celebrando.gif', // fallback to celebrating
+  'scared': './adaggio_gifs/hablando.gif',
+  'shaking_electric': './adaggio_gifs/celebrando.gif',
+  'congelado_estatua': './adaggio_gifs/saludando.gif',
+  'bow': './adaggio_gifs/saludando.gif',
 };
 
 export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, isElectrocuting }) => {
@@ -41,7 +41,7 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
     setGifFailed(false);
   }, [animationState]);
 
-  const gifPath = stateToGifMap[animationState] || '/adaggio_gifs/hablando.gif';
+  const gifPath = stateToGifMap[animationState] || './adaggio_gifs/hablando.gif';
   const isCoreUserGif = ['saludando', 'hablando', 'marchando', 'celebrando'].includes(animationState);
 
   if (!gifFailed || isCoreUserGif) {

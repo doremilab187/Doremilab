@@ -404,7 +404,7 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
             </div>
             
             <button
-              onClick={() => toggleStepAudio(currentStep === 0 ? '/tutorial-music/sonido1.mp3' : '/tutorial-music/sonido2.mp3')}
+              onClick={() => toggleStepAudio(currentStep === 0 ? './tutorial-music/sonido1.mp3' : './tutorial-music/sonido2.mp3')}
               className={`w-full sm:w-auto px-5 py-3 rounded-2xl text-xs font-funny font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shadow-md select-none border-b-4 ${
                 isStepAudioPlaying
                   ? 'bg-rose-500 hover:bg-rose-600 text-white border-rose-700'

@@ -112,7 +112,7 @@ export const FacilitatorWorkspace: React.FC<FacilitatorWorkspaceProps> = ({
           {/* Quick Banner Image of the App */}
           <div className="relative h-28 rounded-2xl overflow-hidden border-2 border-[#BE82ED]/25 group">
             <img 
-              src="/Portada/Portada.png" 
+              src="./Portada/Portada.png" 
               alt="Portada de Aventura Adaggio" 
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               referrerPolicy="no-referrer"
