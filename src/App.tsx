@@ -370,12 +370,12 @@ export default function App() {
                 <Activity className="w-4 h-4 text-amber-400 animate-pulse" />
                 <span>Acerca de</span>
                 <img 
-                  src="/Logo do re mi lab.svg" 
+                  src="/Logo%20do%20re%20mi%20lab.svg" 
                   alt="Do Re Mi Lab" 
                   className="h-5 w-auto object-contain inline-block relative -top-[1px] ml-1 select-none"
                   onError={(e) => {
                     e.currentTarget.onerror = null;
-                    e.currentTarget.src = "/logo doremi lab.png";
+                    e.currentTarget.src = "/logo%20doremi%20lab.png";
                   }}
                 />
               </h3>

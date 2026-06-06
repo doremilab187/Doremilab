@@ -176,7 +176,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
         defaultUrls[i] = getDirectVideoUrl(PRESET_CLOUD_LINKS[i]);
         defaultNames[i] = `Enlace Nube Tramo ${i}`;
       } else {
-        defaultUrls[i] = `/audiovisual historia principal/tramo${i}.mp4`;
+        defaultUrls[i] = `/audiovisual%20historia%20principal/tramo${i}.mp4`;
         defaultNames[i] = `tramo${i}.mp4 (Carpeta Principal)`;
       }
     }

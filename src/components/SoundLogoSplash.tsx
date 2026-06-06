@@ -196,12 +196,12 @@ export function SoundLogoSplash({ onComplete, autoPlayImmediately = false, isFir
 
             <div className="mb-12 relative z-10 flex justify-center items-center select-none">
               <img 
-                src="/Logo do re mi lab.svg" 
+                src="/Logo%20do%20re%20mi%20lab.svg" 
                 alt="Do Re Mi Lab Logo" 
                 className="h-28 md:h-32 w-auto object-contain hover:scale-105 transition-transform duration-300 drop-shadow-md"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
-                  e.currentTarget.src = "/logo doremi lab.png";
+                  e.currentTarget.src = "/logo%20doremi%20lab.png";
                 }}
               />
             </div>

@@ -151,7 +151,7 @@ export const AmuletsGallery: React.FC<AmuletsGalleryProps> = ({ onBackToHome }) 
                 className="w-full h-full object-contain relative z-10 transition-transform duration-350 group-hover:scale-110 drop-shadow-[0_8px_16px_rgba(0,0,0,0.15)]"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
-                  e.currentTarget.src = "/logo doremi lab.png";
+                  e.currentTarget.src = "/logo%20doremi%20lab.png";
                 }}
               />
             </div>
@@ -213,7 +213,7 @@ export const AmuletsGallery: React.FC<AmuletsGalleryProps> = ({ onBackToHome }) 
                     className="w-full h-full object-contain relative z-10 drop-shadow-[0_12px_24px_rgba(0,0,0,0.18)] scale-[1.35] hover:scale-[1.42] transition-transform duration-300"
                     onError={(e) => {
                       e.currentTarget.onerror = null;
-                      e.currentTarget.src = "/logo doremi lab.png";
+                      e.currentTarget.src = "/logo%20doremi%20lab.png";
                     }}
                   />
                 </div>
