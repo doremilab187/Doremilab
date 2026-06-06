@@ -41,7 +41,7 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
     setGifFailed(false);
   }, [animationState]);
 
-  const gifPath = stateToGifMap[animationState] || '/adaggio_gifs/hablando.gif';
+  const gifPath = stateToGifMap[animationState] || './adaggio_gifs/hablando.gif';
   const isCoreUserGif = ['saludando', 'hablando', 'marchando', 'celebrando'].includes(animationState);
 
   if (!gifFailed || isCoreUserGif) {

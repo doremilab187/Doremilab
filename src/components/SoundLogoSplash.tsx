@@ -19,7 +19,7 @@ declare global {
 export function SoundLogoSplash({ onComplete, autoPlayImmediately = false, isFirstTime = false }: SoundLogoSplashProps) {
   const [hasStarted, setHasStarted] = useState<boolean>(false);
   const [videoSrc, setVideoSrc] = useState<string>(() => {
-    return (window as any).__soundLogoBlobUrl || (isFirstTime ? '/sound-logo-2.mp4' : '/sound-logo.mp4');
+    return (window as any).__soundLogoBlobUrl || (isFirstTime ? './sound-logo-2.mp4' : './sound-logo.mp4');
   });
   const [loadError, setLoadError] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -58,12 +58,8 @@ export function SoundLogoSplash({ onComplete, autoPlayImmediately = false, isFir
   const handleVideoError = () => {
     console.warn("Could not load video at source:", videoSrc);
     // If our primary path fails, attempt fallback paths before showing upload gate
-    if (videoSrc === '/sound-logo-2.mp4') {
-      setVideoSrc('./sound-logo-2.mp4');
-    } else if (videoSrc === './sound-logo-2.mp4') {
+    if (videoSrc === './sound-logo-2.mp4') {
       setVideoSrc('sound-logo-2.mp4');
-    } else if (videoSrc === '/sound-logo.mp4') {
-      setVideoSrc('./sound-logo.mp4');
     } else if (videoSrc === './sound-logo.mp4') {
       setVideoSrc('sound-logo.mp4');
     } else {
