@@ -1,9 +1,10 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Rethink+Sans:wght@400;500;600;700;800&family=Baloo+2:wght@700;800&family=Fredoka:wght@600;700&family=Pirata+One&family=MedievalSharp&family=UnifrakturMaguntia&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Rethink+Sans:ital,wght@0,400..800;1,400..800&family=Baloo+2:wght@700;800&family=Fredoka:wght@600;700&family=Pirata+One&family=MedievalSharp&family=UnifrakturMaguntia&display=swap');
 
 @font-face {
   font-family: 'Some Time Later';
-  src: url('/fonts/SomeTimeLater.otf') format('opentype');
+  src: url('/fonts/Some Time Later.woff2') format('woff2'),
+       url('/fonts/SomeTimeLater.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
