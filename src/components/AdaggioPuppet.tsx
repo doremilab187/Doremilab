@@ -12,21 +12,21 @@ interface AdaggioPuppetProps {
 }
 
 const stateToGifMap: Record<string, string> = {
-  // Simplified 4-GIF configuration requested by the user
+  // Simplified 4-GIF configuration corrected to fix inverted states
   'saludando': '/adaggio_gifs/saludando.gif',
   'hablando': '/adaggio_gifs/hablando.gif',
   'marchando': '/adaggio_gifs/marchando.gif',
   'celebrando': '/adaggio_gifs/celebrando.gif',
 
   // Legacy presets for flawless backwards compatibility
-  'quiet': '/adaggio_gifs/saludando.gif',
+  'quiet': '/adaggio_gifs/saludando.gif', // fallback to greeting
   'listening': '/adaggio_gifs/hablando.gif',
   'fluid_raise_drop': '/adaggio_gifs/marchando.gif',
   'proud_march': '/adaggio_gifs/marchando.gif',
   'heavy_march': '/adaggio_gifs/marchando.gif',
-  'accented_jump': '/adaggio_gifs/celebrando.gif',
+  'accented_jump': '/adaggio_gifs/celebrando.gif', // fallback to celebrating
   'march_sowing': '/adaggio_gifs/marchando.gif',
-  'celebration_victory': '/adaggio_gifs/celebrando.gif',
+  'celebration_victory': '/adaggio_gifs/celebrando.gif', // fallback to celebrating
   'scared': '/adaggio_gifs/hablando.gif',
   'shaking_electric': '/adaggio_gifs/celebrando.gif',
   'congelado_estatua': '/adaggio_gifs/saludando.gif',
@@ -42,7 +42,7 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
   }, [animationState]);
 
   const gifPath = stateToGifMap[animationState] || '/adaggio_gifs/hablando.gif';
-  const isCoreUserGif = true;
+  const isCoreUserGif = ['saludando', 'hablando', 'marchando', 'celebrando'].includes(animationState);
 
   if (!gifFailed || isCoreUserGif) {
     return (
@@ -366,7 +366,7 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
           {/* Left Leg */}
           <motion.g
             animate={
-              animationState === 'march_sowing' || animationState === 'proud_march'
+              animationState === 'march_sowing' || animationState === 'proud_march' || animationState === 'marchando'
                 ? { rotate: [-20, 20, -20] }
                 : animationState === 'heavy_march'
                 ? { rotate: [-10, 5, -10] }
@@ -394,7 +394,7 @@ export const AdaggioPuppet: React.FC<AdaggioPuppetProps> = ({ animationState, is
           {/* Right Leg */}
           <motion.g
             animate={
-              animationState === 'march_sowing' || animationState === 'proud_march'
+              animationState === 'march_sowing' || animationState === 'proud_march' || animationState === 'marchando'
                 ? { rotate: [20, -20, 20] }
                 : animationState === 'heavy_march'
                 ? { rotate: [5, -10, 5] }

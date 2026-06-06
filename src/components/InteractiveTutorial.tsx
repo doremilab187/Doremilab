@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, ArrowRight, Sparkles, Volume2, Activity, Play, Eye, Footprints, Info, Upload, Trash2, Pause, Music, Award, Home, Smile } from 'lucide-react';
+import { ArrowLeft, Sparkles, Activity, Play, Pause, Music } from 'lucide-react';
 import { audioInstance } from '../utils/AudioEngine';
 import { AdaggioPuppet } from './AdaggioPuppet';
 
@@ -15,7 +15,6 @@ interface InteractiveTutorialProps {
 
 export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBackToHome }) => {
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [isSoundPlaying, setIsSoundPlaying] = useState<boolean>(false);
   const [activeSubAction, setActiveSubAction] = useState<string | null>(null);
 
   const [isStepAudioPlaying, setIsStepAudioPlaying] = useState<boolean>(false);
@@ -41,7 +40,7 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
           stepAudioRef.current.pause();
         }
         stepAudioRef.current = new Audio(src);
-        stepAudioRef.current.onEnded = () => {
+        stepAudioRef.current.onended = () => {
           setIsStepAudioPlaying(false);
         };
       }
@@ -59,8 +58,8 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
       title: "1. Marcha y Acentuación (Compás 4/4)",
       subtitle: "sonido1.mp3 — Marchar y Acentuar los Fuertes",
       emoji: "👣",
-      colorClass: "from-amber-600/20 to-orange-500/20 text-amber-500 border-amber-500/30",
-      accentBgClass: "bg-amber-500",
+      colorClass: "from-[#FFFDF9] to-[#FFFBF2] border-[#CDA152] text-[#7A5A18]",
+      accentBgClass: "bg-[#CDA152]",
       description: "Marchen con paso firme y regular siguiendo el ritmo de la música. Cuando escuchen que el sonido de la marcha se hace más fuerte, acentúen también el paso marcando el golpe con energía (siguiendo el compás de 4/4).",
       visualTip: "Consigna: ¡Mantén una marcha regular al compás y da un golpe enérgico al suelo sincronizado con cada fuerte del ritmo!",
       hasSound: true,
@@ -74,9 +73,9 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
       title: "2. Reconocimiento de Agudos y Graves",
       subtitle: "sonido2.mp3 — Indica si es Agudo o Grave",
       emoji: "🌈",
-      colorClass: "from-sky-600/20 to-cyan-500/20 text-sky-400 border-sky-500/30",
-      accentBgClass: "bg-sky-500",
-      description: "Escuchen con total atención la melodía. Los niños deberán reaccionar con su cuerpo: indicando hacia arriba con la mano o pañuelo si el sonido es agudo, o hacia abajo si el sonido es grave.",
+      colorClass: "from-[#FAFDFB] to-[#F2FCF9] border-[#31C3AA] text-[#309A87]",
+      accentBgClass: "bg-[#31C3AA]",
+      description: "Los niños escucharán atentamente la melodía. En una primera escucha, identificarán los sonidos agudos y graves presentes en ella. Luego, en una segunda escucha, representarán la altura de los sonidos con movimientos de sus manos: las levantarán cuando escuchen sonidos agudos y las bajarán cuando escuchen sonidos graves.",
       visualTip: "Consigna: ¡Sintoniza bien tus oídos e indica de inmediato si percibes sonidos agudos o graves!",
       hasSound: true,
       soundType: "pitch",
@@ -112,49 +111,47 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
 
   if (showStartScreen) {
     return (
-      <div className="bg-neutral-950 text-white rounded-3xl p-6 md:p-10 border border-neutral-800 shadow-2xl relative overflow-hidden min-h-[580px] flex flex-col justify-between items-center text-center">
-        {/* Lights / blobs */}
-        <div className="absolute top-[-50px] right-[-50px] w-72 h-72 bg-purple-500/10 rounded-full blur-[90px] pointer-events-none" />
-        <div className="absolute bottom-[-100px] left-[-50px] w-96 h-96 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="bg-[#FFFDF1] text-[#472F92] rounded-[36px] p-6 md:p-10 border-[4px] border-[#31C3AA] shadow-2xl relative overflow-hidden min-h-[580px] flex flex-col justify-between items-center text-center selection:bg-cyan-100 selection:text-neutral-900">
+        {/* Soft floating clouds backgrounds */}
+        <div className="absolute top-8 left-[10%] w-48 h-12 bg-white/70 rounded-full blur-md pointer-events-none opacity-60" />
+        <div className="absolute top-20 right-[5%] w-60 h-16 bg-white/70 rounded-full blur-md pointer-events-none opacity-60" />
         
-        <div className="relative z-10 w-full flex justify-between items-center border-b border-neutral-800 pb-4">
-          <span className="text-[10px] font-mono uppercase bg-amber-500/10 border border-amber-500/20 text-amber-400 px-2.5 py-0.5 rounded font-black tracking-widest block">
+        <div className="relative z-10 w-full flex justify-between items-center border-b-2 border-purple-100 pb-4">
+          <span className="text-[10px] font-mono uppercase bg-[#31C3AA]/15 border border-[#31C3AA]/30 text-[#309A87] px-3 py-1 rounded-full font-black tracking-widest block font-bold shadow-sm">
             Sesión de Alistamiento
           </span>
           <button 
             onClick={onBackToHome}
-            className="text-xs text-neutral-400 hover:text-white transition-colors"
+            className="px-3.5 py-1.5 rounded-xl border border-purple-200 text-xs text-[#472F92] font-funny font-black uppercase hover:bg-purple-50 active:scale-95 transition-all cursor-pointer"
           >
-            Regresar ✖
+            Regresar ✕
           </button>
         </div>
 
         <div className="relative z-10 my-auto flex flex-col items-center gap-6 max-w-lg">
-          <div className="relative w-44 h-44 bg-neutral-900 border-2 border-[#CDA152]/40 rounded-full flex items-center justify-center p-2 shadow-2xl overflow-hidden group">
-            {/* Glossy sheen */}
-            <div className="absolute top-1 left-2 right-2 h-2.5 bg-white/20 rounded-full blur-[1px]" />
-            <div className="scale-75 transform origin-center">
+          <div className="relative w-44 h-44 flex items-center justify-center p-2 select-none">
+            <div className="scale-75 transform origin-center relative z-10">
               <AdaggioPuppet animationState="saludando" />
             </div>
           </div>
 
           <div className="space-y-3.5">
-            <h2 className="text-3xl font-black font-funny text-white uppercase tracking-wide leading-tight">
-              ¡Hola Guardián del Ritmo! 👋
+            <h2 className="text-3xl font-black font-funny text-[#472F92] uppercase tracking-wide leading-tight">
+              Alistamiento de Euritmia
             </h2>
-            <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-sans max-w-md mx-auto">
-              Te damos la bienvenida al rincón sensorial. Aquí entrenaremos juntos el oído y el cuerpo para sintonizarnos con la marcha musical y distinguir las alturas graves y agudas.
+            <p className="text-[#6853a4] text-xs sm:text-sm leading-relaxed font-sans max-w-lg mx-auto font-semibold text-center">
+              Bienvenidos a la Guía Interactiva del Facilitador. Antes de iniciar los relatos en Ciudad Bolívar con tus estudiantes, te guiaremos de forma interactiva en la estimulación de los dos movimientos rítmicos clave. Aprenderemos a marcar acentos con la marcha y a discriminar con tus manos las alturas sonoras.
             </p>
           </div>
         </div>
 
         <button
           onClick={() => setShowStartScreen(false)}
-          className="relative group w-full max-w-sm bg-gradient-to-r from-[#A3F1E3] to-[#46E4CF] hover:from-[#B4F7EC] hover:to-[#57EBD5] border-[4px] border-[#31C3AA] active:border-[#1F9F8B] px-8 py-4 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-center flex items-center justify-center gap-3 cursor-pointer overflow-hidden select-none"
+          className="relative group w-full max-w-sm bg-[#472F92] hover:bg-[#3c2583] border-[4px] border-[#31C3AA] active:border-[#1F9F8B] px-8 py-4 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-center flex items-center justify-center gap-3 cursor-pointer overflow-hidden select-none text-white"
         >
-          <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/40 rounded-full blur-[0.5px]" />
-          <Play className="w-5 h-5 fill-[#472F92] text-[#472F92] animate-pulse" />
-          <span className="font-black text-lg text-[#472F92] font-funny tracking-wider uppercase">
+          <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/30 rounded-full blur-[0.5px]" />
+          <Play className="w-5 h-5 fill-white text-white animate-pulse" />
+          <span className="font-black text-lg font-funny tracking-wider uppercase">
             Comenzar Entrenamiento
           </span>
         </button>
@@ -164,35 +161,34 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
 
   if (isTransitioning) {
     return (
-      <div className="bg-neutral-950 text-white rounded-3xl p-6 md:p-10 border border-neutral-800 shadow-2xl relative overflow-hidden min-h-[580px] flex flex-col justify-between items-center text-center">
-        <div className="absolute top-[-50px] right-[-50px] w-72 h-72 bg-purple-500/10 rounded-full blur-[90px] pointer-events-none" />
-        <div className="absolute bottom-[-100px] left-[-50px] w-96 h-96 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="bg-[#FFFDF1] text-[#472F92] rounded-[36px] p-6 md:p-10 border-[4px] border-[#BE82ED] shadow-2xl relative overflow-hidden min-h-[580px] flex flex-col justify-between items-center text-center selection:bg-purple-100 selection:text-neutral-900">
+        <div className="absolute top-8 left-[10%] w-48 h-12 bg-white/70 rounded-full blur-md pointer-events-none opacity-60" />
+        <div className="absolute top-20 right-[5%] w-60 h-16 bg-white/70 rounded-full blur-md pointer-events-none opacity-60" />
 
-        <div className="relative z-10 w-full flex justify-between items-center border-b border-neutral-800 pb-4">
-          <span className="text-[10px] font-mono uppercase bg-sky-500/10 border border-sky-500/20 text-sky-400 px-2.5 py-0.5 rounded font-black tracking-widest block">
+        <div className="relative z-10 w-full flex justify-between items-center border-b-2 border-purple-100 pb-4">
+          <span className="text-[10px] font-mono uppercase bg-[#BE82ED]/15 border border-[#BE82ED]/30 text-[#965EA5] px-3 py-1 rounded-full font-black tracking-widest block font-bold shadow-sm">
             Siguiente Desafío ➔
           </span>
           <button 
             onClick={onBackToHome}
-            className="text-xs text-neutral-400 hover:text-white transition-colors"
+            className="px-3.5 py-1.5 rounded-xl border border-purple-200 text-xs text-[#472F92] font-funny font-black uppercase hover:bg-purple-50 active:scale-95 transition-all cursor-pointer"
           >
-            Salir ✖
+            Salir ✕
           </button>
         </div>
 
         <div className="relative z-10 my-auto flex flex-col items-center gap-6 max-w-lg">
-          <div className="relative w-44 h-44 bg-neutral-900 border-2 border-sky-500/40 rounded-full flex items-center justify-center p-2 shadow-2xl overflow-hidden">
-            <div className="absolute top-1 left-2 right-2 h-2.5 bg-white/20 rounded-full blur-[1px]" />
-            <div className="scale-75 transform origin-center">
+          <div className="relative w-44 h-44 flex items-center justify-center p-2 select-none">
+            <div className="scale-75 transform origin-center relative z-10">
               <AdaggioPuppet animationState="hablando" />
             </div>
           </div>
 
           <div className="space-y-3">
-            <h2 className="text-2xl sm:text-3xl font-black font-funny text-white uppercase tracking-wide">
-              ¡Marchaste con gran pulso! 👣
+            <h2 className="text-3xl font-black font-funny text-[#472F92] uppercase tracking-wide leading-tight">
+              ¡Marchaste con gran pulso!
             </h2>
-            <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-sans max-w-md mx-auto">
+            <p className="text-[#6853a4] text-xs sm:text-sm leading-relaxed font-sans max-w-md mx-auto font-semibold">
               Adaggio está impresionado. Ahora, agudicemos el oído: vamos a aprender a reconocer velocidades acústicas y discriminar entre sonidos <strong>Agudos (Cielo)</strong> y sonidos <strong>Graves (Tierra)</strong>.
             </p>
           </div>
@@ -203,10 +199,10 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
             setCurrentStep(1);
             setIsTransitioning(false);
           }}
-          className="relative group w-full max-w-sm bg-gradient-to-r from-[#E9CEFC] to-[#D598FB] hover:from-[#F0D9FF] hover:to-[#DEA7FE] border-[4px] border-[#BE82ED] active:border-[#A467D4] px-8 py-4 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-center flex items-center justify-center gap-3 cursor-pointer overflow-hidden select-none"
+          className="relative group w-full max-w-sm bg-[#472F92] hover:bg-[#3c2583] border-[4px] border-[#BE82ED] px-8 py-4 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-center flex items-center justify-center cursor-pointer overflow-hidden select-none text-white"
         >
-          <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/40 rounded-full blur-[0.5px]" />
-          <span className="font-black text-lg text-[#472F92] font-funny tracking-wider uppercase">
+          <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/30 rounded-full blur-[0.5px]" />
+          <span className="font-black text-lg font-funny tracking-wider uppercase">
             ¡Siguiente Nivel! ➔
           </span>
         </button>
@@ -216,34 +212,33 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
 
   if (showFinalScreen) {
     return (
-      <div className="bg-neutral-950 text-white rounded-3xl p-6 md:p-10 border border-neutral-800 shadow-2xl relative overflow-hidden min-h-[580px] flex flex-col justify-between items-center text-center">
-        <div className="absolute top-[-50px] right-[-50px] w-72 h-72 bg-purple-500/15 rounded-full blur-[90px] pointer-events-none" />
-        <div className="absolute bottom-[-100px] left-[-50px] w-96 h-96 bg-amber-500/15 rounded-full blur-[100px] pointer-events-none" />
+      <div className="bg-[#FFFDF1] text-[#472F92] rounded-[36px] p-6 md:p-10 border-[4px] border-[#FFC927] shadow-2xl relative overflow-hidden min-h-[580px] flex flex-col justify-between items-center text-center selection:bg-amber-100 selection:text-neutral-900">
+        <div className="absolute top-8 left-[10%] w-48 h-12 bg-white/70 rounded-full blur-md pointer-events-none opacity-60" />
+        <div className="absolute top-20 right-[5%] w-60 h-16 bg-white/70 rounded-full blur-md pointer-events-none opacity-60" />
 
         <div className="relative z-10 w-full flex justify-center pb-2">
-          <div className="w-16 h-16 bg-amber-400/10 border border-amber-400/30 rounded-full flex items-center justify-center text-4xl shadow-md animate-bounce">
-            🏆
+          <div className="w-16 h-16 bg-[#FFC927]/10 border border-[#FFC927]/30 rounded-full flex items-center justify-center shadow-md animate-bounce">
+            <Sparkles className="w-8 h-8 text-[#FFC927]" />
           </div>
         </div>
 
         <div className="relative z-10 my-auto flex flex-col items-center gap-6 max-w-lg">
-          <div className="relative w-44 h-44 bg-neutral-900 border-2 border-emerald-500/40 rounded-full flex items-center justify-center p-2 shadow-2xl overflow-hidden">
-            <div className="absolute top-1 left-2 right-2 h-2.5 bg-white/20 rounded-full blur-[1px]" />
-            <div className="scale-75 transform origin-center">
+          <div className="relative w-44 h-44 flex items-center justify-center p-2 select-none">
+            <div className="scale-75 transform origin-center relative z-10">
               <AdaggioPuppet animationState="celebrando" />
             </div>
           </div>
 
           <div className="space-y-4">
             <div className="flex justify-center">
-              <span className="text-[10px] bg-emerald-500/10 border border-emerald-500/35 text-emerald-400 px-3 py-1 rounded-full font-black tracking-widest uppercase block self-center">
+              <span className="text-[10px] bg-emerald-50 border border-emerald-250 text-emerald-600 px-3.5 py-1 rounded-full font-black tracking-widest uppercase block self-center font-bold shadow-sm">
                 Entrenamiento Completado
               </span>
             </div>
-            <h2 className="text-3xl font-black font-funny text-white uppercase tracking-wide leading-tight">
-              ¡Felicidades, Maestro del Oído! 🎉
+            <h2 className="text-3xl font-black font-funny text-[#472F92] uppercase tracking-wide leading-tight">
+              ¡Excelente, Maestro del Oído!
             </h2>
-            <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-sans max-w-md mx-auto">
+            <p className="text-[#6853a4] text-xs sm:text-sm leading-relaxed font-sans max-w-md mx-auto font-semibold">
               Has dominado los ejercicios de Euritmia Dalcroze con Adaggio perfectamente. Ahora estás preparado para guiar y motivar el movimiento corporal de tus estudiantes en la historia principal.
             </p>
           </div>
@@ -257,16 +252,16 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
               setShowFinalScreen(false);
               setCurrentStep(0);
             }}
-            className="flex-1 py-3.5 rounded-2xl border border-neutral-805 hover:bg-neutral-900 text-neutral-300 font-bold font-sans text-xs uppercase transition-all cursor-pointer active:scale-95"
+            className="flex-1 py-3.5 rounded-2xl bg-white border-[3px] border-[#472F92] text-[#472F92] hover:bg-purple-50 text-xs font-funny font-black uppercase tracking-wide cursor-pointer transition-all active:scale-95 shadow-md"
           >
-            Repetir Tutorial ↺
+            Repetir Guía ↺
           </button>
           
           <button
             onClick={onBackToHome}
-            className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-neutral-950 font-black font-funny text-xs tracking-wider uppercase py-3.5 rounded-2xl transition-all cursor-pointer active:scale-95 shadow-lg shadow-emerald-500/10"
+            className="flex-1 bg-[#472F92] hover:bg-[#3c2583] text-white font-black font-funny text-xs tracking-wider uppercase py-3.5 rounded-2xl transition-all cursor-pointer active:scale-95 shadow-lg border-[3px] border-[#372370]"
           >
-            Regresar al Inicio 🏠
+            Regresar al Inicio
           </button>
         </div>
       </div>
@@ -274,41 +269,42 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
   }
 
   return (
-    <div id="tutorial-full-sensory-experience" className="bg-neutral-950 text-white rounded-3xl p-6 md:p-8 border border-neutral-800 shadow-2xl relative overflow-hidden min-h-[580px] flex flex-col justify-between">
+    <div id="tutorial-full-sensory-experience" className="bg-[#FFFDF1] text-[#472F92] rounded-[36px] p-6 md:p-8 border-[4px] border-[#31C3AA] shadow-2xl relative overflow-hidden min-h-[580px] flex flex-col justify-between selection:bg-cyan-100 selection:text-neutral-900">
       
-      {/* Decorative ambient glowing grids */}
-      <div className="absolute top-[-50px] right-[-50px] w-72 h-72 bg-purple-500/5 rounded-full blur-[90px] pointer-events-none" />
-      <div className="absolute bottom-[-100px] left-[-50px] w-96 h-96 bg-amber-500/5 rounded-full blur-[100px] pointer-events-none" />
+      {/* Decorative ambient illustrated soft clouds */}
+      <div className="absolute top-8 left-[10%] w-48 h-12 bg-white/70 rounded-full blur-md pointer-events-none opacity-60" />
+      <div className="absolute top-20 right-[5%] w-60 h-16 bg-white/70 rounded-full blur-md pointer-events-none opacity-60" />
+      <div className="absolute bottom-20 left-10 w-52 h-14 bg-white/50 rounded-full blur-lg pointer-events-none opacity-50" />
 
       {/* Top bar */}
-      <div className="relative z-10 flex flex-wrap justify-between items-center border-b border-neutral-800 pb-4 gap-3">
+      <div className="relative z-10 flex flex-wrap justify-between items-center border-b-2 border-purple-100 pb-4 gap-3">
         <div className="flex items-center gap-2.5">
           <button 
             id="back-home-tut-btn"
             onClick={onBackToHome}
-            className="p-2 rounded-xl bg-neutral-900 border border-neutral-850 hover:bg-neutral-800 hover:text-white transition-all text-neutral-400 group active:scale-95"
+            className="p-2.5 rounded-xl bg-[#FCFBEB] border-2 border-purple-100 hover:bg-white hover:text-[#472F92] transition-all text-[#6853a4] group active:scale-95 shadow-sm"
             title="Volver al Menú de Inicio"
           >
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
           </button>
           <div>
-            <span className="text-[10px] font-mono uppercase bg-amber-500/10 border border-amber-500/20 text-amber-500 px-2 py-0.5 rounded font-black tracking-widest block w-max">
+            <span className="text-[10px] font-mono uppercase bg-amber-500/10 border border-amber-500/20 text-[#CDA152] px-2 py-0.5 rounded font-black tracking-widest block w-max font-bold">
               EXPERIENCIA PRÁCTICA
             </span>
-            <h2 className="text-lg md:text-xl font-black font-funny uppercase tracking-wide text-white">Guía de Movimiento Dalcroze</h2>
+            <h2 className="text-xl md:text-2xl font-black font-funny uppercase tracking-wide text-[#472F92]">Guía de Movimiento Dalcroze</h2>
           </div>
         </div>
 
         {/* Step indicator pills */}
-        <div className="flex gap-1 bg-neutral-900 p-1.5 rounded-xl border border-neutral-850">
+        <div className="flex gap-1.5 bg-[#FAF6FF] p-1.5 rounded-xl border border-purple-100 shadow-sm">
           {tutorialSteps.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrentStep(idx)}
-              className={`w-3.5 h-3.5 rounded-full text-[8px] font-mono font-black flex items-center justify-center transition-all ${
+              className={`w-7 h-7 rounded-full text-xs font-funny font-black flex items-center justify-center transition-all ${
                 idx === currentStep 
-                  ? 'bg-amber-500 text-neutral-950 scale-110' 
-                  : 'bg-neutral-800 text-neutral-400 hover:bg-neutral-750'
+                  ? 'bg-[#31C3AA] text-white scale-110 shadow-sm' 
+                  : 'bg-[#FCFBEB] text-[#472F92] border border-slate-200 hover:bg-white'
               }`}
             >
               {idx + 1}
@@ -320,14 +316,11 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
       {/* Main card panel body */}
       <div className="relative z-10 my-8 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         
-        {/* Left Side: Visual Interactive Prompt (takes 5 cols) */}
+        {/* Left Side: Visual Interactive Prompt */}
         <div className="lg:col-span-5 flex justify-center">
-          <div className="relative w-64 h-64 md:w-72 md:h-72 rounded-3xl bg-neutral-900 border-2 border-neutral-800 flex flex-col justify-center items-center shadow-xl overflow-hidden p-6">
+          <div className={`relative w-64 h-64 md:w-72 md:h-72 rounded-3xl bg-gradient-to-b ${currentData.colorClass} border-[4px] flex flex-col justify-center items-center shadow-xl overflow-hidden p-6`}>
             
-            {/* Animated card elements representation */}
-            <div className={`absolute inset-0 bg-gradient-to-b opacity-[0.03] ${
-              currentStep === 0 ? 'from-amber-500' : 'from-sky-500'
-            }`} />
+            <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/45 rounded-full blur-[0.5px]" />
  
             <AnimatePresence mode="wait">
               <motion.div
@@ -337,21 +330,40 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
                 exit={{ scale: 0.8, opacity: 0 }}
                 className="flex flex-col items-center justify-center text-center gap-4 relative z-10"
               >
-                {/* Massive Animated Element Emoji */}
-                <span className={`text-8xl leading-none block select-none drop-shadow-md ${
-                  activeSubAction || isStepAudioPlaying ? 'animate-bounce' : 'animate-pulse'
-                }`}>
-                  {currentData.emoji}
-                </span>
+                {/* Responsive Visualizer with cute indicators */}
+                <div className="relative w-52 h-44 flex flex-col items-center justify-center select-none overflow-visible">
+                  {currentStep === 0 ? (
+                    // Step 1: Marcha (Only Footprints)
+                    <motion.span 
+                      animate={{ 
+                        y: [0, -15, 0],
+                        rotate: [-8, 8, -8]
+                      }}
+                      transition={{ 
+                        repeat: Infinity, 
+                        duration: 0.8,
+                        ease: "easeInOut"
+                      }}
+                      className="text-8xl drop-shadow-md select-none block filter saturate-[1.2]"
+                    >
+                      👣
+                    </motion.span>
+                  ) : (
+                    // Step 2: Pitch (Adaggio Puppet)
+                    <div className="scale-[0.8] transform origin-center select-none flex items-center justify-center">
+                      <AdaggioPuppet animationState="hablando" />
+                    </div>
+                  )}
+                </div>
  
                 {/* Foot/Indicator cues */}
                 <div className="flex flex-col gap-1 max-w-[200px]">
-                  <span className="text-neutral-400 text-[10px] font-mono uppercase tracking-widest font-black truncate block">
+                  <span className="text-[#6853a4] text-[10.5px] font-bold uppercase tracking-wider font-sans block truncate">
                     {currentData.subtitle}
                   </span>
-                  <div className="flex items-center gap-1 justify-center">
-                    <Activity className={`w-3 h-3 text-emerald-400 ${activeSubAction || isStepAudioPlaying ? 'animate-spin' : ''}`} />
-                    <span className="text-[11px] text-emerald-400 font-bold font-mono">
+                  <div className="flex items-center gap-1 justify-center mt-1">
+                    <Activity className={`w-4.5 h-4.5 text-emerald-500 ${activeSubAction || isStepAudioPlaying ? 'animate-spin' : ''}`} />
+                    <span className="text-xs text-emerald-600 font-extrabold font-mono">
                       {activeSubAction || isStepAudioPlaying ? 'Emitiendo Sonido...' : 'Listo para Sintonizar'}
                     </span>
                   </div>
@@ -362,30 +374,30 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
           </div>
         </div>
  
-        {/* Right Side: Clean Descriptive Guidelines + Interactive Action Triggers (takes 7 cols) */}
+        {/* Right Side: Descriptive Guidelines & Interactive Triggers */}
         <div className="lg:col-span-7 flex flex-col gap-6 text-left">
           <div>
-            <h3 className="text-2xl font-black text-white leading-tight uppercase font-funny tracking-wide">
+            <h3 className="text-2xl sm:text-3xl font-black text-[#472F92] leading-tight uppercase font-funny tracking-wide">
               {currentData.title}
             </h3>
-            <p className="text-neutral-300 text-sm md:text-base leading-relaxed mt-2.5 max-w-xl">
+            <p className="text-[#6853a4] text-xs sm:text-sm md:text-base leading-relaxed mt-2.5 max-w-xl font-semibold">
               {currentData.description}
             </p>
           </div>
 
           {/* Tutorial MP3 Player Bar */}
-          <div className="bg-neutral-900 border border-neutral-800 p-4 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-md">
+          <div className="bg-[#FCFBEB] border-2 border-purple-100 p-4 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className={`w-11 h-11 rounded-xl flex items-center justify-center border transition-all ${
+              <div className={`w-11 h-11 rounded-2xl flex items-center justify-center border-2 transition-all ${
                 isStepAudioPlaying 
-                  ? 'bg-amber-500/15 border-amber-500/40 text-amber-400 animate-pulse' 
-                  : 'bg-neutral-850 border-neutral-800 text-neutral-400'
+                  ? 'bg-[#31C3AA]/15 border-[#31C3AA]/50 text-[#309A87] animate-pulse' 
+                  : 'bg-[#FCFBEB] border-purple-100 text-[#6853a4]'
               }`}>
                 <Music className={`w-5 h-5 ${isStepAudioPlaying ? 'animate-bounce' : ''}`} />
               </div>
               <div>
-                <span className="text-[9px] font-mono text-neutral-500 uppercase tracking-widest font-black block">Audio Guía del Tramo</span>
-                <span className="text-xs font-black text-white block mt-0.5 font-mono">
+                <span className="text-[9px] font-mono text-[#6853a4] uppercase tracking-widest font-black block">Audio Guía del Tramo</span>
+                <span className="text-xs font-black text-[#472F92] block mt-0.5 font-mono">
                   {currentStep === 0 ? "sonido1.mp3 (Marcha 4/4)" : "sonido2.mp3 (Agudos/Graves)"}
                 </span>
               </div>
@@ -393,46 +405,47 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
             
             <button
               onClick={() => toggleStepAudio(currentStep === 0 ? '/tutorial-music/sonido1.mp3' : '/tutorial-music/sonido2.mp3')}
-              className={`w-full sm:w-auto px-5 py-3 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer ${
+              className={`w-full sm:w-auto px-5 py-3 rounded-2xl text-xs font-funny font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shadow-md select-none border-b-4 ${
                 isStepAudioPlaying
-                  ? 'bg-amber-500 text-neutral-950 hover:bg-amber-400'
-                  : 'bg-emerald-500 text-neutral-950 hover:bg-emerald-400'
+                  ? 'bg-rose-500 hover:bg-rose-600 text-white border-rose-700'
+                  : 'bg-[#472F92] hover:bg-[#3c2583] text-white border-[#27155a]'
               }`}
             >
               {isStepAudioPlaying ? (
                 <>
-                  <Pause className="w-4 h-4 fill-neutral-950 text-neutral-950" />
+                  <Pause className="w-4 h-4 fill-white stroke-white" />
                   <span>Pausar Música</span>
                 </>
               ) : (
                 <>
-                  <Play className="w-4 h-4 fill-neutral-950 text-neutral-950 animate-pulse" />
-                  <span>Reproducir Música</span>
+                  <Play className="w-4 h-4 fill-white stroke-white animate-pulse" />
+                  <span>Sintonizar Música</span>
                 </>
               )}
             </button>
           </div>
 
           {/* Practical Checklist instructions boxes */}
-          <div className="bg-neutral-900 border border-neutral-800/80 p-4 rounded-xl flex items-start gap-3">
-            <div className="bg-amber-500/15 text-amber-400 p-2 rounded-lg font-mono font-bold leading-none select-none text-xs">
+          <div className="bg-[#FFFEEF] border border-amber-200/50 p-4 rounded-2xl flex items-start gap-3 shadow-md relative overflow-hidden">
+            <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/30 rounded-full blur-[0.5px]" />
+            <div className="bg-amber-400/15 text-[#CDA152] p-2 rounded-xl font-mono font-bold leading-none select-none text-base shadow-sm">
               💡
             </div>
             <div>
-              <p className="text-[10px] uppercase font-black text-amber-500 font-mono tracking-wider">
+              <p className="text-[10px] uppercase font-black text-amber-600 font-sans tracking-wide">
                 Consejo de Aula para el Facilitador
               </p>
-              <p className="text-neutral-300 text-xs mt-1 leading-relaxed font-sans font-medium">
+              <p className="text-[#6853a4] text-xs font-semibold mt-1 leading-relaxed font-sans">
                 {currentData.visualTip}
               </p>
             </div>
           </div>
         </div>
-
+ 
       </div>
 
       {/* Footer controls */}
-      <div className="relative z-10 flex justify-between items-center bg-neutral-900/60 p-3 rounded-2xl border border-neutral-850 mt-4">
+      <div className="relative z-10 flex justify-between items-center bg-[#FAF6FF] p-3 rounded-2xl border border-purple-100/50 mt-4 shadow-sm">
         
         <button
           onClick={() => {
@@ -443,14 +456,10 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
               onBackToHome();
             }
           }}
-          className="px-4 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 hover:text-white transition-all text-neutral-400 font-mono text-xs font-bold"
+          className="px-4 py-2.5 rounded-xl bg-[#FCFBEB] border border-slate-200 hover:bg-white text-slate-505 font-funny text-xs font-black uppercase tracking-wide cursor-pointer transition-colors"
         >
           {currentStep === 0 ? "Salir" : "◀ Anterior"}
         </button>
-
-        <span className="text-[10px] font-mono text-neutral-500 uppercase">
-          Método Dalcroze • Ritmo, Cuerpo y Voz
-        </span>
 
         <button
           onClick={() => {
@@ -461,7 +470,7 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({ onBack
               setShowFinalScreen(true);
             }
           }}
-          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-neutral-950 font-funny text-[13px] font-black tracking-wide shadow transition-all active:scale-95 flex items-center gap-1 uppercase"
+          className="px-5 py-2.5 rounded-xl bg-[#472F92] hover:bg-[#3d2780] border-[3px] border-[#321c6e] text-white font-funny text-[13px] font-black tracking-wide shadow-md transition-all active:scale-95 flex items-center gap-1.5 uppercase cursor-pointer"
         >
           <span>{currentStep === tutorialSteps.length - 1 ? "¡Entendido!" : "Siguiente ▶"}</span>
         </button>

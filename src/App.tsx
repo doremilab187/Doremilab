@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Play, BookOpen, Volume2, VolumeX, HelpCircle, Home, Sparkles, Heart, Activity, Settings, Music, RefreshCw } from 'lucide-react';
+import { Play, BookOpen, Volume2, VolumeX, HelpCircle, Home, Sparkles, Heart, Activity, Settings, Music, RefreshCw, Info } from 'lucide-react';
 import { StoryPlayer } from './components/StoryPlayer';
 import { InteractiveTutorial } from './components/InteractiveTutorial';
 import { AmuletsGallery } from './components/AmuletsGallery';
@@ -130,7 +130,7 @@ export default function App() {
                 {/* Button B: Tutorial (Lilac/Lavender Bubbly Styling but off-white) */}
                 <button
                   id="btn-tutorial-play"
-                  onClick={() => setViewLoadingOverlay('tutorial')}
+                  onClick={() => setCurrentView('tutorial')}
                   className="relative group bg-gradient-to-r from-[#FDFBFF] to-[#FAF6FF] hover:from-[#FFFEFF] hover:to-[#FAF7FF] border-[4px] border-[#BE82ED] active:border-[#A467D4] px-5 py-4 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-left flex items-center gap-4 cursor-pointer overflow-hidden select-none"
                 >
                   {/* Gloss Reflection Layer */}
@@ -141,7 +141,6 @@ export default function App() {
                   <div className="w-14 h-14 rounded-2xl bg-[#7052E6] border-2 border-white flex items-center justify-center shadow-md flex-shrink-0 group-hover:rotate-3 transition-transform">
                     <div className="relative">
                       <BookOpen className="w-6 h-6 text-white" />
-                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-yellow-400 border border-white animate-ping" />
                     </div>
                   </div>
 
@@ -168,8 +167,7 @@ export default function App() {
                   {/* Icon: Golden amulet shield */}
                   <div className="w-14 h-14 rounded-2xl bg-[#CDA152] border-2 border-white flex items-center justify-center shadow-md flex-shrink-0 group-hover:rotate-3 transition-transform">
                     <div className="relative">
-                      <Sparkles className="w-6 h-6 text-white animate-pulse" />
-                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-400 border border-white animate-ping" />
+                      <Sparkles className="w-6 h-6 text-white" />
                     </div>
                   </div>
 
@@ -212,15 +210,14 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 1.3 FIXED SETTINGS/GEAR BUTTON FOR THE FACILITATOR AT BOTTOM RIGHT */}
+              {/* 1.3 ACCESS BUTTON TO TEACHER INSTRUCTIONS AT BOTTOM RIGHT */}
               <button
                 id="btn-facilitator-setup"
                 onClick={() => setCurrentView('facilitator')}
                 className="fixed bottom-4 right-4 md:right-8 z-45 bg-[#FCFBEB] p-4.5 rounded-[22px] border-[3px] border-[#CBA86B] text-[#5A2EAC] cursor-pointer hover:bg-white hover:scale-108 active:scale-92 transition-all shadow-xl flex items-center justify-center group"
-                title="Configuración de Facilitador & Alistamiento"
+                title="Instrucciones para el profesor"
               >
-                <Settings className="w-7 h-7 text-[#5A2EAC] group-hover:rotate-45 transition-transform duration-500" />
-                <span className="absolute -top-1 -left-1 w-3 h-3 bg-red-500 border-2 border-white rounded-full animate-pulse" />
+                <Info className="w-7 h-7 text-[#5A2EAC] group-hover:scale-110 transition-transform duration-300" />
               </button>
 
             </motion.div>

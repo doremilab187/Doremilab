@@ -61,21 +61,41 @@ export const getDirectVideoUrl = (url: string): string => {
   return trimmed;
 };
 
-export const getTotemImageForBlock = (blockId: number): { src: string; name: string } | null => {
+export const getTotemImageForBlock = (blockId: number): { src: string; name: string; description: string } | null => {
   if (blockId === 3) {
-    return { src: "/totems/totem_tierra.png", name: "Amuleto de la Tierra" };
+    return { 
+      src: "/totems/totem_tierra.png", 
+      name: "Tótem de la Tierra",
+      description: "Bajo el suelo descansan miles de semillas esperando el momento de despertar. La Tierra las protege con paciencia y cuida cada brote que algún día se convertirá en flor, arbusto o árbol. Quienes ayudan a mantener su equilibrio aprenden que las cosas más valiosas crecen paso a paso."
+    };
   }
   if (blockId === 6) {
-    return { src: "/totems/totem_agua.png", name: "Amuleto del Agua" };
+    return { 
+      src: "/totems/totem_agua.png", 
+      name: "Tótem de la Lluvia",
+      description: "Los mayores enseñan que cada gota de lluvia guarda una pequeña canción. Cuando miles de ellas caen juntas, llenan el mundo de sonidos brillantes que viajan entre las nubes, los ríos y la tierra. Para descubrir sus secretos, Adaggio deberá acompañar el viaje de las gotas y escuchar con atención su melodía."
+    };
   }
   if (blockId === 8) {
-    return { src: "/totems/totem_viento.png", name: "Amuleto del Viento" };
+    return { 
+      src: "/totems/totem_viento.png", 
+      name: "Tótem del Viento",
+      description: "Dicen los mayores que el Viento guarda caminos invisibles entre las nubes y mensajes escondidos en el aire. Quienes desean encontrarlos deben aprender a escuchar con atención las señales que viajan por el cielo."
+    };
   }
   if (blockId === 12) {
-    return { src: "/totems/totem_rayo.png", name: "Amuleto del Rayo" };
+    return { 
+      src: "/totems/totem_rayo.png", 
+      name: "Tótem de la Tormenta",
+      description: "Tras observar la tormenta con atención, Adaggio descubre que detrás del estruendo existe algo más. Entre los ecos, los relámpagos y los truenos se esconden señales que revelan un ritmo desconocido. Siguiendo sus huellas con cuidado, comienza a comprender el verdadero lenguaje de esta poderosa fuerza de la naturaleza."
+    };
   }
   if (blockId === 14) {
-    return { src: "/totems/totem_sol.png", name: "Amuleto del Sol" };
+    return { 
+      src: "/totems/totem_sol.png", 
+      name: "Tótem del Sol",
+      description: "Desde tiempos remotos, una llama sagrada ilumina los caminos de quienes buscan la armonía. Su luz acompaña a los viajeros, les da fuerza para continuar y les recuerda que toda la naturaleza comparte un mismo ritmo. Con una antorcha en sus manos, Adaggio emprende el último tramo de su viaje siguiendo el resplandor del Sol."
+    };
   }
   return null;
 };
@@ -87,21 +107,21 @@ export const getTotemImageForBlock = (blockId: number): { src: string; name: str
 // El sistema los convertirá automáticamente en enlaces directos de streaming para que se reproduzcan solos en cualquier lugar.
 // Ej: "https://drive.google.com/file/d/1XyZ.../view" o "https://www.dropbox.com/s/.../video.mp4?dl=0"
 export const PRESET_CLOUD_LINKS: Record<number, string> = {
-  1: "https://drive.google.com/file/d/1T0v-AdoHVfei6pa42cgIz_iWyD_pWDdA/view?usp=drive_link",
-  2: "https://drive.google.com/file/d/13PWTEhgwejHZP6AbB9ijTxL6p2Y_ta_i/view?usp=drive_link",
-  3: "https://drive.google.com/file/d/1-xBjhi_IA722pNk4A-rBngN66fqibYrG/view?usp=drive_link",
-  4: "https://drive.google.com/file/d/1YH6pkTTKAkyxLJo68GGwq0o2Un3Fh8X1/view?usp=drive_link",
-  5: "https://drive.google.com/file/d/1EVG4kXEldXfcRga0r2Ew7_N0n9cQ2KMA/view?usp=drive_link",
-  6: "https://drive.google.com/file/d/1CX_NfNI0ZLo1ilqAUFy8DERWmhZi31us/view?usp=drive_link",
-  7: "https://drive.google.com/file/d/1lyjl5yNw8exyGG4zSfcp-wzHP72DhcHA/view?usp=drive_link",
-  8: "https://drive.google.com/file/d/16UGsMkZ8BVPir-BLTgBd86DiZsPW9CHW/view?usp=drive_link",
-  9: "https://drive.google.com/file/d/1ZnnfwFmYtJjNchnsrsNuE207LqN1XH4p/view?usp=drive_link",
-  10: "https://drive.google.com/file/d/1ROeV0eXz3OElyztu25o8DAHh_SbN8GWn/view?usp=drive_link",
-  11: "https://drive.google.com/file/d/1K5OIQTzzwYDC9pfDPJBvWEJlfag494GB/view?usp=drive_link",
-  12: "https://drive.google.com/file/d/15pax3hW2NYBdyAt1ZRwLLR48Z0nYt2Ti/view?usp=drive_link",
-  13: "https://drive.google.com/file/d/1PqMYrB6LqgH1kRpOEYeMGjkH523S4u_k/view?usp=drive_link",
-  14: "https://drive.google.com/file/d/1yfyC84CNBnhZzoOczTCZhiXbv2lESity/view?usp=drive_link",
-  15: "https://drive.google.com/file/d/1BvNsUjdzTV-z8OnbC0k4Hj_I8RlD_ce5/view?usp=drive_link"
+  1: "https://www.dropbox.com/scl/fi/7i1sk88gmfyunvorzghid/tramo1.mp4?rlkey=3bdk19nlks0xsjgbmm7o3s7a6&st=1vcdnjza&dl=0",
+  2: "https://www.dropbox.com/scl/fi/j6mb31b53a45vw1hbdwjt/tramo2.mp4?rlkey=nrr3pj8kraoyh74lc19ilq6te&st=mltyap3d&dl=0",
+  3: "https://www.dropbox.com/scl/fi/rhzvx4b4hvtblrr8xqush/tramo3.mp4?rlkey=tahw6yxkiinz0u191hpo9kbj8&st=w595h31y&dl=0",
+  4: "https://www.dropbox.com/scl/fi/z1qgxbgp5vz04rgb9n998/tramo4.mp4?rlkey=e3835ftz8k60tl4s4vjwmt2xa&st=0f9w6ytq&dl=0",
+  5: "https://www.dropbox.com/scl/fi/dfrf5yy1qghgveg6drpmy/tramo5.mp4?rlkey=7rouxg8bwqa2sxqbj6pc2d0d3&st=vq2v5nzy&dl=0",
+  6: "https://www.dropbox.com/scl/fi/5xagal7mssv8tw7x0mfz9/tramo6.mp4?rlkey=j5c69xkrq8r1fyptawdaew90n&st=fp83w5zb&dl=0",
+  7: "https://www.dropbox.com/scl/fi/0pgyaiejb31dzdwn17pc6/tramo7.mp4?rlkey=i5d3c933ppdir4agyalkxr6sw&st=1at8h3k2&dl=0",
+  8: "https://www.dropbox.com/scl/fi/ppehssofghrau45r8i6po/tramo8.mp4?rlkey=ombvf2xl520bbtj6fupedos0h&st=p738tzk7&dl=0",
+  9: "https://www.dropbox.com/scl/fi/lyulzha622b2n7lseggb0/tramo9.mp4?rlkey=kp6r8k2v2gthgmv31mn652652&st=9qrfm7su&dl=0",
+  10: "https://www.dropbox.com/scl/fi/ia1qotrrqoh8pbwb9ezzz/tramo10.mp4?rlkey=xapu1myuazzqw16mml88bku9c&st=15nfhqq7&dl=0",
+  11: "https://www.dropbox.com/scl/fi/axss5mecg0m33ubzqaj2z/tramo11.mp4?rlkey=tytmtd9wgaj0cxgloita10tu6&st=56qlchyq&dl=0",
+  12: "https://www.dropbox.com/scl/fi/88u3vtnezj3317xfwi7dy/tramo12.mp4?rlkey=trv4iivh10vhyepvglo1mz69f&st=n79876xb&dl=0",
+  13: "https://www.dropbox.com/scl/fi/4hxdipih938mbf44c9g6m/tramo13.mp4?rlkey=nbknd2p5ia5awznw2b3r5ata6&st=d5uj5zov&dl=0",
+  14: "https://www.dropbox.com/scl/fi/b1qrxdkz1ezp0llfpc58m/tramo14.mp4?rlkey=55chdo4v33ns9ovlstvv83miy&st=du3w3k5f&dl=0",
+  15: "https://www.dropbox.com/scl/fi/cs00yh2oe91tb2x9kygso/tramo15.mp4?rlkey=iquprqtkgcx60at231lk5hnr4&st=3taln8qo&dl=0"
 };
 
 export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) => {
@@ -585,24 +605,19 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
         <div className="absolute top-8 left-[10%] w-48 h-12 bg-white/70 rounded-full blur-md pointer-events-none opacity-60" />
         <div className="absolute top-20 right-[5%] w-60 h-16 bg-white/70 rounded-full blur-md pointer-events-none opacity-60" />
         
-        <div className="relative z-10 w-full flex justify-between items-center pb-4 border-b border-purple-100">
-          <span className="text-[10px] font-mono uppercase bg-[#6C3483]/10 border border-[#6C3483]/20 text-[#6C3483] px-2.5 py-0.5 rounded font-black tracking-widest block font-bold">
-            HISTORIA DE EURITMIA DETALLADA
-          </span>
+        <div className="relative z-10 w-full flex justify-end items-center pb-4 border-b border-purple-100">
           <button 
             onClick={() => {
               if (onSessionComplete) onSessionComplete([]);
             }}
-            className="text-xs text-[#472F92] font-black uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all"
+            className="text-xs text-[#472F92] font-black uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all cursor-pointer"
           >
-            Regresar al Inicio 🏠
+            Regresar al Inicio
           </button>
         </div>
 
         <div className="relative z-10 my-auto flex flex-col items-center gap-6 max-w-lg">
-          <div className="relative w-44 h-44 bg-[#FFFDF1] border-4 border-[#31C3AA]/50 rounded-full flex items-center justify-center p-2 shadow-xl overflow-hidden group">
-            {/* Glossy sheen */}
-            <div className="absolute top-1 left-2 right-2 h-2.5 bg-white/50 rounded-full blur-[0.5px]" />
+          <div className="relative w-44 h-44 flex items-center justify-center p-2 select-none">
             <div className="scale-75 transform origin-center">
               <AdaggioPuppet animationState="saludando" />
             </div>
@@ -610,21 +625,21 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
 
           <div className="space-y-3.5">
             <h2 className="text-3xl font-black font-funny text-[#472F92] uppercase tracking-wide leading-tight">
-              ¡Viaje Rítmico de Adaggio! 👋
+              Adaggio, el Viajero de los Ritmos
             </h2>
-            <p className="text-[#6853a4] text-sm md:text-base leading-relaxed font-sans max-w-md mx-auto font-medium font-semibold">
-              Acompaña a Adaggio por los 15 tramos rítmicos de la naturaleza para despertar el gran pulso rítmico. Los niños jugarán sintiéndose tierra, agua, viento, trueno y sol.
+            <p className="text-[#6853a4] text-xs sm:text-sm leading-relaxed font-sans max-w-lg mx-auto font-medium font-semibold text-center">
+              Adaggio es un joven conejo viajero conocido por sus extraordinarias capacidades para escuchar. Mientras otros oyen solamente sonidos, él puede percibir los ritmos ocultos que viven en la naturaleza: el movimiento de las nubes, el susurro de las hojas y el latido de la tierra bajo sus patas. Guiado por su curiosidad y su amor por la música, recorre caminos y paisajes aprendiendo de cada encuentro. Su mayor don no es la fuerza ni la magia, sino la capacidad de escuchar, comprender y conectar aquello que parece estar separado.
             </p>
           </div>
         </div>
 
         <button
           onClick={() => setShowStartScreen(false)}
-          className="relative group w-full max-w-sm bg-gradient-to-r from-[#A3F1E3] to-[#46E4CF] hover:from-[#B4F7EC] hover:to-[#57EBD5] border-[4px] border-[#31C3AA] active:border-[#1F9F8B] px-8 py-4 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-center flex items-center justify-center gap-3 cursor-pointer overflow-hidden select-none"
+          className="relative group w-full max-w-sm bg-[#472F92] hover:bg-[#3d2780] border-[4px] border-[#31C3AA] active:border-[#1F9F8B] px-8 py-4 rounded-[26px] shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-center flex items-center justify-center gap-3 cursor-pointer overflow-hidden select-none text-white font-black"
         >
-          <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/40 rounded-full blur-[0.5px]" />
-          <Play className="w-5 h-5 fill-[#472F92] text-[#472F92] animate-pulse" />
-          <span className="font-black text-lg text-[#472F92] font-funny tracking-wider uppercase">
+          <div className="absolute top-0.5 left-2 right-2 h-2.5 bg-white/30 rounded-full blur-[0.5px]" />
+          <Play className="w-5 h-5 fill-white text-white animate-pulse" />
+          <span className="font-black text-lg font-funny tracking-wider uppercase">
             Iniciar Relato Rítmico
           </span>
         </button>
@@ -843,30 +858,6 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
           </div>
         </div>
 
-        {/* BOTÓN DE VALIDACIÓN DIRECTO BAJO EL REPRODUCTOR */}
-        {currentBlockVideoUrl && (
-          <div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-white border border-slate-200/80 p-4 rounded-2xl shadow-md mt-1 animate-fadeIn">
-            <div className="flex items-center gap-2 text-slate-700">
-              <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span className="text-xs font-bold font-sans">
-                {isGoogleDrive ? "Video en reproducción desde la nube (Drive)" : "Video interactivo cargado"}
-              </span>
-            </div>
-            
-            <button
-              onClick={() => handleBlockCompletion(activeBlock.id)}
-              className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-black font-sans text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-lg shadow-emerald-500/10 border-b-2 border-emerald-700 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
-              title="Validar este video y pasar a las indicaciones"
-            >
-              <Award className="w-3.5 h-3.5 text-emerald-100" />
-              <span>Validar</span>
-            </button>
-          </div>
-        )}
-
         {/* MEDIA TIMELINE & CONTROLS DASHBOARD */}
         {!isGoogleDrive && (
           <div id="media-timeline-dashboard" className="bg-neutral-950 rounded-2xl p-4 flex flex-col gap-3.5 shadow-2xl border border-neutral-900">
@@ -935,11 +926,11 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                     onClick={handlePauseToggle}
                     className={`px-5 py-2 rounded-lg font-black flex items-center gap-2 transition-all hover:scale-105 active:scale-95 cursor-pointer ${
                       isPlaying
-                        ? 'bg-neutral-800 hover:bg-neutral-700 text-amber-500 border border-amber-500/20'
-                        : 'bg-amber-400 hover:bg-amber-300 text-neutral-950 shadow shadow-amber-400/10'
+                        ? 'bg-[#472F92]/20 hover:bg-[#472F92]/30 text-white border border-[#472F92]/40'
+                        : 'bg-[#472F92] hover:bg-[#352079] text-white shadow shadow-[#472F92]/10'
                     }`}
                   >
-                    {isPlaying ? <Pause className="w-3.5 h-3.5 fill-amber-500" /> : <Play className="w-3.5 h-3.5 fill-neutral-900" />}
+                    {isPlaying ? <Pause className="w-3.5 h-3.5 fill-white stroke-white" /> : <Play className="w-3.5 h-3.5 fill-white stroke-white animate-pulse" />}
                     <span className="font-funny text-[13px] tracking-wide">{isPlaying ? 'PAUSAR' : 'PRODUCIR RITMO'}</span>
                   </button>
 
@@ -979,7 +970,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                         setIsMuted(false);
                       }
                     }}
-                    className="w-16 sm:w-20 md:w-24 h-1 bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-amber-400 outline-none"
+                    className="w-16 sm:w-20 md:w-24 h-1 bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-[#472F92] outline-none"
                     title="Regulador de Volumen"
                   />
                 </div>
@@ -987,7 +978,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                 {/* Mobile Cinema Mode Button */}
                 <button
                   onClick={() => setIsMobileCinemaMode(true)}
-                  className="sm:hidden p-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-neutral-950 transition-all hover:scale-105 active:scale-95 cursor-pointer font-black flex items-center justify-center text-sm"
+                  className="sm:hidden p-2 rounded-xl bg-[#472F92] hover:bg-[#352079] text-white transition-all hover:scale-105 active:scale-95 cursor-pointer font-black flex items-center justify-center text-sm"
                   title="Modo Cine Pantalla Completa"
                 >
                   <span>🎬</span>
@@ -1003,6 +994,30 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                 </button>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* BOTÓN DE VALIDACIÓN DIRECTO BAJO EL REPRODUCTOR */}
+        {currentBlockVideoUrl && (
+          <div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-white border border-slate-200/80 p-4 rounded-2xl shadow-md mt-1 animate-fadeIn w-full">
+            <div className="flex items-center gap-2 text-slate-700">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#472F92]/40 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#472F92]"></span>
+              </span>
+              <span className="text-xs font-bold font-sans">
+                {isGoogleDrive ? "Video en reproducción desde la nube (Drive)" : "Video interactivo cargado"}
+              </span>
+            </div>
+            
+            <button
+              onClick={() => handleBlockCompletion(activeBlock.id)}
+              className="w-full sm:w-auto bg-[#472F92] hover:bg-[#3d2780] active:scale-95 text-white font-black font-sans text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-lg shadow-[#472F92]/10 border-b-2 border-[#2b1766] transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              title="Validar este video y pasar a las indicaciones"
+            >
+              <Award className="w-3.5 h-3.5 text-purple-100" />
+              <span>Validar</span>
+            </button>
           </div>
         )}
 
@@ -1087,20 +1102,19 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                         initial={{ opacity: 0, scale: 0.85, rotate: -8 }}
                         animate={{ opacity: 1, scale: 1, rotate: 0 }}
                         transition={{ type: "spring", stiffness: 100, delay: 0.1 }}
-                        className="relative w-44 h-44 bg-gradient-to-b from-amber-50 to-orange-100/40 border-4 border-amber-300 rounded-3xl flex items-center justify-center p-5 shadow-xl overflow-hidden"
+                        className="relative w-48 h-48 flex items-center justify-center p-2"
                       >
                         {/* Shimmer/glow effects in back */}
                         <div 
-                          className="absolute inset-0 opacity-20 blur-xl pointer-events-none animate-pulse"
-                          style={{ backgroundColor: accentColor }}
+                          className="absolute inset-4 rounded-full opacity-50 blur-3xl pointer-events-none animate-pulse"
+                          style={{ backgroundColor: accentColor || 'rgba(242, 175, 41, 0.4)' }}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/50 to-transparent pointer-events-none" />
                         
                         <motion.img 
                           src={totem.src} 
                           alt={totem.name}
                           referrerPolicy="no-referrer"
-                          className="w-full h-full object-contain relative z-10 drop-shadow-md select-none"
+                          className="w-full h-full object-contain relative z-10 drop-shadow-[0_12px_24px_rgba(0,0,0,0.4)] select-none"
                           animate={{ y: [0, -6, 0] }}
                           transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
                         />
@@ -1108,7 +1122,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
 
                       {/* Collection Heading */}
                       <div className="flex flex-col gap-1">
-                        <h2 className="text-2xl sm:text-3xl font-black font-funny text-amber-600 uppercase tracking-wide leading-tight px-2">
+                        <h2 className="text-2xl sm:text-3xl font-black font-funny text-amber-600 uppercase tracking-wide leading-tight px-5">
                           ¡Recogiste el {totem.name}!
                         </h2>
                       </div>
@@ -1117,9 +1131,12 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                     /* STANDARD TRAMO WITH ADAGGIO (When no totem is collected) */
                     <div className="flex flex-col items-center w-full gap-4">
                       {/* Adaggio Puppet (Always constant in standard tramos but with dynamic states) */}
-                      <div className="relative w-44 h-44 bg-gradient-to-b from-[#FFFDF1] to-slate-50 border-4 rounded-3xl flex items-center justify-center p-2 shadow-xl overflow-hidden" style={{ borderColor: `${accentColor}50` }}>
-                        <div className="absolute top-1 left-2 right-2 h-2.5 bg-white/50 rounded-full blur-[0.5px]" />
-                        <div className="scale-75 transform origin-center">
+                      <div className="relative w-48 h-48 flex items-center justify-center p-2">
+                        <div 
+                          className="absolute inset-4 rounded-full opacity-40 blur-3xl pointer-events-none animate-pulse"
+                          style={{ backgroundColor: accentColor || 'rgba(59, 130, 246, 0.4)' }}
+                        />
+                        <div className="scale-75 transform origin-center relative z-10 drop-shadow-[0_8px_16px_rgba(0,0,0,0.12)]">
                           <AdaggioPuppet animationState={activeTransitionModal.adaggioAnimationState || 'hablando'} />
                         </div>
                       </div>
@@ -1179,12 +1196,11 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
               className="bg-white text-slate-800 rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl border-4 border-[#1DD2C4] relative text-center flex flex-col items-center gap-6"
             >
               <div className="flex items-center gap-4 justify-center">
-                <div className="w-16 h-16 bg-[#1DD2C4]/10 border border-[#1DD2C4]/30 rounded-full flex items-center justify-center text-3xl shadow-md animate-bounce">
-                  🏆
+                <div className="w-16 h-16 bg-[#1DD2C4]/10 border border-[#1DD2C4]/30 rounded-full flex items-center justify-center shadow-md animate-bounce">
+                  <Sparkles className="w-8 h-8 text-[#1DD2C4]" />
                 </div>
                 {/* Adaggio Puppet */}
-                <div className="relative w-36 h-36 bg-[#FFFDF1] border-4 border-[#1DD2C4] rounded-full flex items-center justify-center p-2 overflow-hidden shadow-lg">
-                  <div className="absolute top-1 left-2 right-2 h-2.5 bg-white/50 rounded-full blur-[0.5px]" />
+                <div className="relative w-36 h-36 flex items-center justify-center p-2 select-none">
                   <div className="scale-[0.65] transform origin-center">
                     <AdaggioPuppet animationState="celebrando" />
                   </div>
@@ -1196,7 +1212,7 @@ export const StoryPlayer: React.FC<StoryPlayerProps> = ({ onSessionComplete }) =
                   Clase Completada
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-black font-funny mt-3 uppercase tracking-wide text-slate-800">
-                  ¡FELICITACIONES! 🎉
+                  ¡FELICITACIONES!
                 </h2>
                 <p className="text-xs text-slate-400 font-sans mt-1">
                   Has completado todo el viaje y la historia. ¡Buen trabajo!
