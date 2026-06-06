@@ -1,0 +1,5 @@
+# Carpeta para archivos de tipografías (fonts)
+Coloca aquí tus archivos de fuentes para que Vite los procese de manera óptima para producción (Netlify / GitHub Pages):
+- SomeTimeLater.otf
+- RethinkSans-VariableFont_wght.ttf
+- RethinkSans-Italic-VariableFont_wght.ttf

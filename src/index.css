@@ -3,7 +3,7 @@
 
 @font-face {
   font-family: 'Some Time Later';
-  src: url('/fonts/SomeTimeLater.otf') format('opentype');
+  src: url('./assets/fonts/SomeTimeLater.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -11,7 +11,7 @@
 
 @font-face {
   font-family: 'Rethink Sans Local';
-  src: url('/fonts/RethinkSans-VariableFont_wght.ttf') format('truetype');
+  src: url('./assets/fonts/RethinkSans-VariableFont_wght.ttf') format('truetype');
   font-weight: 300 800;
   font-style: normal;
   font-display: swap;
@@ -19,7 +19,7 @@
 
 @font-face {
   font-family: 'Rethink Sans Local';
-  src: url('/fonts/RethinkSans-Italic-VariableFont_wght.ttf') format('truetype');
+  src: url('./assets/fonts/RethinkSans-Italic-VariableFont_wght.ttf') format('truetype');
   font-weight: 300 800;
   font-style: italic;
   font-display: swap;

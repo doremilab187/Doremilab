@@ -64,35 +64,35 @@ export const getDirectVideoUrl = (url: string): string => {
 export const getTotemImageForBlock = (blockId: number): { src: string; name: string; description: string } | null => {
   if (blockId === 3) {
     return { 
-      src: "./totems/totem_tierra.png", 
+      src: "/adaggio_gifs/totems/totem_tierra.png", 
       name: "Tótem de la Tierra",
       description: "Bajo el suelo descansan miles de semillas esperando el momento de despertar. La Tierra las protege con paciencia y cuida cada brote que algún día se convertirá en flor, arbusto o árbol. Quienes ayudan a mantener su equilibrio aprenden que las cosas más valiosas crecen paso a paso."
     };
   }
   if (blockId === 6) {
     return { 
-      src: "./totems/totem_agua.png", 
+      src: "/adaggio_gifs/totems/totem_agua.png", 
       name: "Tótem de la Lluvia",
       description: "Los mayores enseñan que cada gota de lluvia guarda una pequeña canción. Cuando miles de ellas caen juntas, llenan el mundo de sonidos brillantes que viajan entre las nubes, los ríos y la tierra. Para descubrir sus secretos, Adaggio deberá acompañar el viaje de las gotas y escuchar con atención su melodía."
     };
   }
   if (blockId === 8) {
     return { 
-      src: "./totems/totem_viento.png", 
+      src: "/adaggio_gifs/totems/totem_viento.png", 
       name: "Tótem del Viento",
       description: "Dicen los mayores que el Viento guarda caminos invisibles entre las nubes y mensajes escondidos en el aire. Quienes desean encontrarlos deben aprender a escuchar con atención las señales que viajan por el cielo."
     };
   }
   if (blockId === 12) {
     return { 
-      src: "./totems/totem_rayo.png", 
+      src: "/adaggio_gifs/totems/totem_rayo.png", 
       name: "Tótem de la Tormenta",
       description: "Tras observar la tormenta con atención, Adaggio descubre que detrás del estruendo existe algo más. Entre los ecos, los relámpagos y los truenos se esconden señales que revelan un ritmo desconocido. Siguiendo sus huellas con cuidado, comienza a comprender el verdadero lenguaje de esta poderosa fuerza de la naturaleza."
     };
   }
   if (blockId === 14) {
     return { 
-      src: "./totems/totem_sol.png", 
+      src: "/adaggio_gifs/totems/totem_sol.png", 
       name: "Tótem del Sol",
       description: "Desde tiempos remotos, una llama sagrada ilumina los caminos de quienes buscan la armonía. Su luz acompaña a los viajeros, les da fuerza para continuar y les recuerda que toda la naturaleza comparte un mismo ritmo. Con una antorcha en sus manos, Adaggio emprende el último tramo de su viaje siguiendo el resplandor del Sol."
     };
