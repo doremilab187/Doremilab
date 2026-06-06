@@ -60,7 +60,7 @@ export default function App() {
       id="dalcroze-app-root" 
       className={`min-h-screen text-[#472F92] font-sans antialiased ${isHome ? 'pb-4' : 'pb-28'} relative selection:bg-yellow-250 selection:text-neutral-900 flex flex-col justify-between overflow-x-hidden transition-all duration-700 bg-cover bg-center bg-no-repeat`}
       style={{
-        backgroundImage: isHome ? 'url("./Portada/Portada.png")' : 'none',
+        backgroundImage: isHome ? 'url("/Portada/Portada.png")' : 'none',
         backgroundColor: '#FFFDF1'
       }}
     >
