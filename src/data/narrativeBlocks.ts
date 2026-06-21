@@ -19,7 +19,7 @@ export const NARRATIVE_BLOCKS: NarrativeBlock[] = [
     physicalMaterials: [],
     instrumentProtagonist: "Silencio absoluto → pad ambiental misterioso",
     narratorLines: "El gran teatro está en silencio. Adaggio despierta lentamente de un sueño profundo... ¡Prepárate para entrar en sintonía!",
-    facilitatorCue: "Por favor, siéntense muy, muy quietos y escuchen el silencio antes de activar los tótems.",
+    facilitatorCue: "Por favor, siéntense muy, muy quietos y escuchen el silencio antes de activar los amuletos.",
     adaggioAnimationState: "hablando",
     suggestedPausas: [],
     observables: [

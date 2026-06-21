@@ -31,7 +31,7 @@ export const AmuletsGallery: React.FC<AmuletsGalleryProps> = ({ onBackToHome }) 
     {
       id: 'tierra',
       name: 'Amuleto de Tierra',
-      category: 'El Tótem de la Tierra',
+      category: 'El Amuleto de la Tierra',
       element: 'Tierra',
       imageUrl: '/adaggio_gifs/totems/totem_tierra.png',
       description: 'Bajo el suelo descansan miles de semillas esperando el momento de despertar. La Tierra las protege con paciencia y cuida cada brote que algún día se convertirá en flor, arbusto o árbol. Quienes ayudan a mantener su equilibrio aprenden que las cosas más valiosas crecen paso a paso.',
@@ -43,7 +43,7 @@ export const AmuletsGallery: React.FC<AmuletsGalleryProps> = ({ onBackToHome }) 
     {
       id: 'agua',
       name: 'Amuleto de Agua',
-      category: 'El Tótem del Agua',
+      category: 'El Amuleto del Agua',
       element: 'Agua',
       imageUrl: '/adaggio_gifs/totems/totem_agua.png',
       description: 'Los mayores enseñan que cada gota de lluvia guarda una pequeña canción. Cuando miles de ellas caen juntas, llenan el mundo de sonidos brillantes que viajan entre las nubes, los ríos y la tierra. Para descubrir sus secretos, Adaggio deberá acompañar el viaje de las gotas y escuchar con atención su melodía.',
@@ -55,7 +55,7 @@ export const AmuletsGallery: React.FC<AmuletsGalleryProps> = ({ onBackToHome }) 
     {
       id: 'viento',
       name: 'Amuleto de Viento',
-      category: 'El Tótem del Viento',
+      category: 'El Amuleto del Viento',
       element: 'Viento',
       imageUrl: '/adaggio_gifs/totems/totem_viento.png',
       description: 'Dicen los mayores que el Viento guarda caminos invisibles entre las nubes y mensajes escondidos en el aire. Quienes desean encontrarlos deben aprender a escuchar con atención las señales que viajan por el cielo.',
@@ -67,7 +67,7 @@ export const AmuletsGallery: React.FC<AmuletsGalleryProps> = ({ onBackToHome }) 
     {
       id: 'rayo',
       name: 'Amuleto de Rayo',
-      category: 'El Tótem del Rayo',
+      category: 'El Amuleto del Rayo',
       element: 'Rayo',
       imageUrl: '/adaggio_gifs/totems/totem_rayo.png',
       description: 'Cuando la tormenta despierta, su estruendo puede cubrir los sonidos del mundo y volver inciertos los caminos. Muchos viajeros temen su fuerza, pues sus rugidos recorren montañas y valles sin previo aviso. Para seguir adelante, Adaggio deberá atravesar el ruido y aprender a escuchar más allá de él. Tras observar la tormenta con atención, descubre que detrás del estruendo existe algo más: relámpagos, truenos y ecos que revelan un ritmo desconocido.',
@@ -79,7 +79,7 @@ export const AmuletsGallery: React.FC<AmuletsGalleryProps> = ({ onBackToHome }) 
     {
       id: 'sol',
       name: 'Amuleto de Sol',
-      category: 'El Tótem del Sol',
+      category: 'El Amuleto del Sol',
       element: 'Sol',
       imageUrl: '/adaggio_gifs/totems/totem_sol.png',
       description: 'Desde tiempos remotos, una llama sagrada ilumina los caminos de quienes buscan la armonía. Su luz acompaña a los viajeros, les da fuerza para continuar y les recuerda que toda la naturaleza comparte un mismo ritmo. Con una antorcha en sus manos, Adaggio emprende el último tramo de su viaje siguiendo el resplandor del Sol.',
